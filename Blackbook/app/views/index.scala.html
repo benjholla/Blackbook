@@ -1,7 +1,31 @@
-@(message: String)
+@(products: List[Product], productForm: Form[String])
 
-@main("Welcome to Play 2.1") {
+@import helper._
+
+@main("Todo list") {
     
-    @play20.welcome(message)
+    <h1>@products.size product(s)</h1>
+    
+    <ul>
+        @products.map { product =>
+            <li>
+                @product.label
+                
+                @form(routes.Application.deleteProduct(product.id)) {
+                    <input type="submit" value="Delete">
+                }
+            </li>
+        }
+    </ul>
+    
+    <h2>Add a new product</h2>
+    
+    @form(routes.Application.newProduct) {
+        
+        @inputText(productForm("label")) 
+        
+        <input type="submit" value="Create">
+        
+    }
     
 }

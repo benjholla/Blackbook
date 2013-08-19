@@ -7,3 +7,8 @@ GET     /                           controllers.Application.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+# Products Routes
+GET     /products                      controllers.Application.products
+POST    /products                      controllers.Application.newProduct
+POST    /products/:id/delete           controllers.Application.deleteProduct(id:Long)
