@@ -19,19 +19,18 @@ object Tag {
   def normalizeLabel(label: String) = label.toUpperCase
 
   def all(): List[Tag] = DB.withConnection { implicit c =>
-    SQL("select * from tags").as(tag *)
+    SQL("SELECT * FROM Tags").as(tag *)
   }
 
   def create(label: String) { 
     DB.withConnection { implicit c =>
-      SQL("insert into tags (label) values ({label})").on(
+      SQL("INSERT INTO Tags(Label) VALUES ({label})").on(
         'label -> normalizeLabel(label)).executeUpdate()
-        //normalizeLabel(label)).executeUpdate()
     }
   }
 
   def getId(label: String) = DB.withConnection { implicit c =>
-    SQL("select * from tags where label = {label}").on(
+    SQL("SELECT * FROM Tags WHERE Label = {label}").on(
       'label -> normalizeLabel(label)).as(tag *) 
     match {
       case id :: others => id
@@ -41,7 +40,7 @@ object Tag {
 
   def delete(id: Long) { 
     DB.withConnection { implicit c =>
-      SQL("delete from tags where id = {id}").on(
+      SQL("DELETE FROM Tags WHERE Id = {id}").on(
         'id -> id).executeUpdate()
     }
   }

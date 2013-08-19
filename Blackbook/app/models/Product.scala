@@ -17,19 +17,19 @@ object Product {
   }
 
   def all(): List[Product] = DB.withConnection { implicit c =>
-    SQL("select * from product").as(product *)
+    SQL("SELECT * FROM Products").as(product *)
   }
 
   def create(label: String) {
     DB.withConnection { implicit c =>
-      SQL("insert into product (label) values ({label})").on(
+      SQL("INSERT INTO Products(Label) VALUES ({label})").on(
         'label -> label).executeUpdate()
     }
   }
 
   def delete(id: Long) {
     DB.withConnection { implicit c =>
-      SQL("delete from product where id = {id}").on(
+      SQL("DELETE FROM PRODUCTS WHERE ID = {id}").on(
         'id -> id).executeUpdate()
     }
   }
