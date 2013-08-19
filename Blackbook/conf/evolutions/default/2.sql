@@ -17,8 +17,10 @@ CREATE TABLE tags (
 );
 
 CREATE TABLE product_tags (
-    ProductId integer REFERENCES product(id),
-    TagId integer REFERENCES tags(id),
+    ProductId integer,
+    TagId integer,
+    FOREIGN KEY (ProductId) REFERENCES Product(ID) ON DELETE CASCADE,
+    FOREIGN KEY (TagId) REFERENCES Tags(ID) ON DELETE CASCADE,
     PRIMARY KEY (ProductId, TagId)
 );
 
