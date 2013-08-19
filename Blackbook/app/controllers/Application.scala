@@ -17,12 +17,12 @@ object Application extends Controller {
   }
 
   def products = Action {
-    Ok(views.html.index(Product.all(), productForm))
+    Ok(views.html.products(Product.all(), productForm))
   }
 
   def newProduct = Action { implicit request =>
     productForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.index(Product.all(), errors)),
+      errors => BadRequest(views.html.products(Product.all(), errors)),
       label => {
         Product.create(label)
         Redirect(routes.Application.products)
