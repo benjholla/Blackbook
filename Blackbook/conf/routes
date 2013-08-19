@@ -12,3 +12,8 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /products                      controllers.Application.products
 POST    /products                      controllers.Application.newProduct
 POST    /products/:id/delete           controllers.Application.deleteProduct(id:Long)
+
+# Tag Routes
+GET     /tags                          controllers.Application.tags
+POST    /tags                          controllers.Application.newTag
+POST    /tags/:id/delete               controllers.Application.deleteTag(id:Long)
