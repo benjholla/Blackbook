@@ -26,14 +26,19 @@ object Tag {
     SQL("SELECT * FROM Tags").as(tag *)
   }
 
-  def create(name: String) { 
+  def create(name: String): Tag = { 
     DB.withConnection { implicit c =>
       SQL("INSERT INTO Tags(Name) VALUES ({name})").on(
         'name -> normalizeName(name)).executeUpdate()
+
+      val id = SQL("SELECT SCOPE_IDENTITY()")().map( row =>
+        row[Long]("SCOPE_IDENTITY()") ).head
+
+      return Tag(id, normalizeName(name))
     }
   }
 
-  def findTag(name: String): Option[Tag] = DB.withConnection { implicit c =>
+  def find(name: String): Option[Tag] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Tags WHERE Name = {name}").on(
       'name -> normalizeName(name)).as(tag *)
     match { 
@@ -42,12 +47,19 @@ object Tag {
     }
   }
 
-  def findTag(id: Long): Option[Tag] = DB.withConnection { implicit c => 
+  def find(id: Long): Option[Tag] = DB.withConnection { implicit c => 
     SQL("SELECT * FROM Tags WHERE Id = {id}").on(
       'id -> id).as(tag *)
     match { 
       case found :: others => Some(found)
       case _ => None
+    }
+  }
+
+  def findOrCreate(name: String): Tag = DB.withConnection { implicit c =>
+    find(name) match {
+      case Some(tag) => tag
+      case _ => create(name)
     }
   }
 
