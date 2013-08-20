@@ -47,4 +47,16 @@ object Product {
       """
       ).on('productId -> productId).as(Tag.tag *)
   }
+
+  def addTag[A](productId: Long, tagName: String) = { 
+    DB.withConnection { implicit c =>
+      val tag = Tag.findOrCreate(tagName)
+      SQL("""
+        MERGE INTO ProductTags(ProductId, TagId) 
+        VALUES ({productId}, {tagId})
+      """).on(
+        'productId -> productId,
+        'tagId -> tag.id).executeUpdate()
+    }
+  }
 }
