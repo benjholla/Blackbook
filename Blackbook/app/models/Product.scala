@@ -66,7 +66,7 @@ object Product {
       ).on('productId -> productId).as(Tag.tag *)
   }
 
-  def addTag[A](productId: Long, tagName: String) = { 
+  def addTag(productId: Long, tagName: String) = { 
     DB.withConnection { implicit c =>
       val tag = Tag.findOrCreate(tagName)
       SQL("""
@@ -75,6 +75,20 @@ object Product {
       """).on(
         'productId -> productId,
         'tagId -> tag.id).executeUpdate()
+    }
+  }
+
+  def removeTag(productId: Long, tagName: String) = {
+    DB.withConnection { implicit c =>
+      for ( tag <- Tag.find(tagName) ) {
+        SQL("""
+          DELETE FROM ProductTags
+          WHERE ProductId = {productId} 
+            AND TagId = {tagId}
+          """).on(
+            'productId -> productId,
+            'tagId -> tag.id).executeUpdate()
+      }
     }
   }
 }
