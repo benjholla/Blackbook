@@ -37,6 +37,24 @@ object Product {
         'id -> id).executeUpdate()
     }
   }
+
+  def find(id: Long): Option[Product] = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM Products WHERE Id = {id}").on(
+      'id -> id).as(product *)
+    match { 
+      case found :: others => Some(found)
+      case _ => None
+    }
+  }
+  
+  def find(name: String): Option[Product] = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM Products WHERE Name = {name}").on(
+      'name -> name).as(product *)
+    match { 
+      case found :: others => Some(found)
+      case _ => None
+    }
+  }
   
   def getTags(productId: Long): List[Tag] = DB.withConnection { implicit c =>
     SQL("""
