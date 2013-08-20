@@ -8,10 +8,10 @@
   <table>
     @products.map { product =>
       <tr>
-        <td>@product.label</td>
+        <td>@product.name</td>
         @Product.getTags(product.id).map { tag =>
           <td>
-            @tag.label
+            @tag.name
           </td>
         }
         <td>
@@ -27,7 +27,7 @@
   
   @form(routes.ProductController.newProduct) {
     
-    @inputText(productForm("label")) 
+    @inputText(productForm("name")) 
     <input type="submit" value="Create">
     
   }

@@ -5,16 +5,14 @@ import anorm.SqlParser._
 import play.api.db._
 import play.api.Play.current
 
-import scala.language.postfixOps
-
-case class Product(id: Long, label: String)
+case class Product(id: Long, name: String)
 
 object Product {
 
   val product = {
     get[Long]("id") ~
-      get[String]("label") map {
-        case id ~ label => Product(id, label)
+      get[String]("name") map {
+        case id ~ name => Product(id, name)
       }
   }
 
@@ -22,10 +20,10 @@ object Product {
     SQL("SELECT * FROM Products").as(product *)
   }
 
-  def create(label: String) {
+  def create(name: String) {
     DB.withConnection { implicit c =>
-      SQL("INSERT INTO Products(Label) VALUES ({label})").on(
-        'label -> label).executeUpdate()
+      SQL("INSERT INTO Products(Name) VALUES ({name})").on(
+        'name -> name).executeUpdate()
     }
   }
 
@@ -38,7 +36,7 @@ object Product {
   
   def getTags(productId: Long): List[Tag] = DB.withConnection { implicit c =>
     SQL("""
-      SELECT Tags.Id AS Id, Tags.Label AS Label FROM ProductTags
+      SELECT Tags.Id AS Id, Tags.Name AS Name FROM ProductTags
         JOIN Products ON Products.Id = ProductTags.ProductId
         JOIN Tags ON Tags.Id = ProductTags.TagId
         WHERE Products.Id = {productId}

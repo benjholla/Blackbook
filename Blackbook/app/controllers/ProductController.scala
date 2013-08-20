@@ -9,7 +9,7 @@ import models._
 object ProductController extends Controller {
 
   val productForm = Form (
-    "label" -> nonEmptyText
+    "name" -> nonEmptyText
   )
   
   def products = Action {
@@ -19,8 +19,8 @@ object ProductController extends Controller {
   def newProduct = Action { implicit request =>
     productForm.bindFromRequest.fold(
       errors => BadRequest(views.html.products(Product.all(), errors)),
-      label => {
-        Product.create(label)
+      name => {
+        Product.create(name)
         Redirect(routes.ProductController.products)
       })
   }

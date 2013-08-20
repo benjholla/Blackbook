@@ -9,7 +9,7 @@ import models._
 object TagController extends Controller {
 
   val tagForm = Form (
-    "label" -> nonEmptyText
+    "name" -> nonEmptyText
   )
   
   def tags = Action { 
@@ -19,8 +19,8 @@ object TagController extends Controller {
   def newTag = Action { implicit request =>
     tagForm.bindFromRequest.fold(
       errors => BadRequest(views.html.tags(Tag.all(), errors)),
-      label => {
-        Tag.create(label)
+      name => {
+        Tag.create(name)
         Redirect(routes.TagController.tags)
       })
   }

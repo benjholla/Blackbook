@@ -6,34 +6,32 @@ import anorm.SqlParser._
 import play.api.db._
 import play.api.Play.current
 
-import scala.language.postfixOps
-
-case class Tag(id: Long, label: String)
+case class Tag(id: Long, name: String)
 
 object Tag {
   val tag = { 
     get[Long]("id") ~
-    get[String]("label") map { 
-      case id ~ label => Tag(id, label)
+    get[String]("name") map { 
+      case id ~ name => Tag(id, name)
     }
   }
 
-  def normalizeLabel(label: String) = label.toUpperCase
+  def normalizeName(name: String) = name.toUpperCase
 
   def all(): List[Tag] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Tags").as(tag *)
   }
 
-  def create(label: String) { 
+  def create(name: String) { 
     DB.withConnection { implicit c =>
-      SQL("INSERT INTO Tags(Label) VALUES ({label})").on(
-        'label -> normalizeLabel(label)).executeUpdate()
+      SQL("INSERT INTO Tags(Name) VALUES ({name})").on(
+        'name -> normalizeName(name)).executeUpdate()
     }
   }
 
-  def getId(label: String) = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM Tags WHERE Label = {label}").on(
-      'label -> normalizeLabel(label)).as(tag *) 
+  def getId(name: String) = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM Tags WHERE Name = {name}").on(
+      'name -> normalizeName(name)).as(tag *) 
     match {
       case id :: others => id
       case List() => -1
@@ -49,9 +47,9 @@ object Tag {
 
   def getProducts(tagId: Long): List[Product] = DB.withConnection { implicit c =>
     SQL("""
-      SELECT Products.Id AS Id, Products.Label AS Label FROM ProductTags 
-        JOIN Products ON Products.Id = ProductTags.ProductId
-        JOIN Tags ON Tags.Id = ProductTags.TagId
+      SELECT (Products.Id, Products.Name) FROM ProductTags 
+        JOIN Products.Id = ProductTags.ProductId
+        JOIN Tags.Id = ProductTags.TagId
         WHERE Tags.Id = {tagId}
       """
       ).on('tagId -> tagId).as(Product.product *)
