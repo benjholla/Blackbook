@@ -44,4 +44,14 @@ object Tag {
         'id -> id).executeUpdate()
     }
   }
+
+  def getProducts(tagId: Long): List[Product] = DB.withConnection { implicit c =>
+    SQL("""
+      SELECT (Products.Id, Products.Label) FROM ProductTags 
+        JOIN Products.Id = ProductTags.ProductId
+        JOIN Tags.Id = ProductTags.TagId
+        WHERE Tags.Id = {tagId}
+      """
+      ).on('tagId -> tagId).as(Product.product *)
+  }
 }
