@@ -8,6 +8,8 @@ import play.api.Play.current
 
 import scala.language.postfixOps
 
+import util.Db
+
 case class Product(id: Long, name: String) {
   def getTags() = { Product.getTags(id) }
   def addTag(tagName: String) = { Product.addTag(id, tagName) }
@@ -28,10 +30,11 @@ object Product {
     SQL("SELECT * FROM Products").as(product *)
   }
 
-  def create(name: String) {
+  def create(name: String): Product = {
     DB.withConnection { implicit c =>
       SQL("INSERT INTO Products(Name) VALUES ({name})").on(
         'name -> name).executeUpdate()
+      return Product(Db.scopeIdentity(), name)
     }
   }
 

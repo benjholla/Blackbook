@@ -8,6 +8,9 @@ import play.api.Play.current
 
 import scala.language.postfixOps
 
+import util._
+
+
 case class Tag(id: Long, name: String) { 
   def getProducts() = { Tag.getProducts(id) }
 }
@@ -32,11 +35,7 @@ object Tag {
     DB.withConnection { implicit c =>
       SQL("INSERT INTO Tags(Name) VALUES ({name})").on(
         'name -> normalizeName(name)).executeUpdate()
-
-      val id = SQL("SELECT SCOPE_IDENTITY()")().map( row =>
-        row[Long]("SCOPE_IDENTITY()") ).head
-
-      return Tag(id, normalizeName(name))
+      return Tag(Db.scopeIdentity(), normalizeName(name))
     }
   }
 
