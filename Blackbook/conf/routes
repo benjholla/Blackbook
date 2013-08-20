@@ -10,6 +10,7 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Products Routes
 GET     /products                      controllers.ProductController.products
+GET     /products/:id/categories       controllers.ProductController.tagsForProduct(id: Long)
 POST    /products                      controllers.ProductController.newProduct
 POST    /products/:id/delete           controllers.ProductController.deleteProduct(id:Long)
 

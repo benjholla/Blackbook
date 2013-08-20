@@ -29,5 +29,14 @@ object ProductController extends Controller {
     Product.delete(id)
     Redirect(routes.ProductController.products)
   }
+
+  def tagsForProduct(id: Long) = Action { 
+    val product = Product.find(id)
+
+    product match { 
+      case Some(p) => Ok(views.html.product_tags(p))
+      case None => BadRequest(views.html.products(Product.all(), productForm))
+    }
+  }
   
 }
