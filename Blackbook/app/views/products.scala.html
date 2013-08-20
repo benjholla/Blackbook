@@ -11,7 +11,7 @@
             <li>
                 @product.label
                 
-                @form(routes.Application.deleteProduct(product.id)) {
+                @form(routes.ProductController.deleteProduct(product.id)) {
                     <input type="submit" value="Delete">
                 }
             </li>
@@ -20,7 +20,7 @@
     
     <h2>Add a new product</h2>
     
-    @form(routes.Application.newProduct) {
+    @form(routes.ProductController.newProduct) {
         
         @inputText(productForm("label")) 
         

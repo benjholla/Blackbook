@@ -7,7 +7,7 @@
         @tags.map { tag =>
             <li>
                 @tag.label 
-                @form(routes.Application.deleteTag(tag.id)) { 
+                @form(routes.TagController.deleteTag(tag.id)) { 
                     <input type="submit" value="Delete">
                 }
             </li>
@@ -15,7 +15,7 @@
     </ul>
 
     <h2>Add a new category</h2>
-    @form(routes.Application.newTag) { 
+    @form(routes.TagController.newTag) { 
         @inputText(tagForm("label"))
         <input type="submit" value="Create">
     }
