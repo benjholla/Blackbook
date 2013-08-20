@@ -8,8 +8,6 @@ import models._
 
 object Application extends Controller {
 
-  def index = Action {
-    Ok("TODO")
-  }
+  def index = TODO
   
 }
