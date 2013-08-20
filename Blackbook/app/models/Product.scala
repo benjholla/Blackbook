@@ -36,7 +36,7 @@ object Product {
   
   def getTags(productId: Long): List[Tag] = DB.withConnection { implicit c =>
     SQL("""
-      SELECT (Tags.Id, Tags.Label) FROM ProductTags
+      SELECT Tags.Id AS Id, Tags.Label AS Label FROM ProductTags
         JOIN Products ON Products.Id = ProductTags.ProductId
         JOIN Tags ON Tags.Id = ProductTags.TagId
         WHERE Products.Id = {productId}
