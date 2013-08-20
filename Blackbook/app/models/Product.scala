@@ -9,9 +9,10 @@ case class Product(id: Long, name: String)
 
 object Product {
 
+  /* Parses a product from a SQL result set */
   val product = {
-    get[Long]("id") ~
-      get[String]("name") map {
+    get[Long]("Products.Id") ~
+      get[String]("Products.Name") map {
         case id ~ name => Product(id, name)
       }
   }
@@ -36,7 +37,7 @@ object Product {
   
   def getTags(productId: Long): List[Tag] = DB.withConnection { implicit c =>
     SQL("""
-      SELECT Tags.Id AS Id, Tags.Name AS Name FROM ProductTags
+      SELECT Tags.Id, Tags.Name FROM ProductTags
         JOIN Products ON Products.Id = ProductTags.ProductId
         JOIN Tags ON Tags.Id = ProductTags.TagId
         WHERE Products.Id = {productId}
