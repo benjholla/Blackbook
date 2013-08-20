@@ -31,12 +31,21 @@ object Tag {
     }
   }
 
-  def getId(name: String) = DB.withConnection { implicit c =>
+  def findTag(name: String): Option[Tag] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Tags WHERE Name = {name}").on(
-      'name -> normalizeName(name)).as(tag *) 
-    match {
-      case id :: others => id
-      case List() => -1
+      'name -> normalizeName(name)).as(tag *)
+    match { 
+      case found :: others => Some(found)
+      case _ => None
+    }
+  }
+
+  def findTag(id: Long): Option[Tag] = DB.withConnection { implicit c => 
+    SQL("SELECT * FROM Tags WHERE Id = {id}").on(
+      'id -> id).as(tag *)
+    match { 
+      case found :: others => Some(found)
+      case _ => None
     }
   }
 
