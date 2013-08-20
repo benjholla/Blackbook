@@ -3,29 +3,33 @@
 @import helper._
 
 @main("Products") {
-    
-    <h1>@products.size product(s)</h1>
-    
-    <ul>
-        @products.map { product =>
-            <li>
-                @product.label
-                
-                @form(routes.ProductController.deleteProduct(product.id)) {
-                    <input type="submit" value="Delete">
-                }
-            </li>
+  <h1>@products.size product(s)</h1>
+  
+  <table>
+    @products.map { product =>
+      <tr>
+        <td>@product.label</td>
+        @Product.getTags(product.id).map { tag =>
+          <td>
+            @tag.label
+          </td>
         }
-    </ul>
-    
-    <h2>Add a new product</h2>
-    
-    @form(routes.ProductController.newProduct) {
-        
-        @inputText(productForm("label")) 
-        
-        <input type="submit" value="Create">
-        
+        <td>
+          @form(routes.ProductController.deleteProduct(product.id)) {
+              <input type="submit" value="Delete">
+          }
+        </td>
+      </tr>
     }
+  </table>
+  
+  <h2>Add a new product</h2>
+  
+  @form(routes.ProductController.newProduct) {
     
+    @inputText(productForm("label")) 
+    <input type="submit" value="Create">
+    
+  }
+  
 }
