@@ -8,7 +8,9 @@ import play.api.Play.current
 
 import scala.language.postfixOps
 
-case class Tag(id: Long, name: String)
+case class Tag(id: Long, name: String) { 
+  def getProducts() = { Tag.getProducts(id) }
+}
 
 object Tag {
 
