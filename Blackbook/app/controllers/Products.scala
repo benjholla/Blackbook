@@ -6,7 +6,7 @@ import play.api.data._
 import play.api.data.Forms._
 import models._
 
-object ProductController extends Controller {
+object Products extends Controller {
 
   val productForm = Form (
     "name" -> nonEmptyText
@@ -38,7 +38,7 @@ object ProductController extends Controller {
       name => {
         val product = Product.find(id)
 	    product match { 
-	      case Some(p) => {Product.update(p.id, name); Redirect(routes.ProductController.products)}
+	      case Some(p) => {Product.update(p.id, name); Redirect(routes.Products.products)}
 	      case None => BadRequest(views.html.products.index(Product.all(), productForm))
 	    }
       })
@@ -49,13 +49,13 @@ object ProductController extends Controller {
       errors => BadRequest(views.html.products.index(Product.all(), errors)),
       name => {
         Product.create(name)
-        Redirect(routes.ProductController.products)
+        Redirect(routes.Products.products)
       })
   }
 
   def deleteProduct(id: Long) = Action {
     Product.delete(id)
-    Redirect(routes.ProductController.products)
+    Redirect(routes.Products.products)
   }
 
   def tagsForProduct(id: Long) = Action { 

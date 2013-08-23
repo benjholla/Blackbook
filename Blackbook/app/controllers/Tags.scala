@@ -6,7 +6,7 @@ import play.api.data._
 import play.api.data.Forms._
 import models._
 
-object TagController extends Controller {
+object Tags extends Controller {
 
   val tagForm = Form (
     "name" -> nonEmptyText
@@ -21,13 +21,13 @@ object TagController extends Controller {
       errors => BadRequest(views.html.tags.index(Tag.all(), errors)),
       name => {
         Tag.create(name)
-        Redirect(routes.TagController.tags)
+        Redirect(routes.Tags.tags)
       })
   }
 
   def deleteTag(id: Long) = Action {
     Tag.delete(id)
-    Redirect(routes.TagController.tags)
+    Redirect(routes.Tags.tags)
   }
   
 }

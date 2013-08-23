@@ -9,15 +9,15 @@ GET     /                           controllers.Application.index
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 # Products Routes
-GET     /products                      controllers.ProductController.products
-GET     /products/:id/edit             controllers.ProductController.editProduct(id: Long)
-GET     /products/:id                  controllers.ProductController.viewProduct(id: Long)
-GET     /products/:id/categories       controllers.ProductController.tagsForProduct(id: Long)
-POST    /products                      controllers.ProductController.newProduct
-POST    /products/:id/delete           controllers.ProductController.deleteProduct(id:Long)
-POST    /products/:id/update           controllers.ProductController.updateProduct(id: Long)
+GET     /products                      controllers.Products.products
+GET     /products/:id/edit             controllers.Products.editProduct(id: Long)
+GET     /products/:id                  controllers.Products.viewProduct(id: Long)
+GET     /products/:id/categories       controllers.Products.tagsForProduct(id: Long)
+POST    /products                      controllers.Products.newProduct
+POST    /products/:id/delete           controllers.Products.deleteProduct(id:Long)
+POST    /products/:id/update           controllers.Products.updateProduct(id: Long)
 
 # Tag Routes
-GET     /categories                          controllers.TagController.tags
-POST    /categories                          controllers.TagController.newTag
-POST    /categories/:id/delete               controllers.TagController.deleteTag(id:Long)
+GET     /categories                          controllers.Tags.tags
+POST    /categories                          controllers.Tags.newTag
+POST    /categories/:id/delete               controllers.Tags.deleteTag(id:Long)
