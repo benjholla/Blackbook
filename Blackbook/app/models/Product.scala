@@ -37,6 +37,13 @@ object Product {
       return Product(Db.scopeIdentity(), Db.normalizeName(name))
     }
   }
+  
+  def update(id: Long, name:String) {
+    DB.withConnection { implicit c =>
+      SQL("UPDATE Products SET Name={name} WHERE Id={id}").on(
+        'name -> Db.normalizeName(name), 'id -> id).executeUpdate()
+    }
+  }
 
   def delete(id: Long) {
     DB.withConnection { implicit c =>

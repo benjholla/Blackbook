@@ -1,0 +1,14 @@
+@(product: Product, productForm: Form[String])
+
+@import helper._
+
+@main(product.name) {
+  <h1>@product.name</h1>
+  <h2>EDIT</h2>
+  
+  @form(routes.ProductController.updateProduct(product.id)) {
+    @inputText(productForm("name")) 
+    <input type="submit" value="Update">
+    
+  }
+}
