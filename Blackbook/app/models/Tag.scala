@@ -25,10 +25,6 @@ object Tag {
     }
   }
 
-  def normalizeName(name: String) = {
-    name.toUpperCase().trim()
-  }
-
   def all(): List[Tag] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Tags").as(tag *)
   }
@@ -36,16 +32,16 @@ object Tag {
   def create(name: String): Tag = { 
     DB.withConnection { implicit c =>
       SQL("INSERT INTO Tags(Name) VALUES ({name})").on(
-        'name -> normalizeName(name)).executeUpdate()
-      return Tag(Db.scopeIdentity(), normalizeName(name))
+        'name -> Db.normalizeName(name)).executeUpdate()
+      return Tag(Db.scopeIdentity(), Db.normalizeName(name))
     }
   }
 
   def find(name: String): Option[Tag] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Tags WHERE Name = {name}").on(
-      'name -> normalizeName(name)).as(tag *)
+      'name -> Db.normalizeName(name)).as(tag *)
     match { 
-      case found :: _ => Some(found)
+      case found :: others => Some(found)
       case _ => None
     }
   }

@@ -33,8 +33,8 @@ object Product {
   def create(name: String): Product = {
     DB.withConnection { implicit c =>
       SQL("INSERT INTO Products(Name) VALUES ({name})").on(
-        'name -> name).executeUpdate()
-      return Product(Db.scopeIdentity(), name)
+        'name -> Db.normalizeName(name)).executeUpdate()
+      return Product(Db.scopeIdentity(), Db.normalizeName(name))
     }
   }
 
@@ -56,7 +56,7 @@ object Product {
   
   def find(name: String): Option[Product] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Products WHERE Name = {name}").on(
-      'name -> name).as(product *)
+      'name -> Db.normalizeName(name)).as(product *)
     match { 
       case found :: others => Some(found)
       case _ => None
