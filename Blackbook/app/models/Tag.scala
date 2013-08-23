@@ -39,20 +39,12 @@ object Tag {
 
   def find(name: String): Option[Tag] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Tags WHERE Name = {name}").on(
-      'name -> Db.normalizeName(name)).as(tag *)
-    match { 
-      case found :: others => Some(found)
-      case _ => None
-    }
+      'name -> Db.normalizeName(name)).as(tag *).headOption
   }
 
   def find(id: Long): Option[Tag] = DB.withConnection { implicit c => 
     SQL("SELECT * FROM Tags WHERE Id = {id}").on(
-      'id -> id).as(tag *)
-    match { 
-      case found :: others => Some(found)
-      case _ => None
-    }
+      'id -> id).as(tag *).headOption
   }
 
   def findOrCreate(name: String): Tag = DB.withConnection { implicit c =>

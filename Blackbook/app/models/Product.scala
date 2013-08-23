@@ -54,20 +54,12 @@ object Product {
 
   def find(id: Long): Option[Product] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Products WHERE Id = {id}").on(
-      'id -> id).as(product *)
-    match { 
-      case found :: others => Some(found)
-      case _ => None
-    }
+      'id -> id).as(product *).headOption
   }
   
   def find(name: String): Option[Product] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Products WHERE Name = {name}").on(
-      'name -> Db.normalizeName(name)).as(product *)
-    match { 
-      case found :: others => Some(found)
-      case _ => None
-    }
+      'name -> Db.normalizeName(name)).as(product *).headOption
   }
   
   def getTags(productId: Long): List[Tag] = DB.withConnection { implicit c =>
