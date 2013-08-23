@@ -13,12 +13,12 @@ object TagController extends Controller {
   )
   
   def tags = Action { 
-    Ok(views.html.tags(Tag.all(), tagForm))
+    Ok(views.html.tags.index(Tag.all(), tagForm))
   }
   
   def newTag = Action { implicit request =>
     tagForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.tags(Tag.all(), errors)),
+      errors => BadRequest(views.html.tags.index(Tag.all(), errors)),
       name => {
         Tag.create(name)
         Redirect(routes.TagController.tags)

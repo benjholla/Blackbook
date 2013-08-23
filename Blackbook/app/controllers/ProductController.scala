@@ -13,12 +13,12 @@ object ProductController extends Controller {
   )
   
   def products = Action {
-    Ok(views.html.products(Product.all(), productForm))
+    Ok(views.html.products.index(Product.all(), productForm))
   }
 
   def newProduct = Action { implicit request =>
     productForm.bindFromRequest.fold(
-      errors => BadRequest(views.html.products(Product.all(), errors)),
+      errors => BadRequest(views.html.products.index(Product.all(), errors)),
       name => {
         Product.create(name)
         Redirect(routes.ProductController.products)
@@ -35,8 +35,13 @@ object ProductController extends Controller {
 
     product match { 
       case Some(p) => Ok(views.html.product_tags(p))
-      case None => BadRequest(views.html.products(Product.all(), productForm))
+      case None => BadRequest(views.html.products.index(Product.all(), productForm))
     }
   }
+  
+//  def viewProduct(id: Long) = Action {
+//    val product = Product.find(id)
+//    Ok(product.)
+//  }
   
 }
