@@ -25,7 +25,9 @@ object Tag {
     }
   }
 
-  def normalizeName(name: String) = name.toUpperCase
+  def normalizeName(name: String) = {
+    name.toUpperCase().trim()
+  }
 
   def all(): List[Tag] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Tags").as(tag *)
@@ -43,7 +45,7 @@ object Tag {
     SQL("SELECT * FROM Tags WHERE Name = {name}").on(
       'name -> normalizeName(name)).as(tag *)
     match { 
-      case found :: others => Some(found)
+      case found :: _ => Some(found)
       case _ => None
     }
   }
