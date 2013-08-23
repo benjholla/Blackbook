@@ -1,0 +1,11 @@
+# Make names not null
+
+# --- !Ups
+
+ALTER TABLE Products ALTER COLUMN Name SET NOT NULL;
+ALTER TABLE Tags ALTER COLUMN Name SET NOT NULL;
+
+# --- !Downs
+
+ALTER TABLE Products ALTER COLUMN Name SET NULL;
+ALTER TABLE Tags ALTER COLUMN Name SET NULL;
