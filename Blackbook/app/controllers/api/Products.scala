@@ -25,16 +25,16 @@ object Products extends Controller {
     )))
   }
   
-  def create = Action(parse.json) { request =>
-    ( request.body \ "name" ).asOpt[String].map { name =>
-      val result = models.Product.create(name)
-      Ok(toJson(Map(
-        "status" -> toJson("OK"),
-        "result" -> toJson(result)
-      )))
-    }.getOrElse { 
-      BadRequest("Missing parameter [name]")
-    }
-  }
+//  def create = Action(parse.json) { request =>
+//    ( request.body \ "name" ).asOpt[String].map { form =>
+//      val result = models.Product.create(form)
+//      Ok(toJson(Map(
+//        "status" -> toJson("OK"),
+//        "result" -> toJson(result)
+//      )))
+//    }.getOrElse { 
+//      BadRequest("Missing parameter [name]")
+//    }
+//  }
 
 }

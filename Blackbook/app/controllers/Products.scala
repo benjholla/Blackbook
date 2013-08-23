@@ -9,7 +9,8 @@ import models._
 object Products extends Controller {
 
   val productForm = Form (
-    "name" -> nonEmptyText
+    tuple("name" -> nonEmptyText,
+    "description" -> nonEmptyText)
   )
   
   def products = Action {
@@ -27,7 +28,7 @@ object Products extends Controller {
   def editProduct(id: Long) = Action {
     val product = Product.find(id)
     product match { 
-      case Some(p) => Ok(views.html.products.edit(p, productForm))
+      case Some(p) => Ok(views.html.products.edit(p,productForm.fill((p.name, p.description))))
       case None => throw new Exception("No product " + id + " found.")
     }
   }
@@ -35,10 +36,10 @@ object Products extends Controller {
   def updateProduct(id: Long) = Action { implicit request =>
     productForm.bindFromRequest.fold(
       errors => BadRequest(views.html.products.index(Product.all(), errors)),
-      name => {
+      form => {
         val product = Product.find(id)
 	    product match { 
-	      case Some(p) => {Product.update(p.id, name); Redirect(routes.Products.products)}
+	      case Some(p) => {Product.update(p.id, form); Redirect(routes.Products.products)}
 	      case None => BadRequest(views.html.products.index(Product.all(), productForm))
 	    }
       })
@@ -47,8 +48,8 @@ object Products extends Controller {
   def newProduct = Action { implicit request =>
     productForm.bindFromRequest.fold(
       errors => BadRequest(views.html.products.index(Product.all(), errors)),
-      name => {
-        Product.create(name)
+      form => {
+        Product.create(form._1, form._2)
         Redirect(routes.Products.products)
       })
   }
@@ -66,10 +67,5 @@ object Products extends Controller {
       case None => BadRequest(views.html.products.index(Product.all(), productForm))
     }
   }
-  
-//  def viewProduct(id: Long) = Action {
-//    val product = Product.find(id)
-//    Ok(product.)
-//  }
   
 }

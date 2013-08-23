@@ -1,19 +1,36 @@
-@(products: List[Product], productForm: Form[String])
+@(products: List[Product], productForm: Form[(String, String)])
 
 @import helper._
 
 @main("Products") {
   <h1>@products.size product(s)</h1>
   
-  <table>
+  <table border="1">
+      <tr>
+      	<td>Product</td>
+      	<td>Categories</td>
+      	<td>View</td>
+      	<td>Edit</td>
+      	<td>Delete</td>
+      </tr>
     @products.map { product =>
       <tr>
         <td>@product.name</td>
+        <td>
         @Product.getTags(product.id).map { tag =>
-          <td>
-            @tag.name
-          </td>
+            tag.name + " "
         }
+        </td>
+        <td>
+          @form(routes.Products.viewProduct(product.id)) {
+              <input type="submit" value="View">
+          }
+        </td>
+        <td>
+          @form(routes.Products.editProduct(product.id)) {
+              <input type="submit" value="Edit">
+          }
+        </td>
         <td>
           @form(routes.Products.deleteProduct(product.id)) {
               <input type="submit" value="Delete">
@@ -26,10 +43,9 @@
   <h2>Add a new product</h2>
   
   @form(routes.Products.newProduct) {
-    
     @inputText(productForm("name")) 
+    @textarea(productForm("description"), args = 'rows -> 3, 'cols -> 50)
     <input type="submit" value="Create">
-    
   }
   
 }

@@ -1,14 +1,13 @@
-@(product: Product, productForm: Form[String])
+@(product: Product, productForm: Form[(String, String)])
 
 @import helper._
 
 @main(product.name) {
-  <h1>@product.name</h1>
-  <h2>EDIT</h2>
+  <h1>Edit Product: @product.name</h1>
   
   @form(routes.Products.updateProduct(product.id)) {
-    @inputText(productForm("name")) 
+    @inputText(productForm("name"), args = '_label -> "Name") 
+    @textarea(productForm("description"), args = 'rows -> 3, 'cols -> 50, '_label -> "Description")
     <input type="submit" value="Update">
-    
   }
 }

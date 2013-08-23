@@ -2,46 +2,47 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-
 import play.api.db._
 import play.api.Play.current
-
 import scala.language.postfixOps
-
 import util.Db
+import java.util.Date
 
-case class Product(id: Long, name: String) {
+case class Product(id: Long, name: String, description:String) {
   def getTags() = { Product.getTags(id) }
   def addTag(tagName: String) = { Product.addTag(id, tagName) }
   def removeTag(tagName: String) = { Product.removeTag(id, tagName) }
+  def createdAt():Date = {Product.getCreatedAt(id).get}
+  def lastModified():Date = {Product.getLastModified(id).get}
 }
 
 object Product {
 
-  /* Parses a product from a SQL result set */
+  // Parses a product from a SQL result set
   val product = {
     get[Long]("Products.Id") ~
-      get[String]("Products.Name") map {
-        case id ~ name => Product(id, name)
-      }
+      get[String]("Products.Name") ~
+        get[String]("Products.Description")  map {
+          case id ~ name ~ description => Product(id, name, description)
+        }
   }
 
   def all(): List[Product] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Products").as(product *)
   }
 
-  def create(name: String): Product = {
+  def create(name: String, description:String): Product = {
     DB.withConnection { implicit c =>
-      SQL("INSERT INTO Products(Name) VALUES ({name})").on(
-        'name -> Db.normalizeName(name)).executeUpdate()
-      return Product(Db.scopeIdentity(), Db.normalizeName(name))
+      SQL("INSERT INTO Products(Name,Description) VALUES ({name},{description})").on(
+        'name -> Db.normalizeName(name), 'description -> description).executeUpdate()
+      return Product(Db.scopeIdentity(), Db.normalizeName(name), description)
     }
   }
   
-  def update(id: Long, name:String) {
+  def update(id: Long, form:(String,String)) {
     DB.withConnection { implicit c =>
-      SQL("UPDATE Products SET Name={name} WHERE Id={id}").on(
-        'name -> Db.normalizeName(name), 'id -> id).executeUpdate()
+      SQL("UPDATE Products SET Name={name}, Description={description} WHERE Id={id}").on(
+        'name -> Db.normalizeName(form._1), 'description -> form._2, 'id -> id).executeUpdate()
     }
   }
 
@@ -60,6 +61,18 @@ object Product {
   def find(name: String): Option[Product] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Products WHERE Name = {name}").on(
       'name -> Db.normalizeName(name)).as(product *).headOption
+  }
+  
+  def getCreatedAt(id: Long): Option[Date] = DB.withConnection { implicit c =>
+    val selectCreatedAt = SQL("SELECT CreatedAt FROM Products WHERE Id = {id}").on('id -> id)
+    val createdAt = selectCreatedAt().map(row => row[Date]("CreatedAt")).headOption
+    return createdAt
+  }
+  
+  def getLastModified(id: Long): Option[Date] = DB.withConnection { implicit c =>
+    val selectLastModified = SQL("SELECT LastModified FROM Products WHERE Id = {id}").on('id -> id)
+    val lastModified = selectLastModified().map(row => row[Date]("LastModified")).headOption
+    return lastModified
   }
   
   def getTags(productId: Long): List[Tag] = DB.withConnection { implicit c =>
