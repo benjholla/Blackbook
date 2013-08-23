@@ -28,7 +28,7 @@ object Products extends Controller {
     val product = Product.find(id)
     product match { 
       case Some(p) => Ok(views.html.products.edit(p, productForm))
-      case None => BadRequest(views.html.products.index(Product.all(), productForm))
+      case None => throw new Exception("No product " + id + " found.")
     }
   }
   
