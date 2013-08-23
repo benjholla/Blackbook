@@ -39,10 +39,10 @@ object Product {
     }
   }
   
-  def update(id: Long, form:(String,String)) {
+  def update(id: Long, name:String, description:String) {
     DB.withConnection { implicit c =>
       SQL("UPDATE Products SET Name={name}, Description={description} WHERE Id={id}").on(
-        'name -> Db.normalizeName(form._1), 'description -> form._2, 'id -> id).executeUpdate()
+        'name -> Db.normalizeName(name), 'description -> description, 'id -> id).executeUpdate()
     }
   }
 
