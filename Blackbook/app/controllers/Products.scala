@@ -37,9 +37,10 @@ object Products extends Controller {
     productForm.bindFromRequest.fold(
       errors => BadRequest(views.html.products.index(Product.all(), errors)),
       form => {
+        val (name, description) = form
         val product = Product.find(id)
 	    product match { 
-	      case Some(p) => {Product.update(p.id, form._1, form._2); Redirect(routes.Products.products)}
+	      case Some(p) => {Product.update(p.id, name, description); Redirect(routes.Products.products)}
 	      case None => BadRequest(views.html.products.index(Product.all(), productForm))
 	    }
       })
@@ -49,7 +50,8 @@ object Products extends Controller {
     productForm.bindFromRequest.fold(
       errors => BadRequest(views.html.products.index(Product.all(), errors)),
       form => {
-        Product.create(form._1, form._2)
+        val (name, description) = form
+        Product.create(name, description)
         Redirect(routes.Products.products)
       })
   }

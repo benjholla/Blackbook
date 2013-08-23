@@ -8,12 +8,12 @@ import scala.language.postfixOps
 import util.Db
 import java.util.Date
 
-case class Product(id: Long, name: String, description:String) {
+case class Product(id: Long, name: String, description:String=null) {
   def getTags() = { Product.getTags(id) }
   def addTag(tagName: String) = { Product.addTag(id, tagName) }
   def removeTag(tagName: String) = { Product.removeTag(id, tagName) }
-  def createdAt():Date = {Product.getCreatedAt(id).get}
-  def lastModified():Date = {Product.getLastModified(id).get}
+  def createdAt():Date = { Product.getCreatedAt(id).get }
+  def lastModified():Date = { Product.getLastModified(id).get }
 }
 
 object Product {
