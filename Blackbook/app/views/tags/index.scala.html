@@ -1,0 +1,22 @@
+@(tags: List[Tag], tagForm: Form[String])
+
+@import helper._
+
+@main("Categories") {
+    <ul>
+        @tags.map { tag =>
+            <li>
+                @tag.name 
+                @form(routes.TagController.deleteTag(tag.id)) { 
+                    <input type="submit" value="Delete">
+                }
+            </li>
+        }
+    </ul>
+
+    <h2>Add a new category</h2>
+    @form(routes.TagController.newTag) { 
+        @inputText(tagForm("name"))
+        <input type="submit" value="Create">
+    }
+}
