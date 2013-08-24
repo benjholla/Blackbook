@@ -30,8 +30,10 @@ POST    /categories/:id/delete                controllers.Tags.deleteTag(id:Long
 # JSON read-only routes
 GET     /api/products                         controllers.api.Products.all
 GET     /api/products/:id                     controllers.api.Products.get(id:Long)
+GET     /api/products/:id/tags                controllers.api.Products.getTags(id:Long)
 
 # JSON read/write routes
 POST    /api/products/create                  controllers.api.Products.create
 POST    /api/products/update                  controllers.api.Products.update
 POST    /api/products/delete                  controllers.api.Products.delete
+POST    /api/products/:id/addTag              controllers.api.Products.addTag(id: Long)

@@ -43,7 +43,21 @@ object Products extends Api {
     }.recoverTotal(ValidationError)
   }
 
+  /* Get a single product. */
   def get(id: Long) = {
     apiCall( SuccessWithData(toJson(Product.find(id))) )
+  }
+
+  def getTags(id: Long) = {
+    apiCall( SuccessWithData(toJson(Product.getTags(id))) )
+  }
+
+  def addTag(id: Long) = apiCall { body =>
+    body.validate[List[String]].map { tags =>
+      tags.map { tag =>
+        Product.addTag(id, tag)
+      }
+      Success()
+    }.recoverTotal(ValidationError)
   }
 }
