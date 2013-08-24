@@ -11,12 +11,38 @@ import java.io.File
 import scala.collection.mutable.ArrayBuffer
 import controllers.Assets
 
-case class Product(id: Long, name: String, description:String=null) {
+case class Product(
+    id: Long, 
+    name: String, 
+    description: String = null, 
+    createTime: Option[Date] = None,
+    modifyTime: Option[Date] = None
+  ) {
+  override def equals(v: Any): Boolean = {
+    v match { 
+        case p: Product => {
+          (id == id) &&
+          (name == p.name) &&
+          (description == p.description) && 
+          (getCreateTime() == p.getCreateTime()) &&
+          (getModifyTime() == p.getModifyTime())
+        }
+        case _ => false
+    }
+  }
+
   def getTags() = { Product.getTags(id) }
   def addTag(tagName: String) = { Product.addTag(id, tagName) }
   def removeTag(tagName: String) = { Product.removeTag(id, tagName) }
-  def createdAt():Date = { Product.getCreatedAt(id).get }
-  def lastModified():Date = { Product.getLastModified(id).get }
+
+  def getCreateTime() = { 
+    createTime.getOrElse( Product.getCreatedAt(id).get )
+  }
+
+  def getModifyTime() = { 
+    modifyTime.getOrElse( Product.getCreatedAt(id).get )
+  }
+
   def getFiles():List[File] = {
     var files = ArrayBuffer[File]()
     for(file <- new File("/tmp/products/" + id + "/files/").listFiles()){
@@ -24,6 +50,7 @@ case class Product(id: Long, name: String, description:String=null) {
     }
     return files.toList
   }
+
   def getIcon():String = {
     if(new File("/tmp/products/" + id + "/icon.png").exists()){
       "/products/" + id + "/icon.png" 
@@ -38,10 +65,10 @@ object Product {
   // Parses a product from a SQL result set
   val product = {
     get[Long]("Products.Id") ~
-      get[String]("Products.Name") ~
-        get[String]("Products.Description")  map {
-          case id ~ name ~ description => Product(id, name, description)
-        }
+    get[String]("Products.Name") ~
+    get[String]("Products.Description") ~
+    get[Option[Date]]("Products.CreatedAt") ~
+    get[Option[Date]]("Products.LastModified") map (flatten) map ((Product.apply _).tupled)
   }
 
   def all(): List[Product] = DB.withConnection { implicit c =>

@@ -4,7 +4,7 @@
 
 @main(product.name) {
   <h1>Product: @product.name</h1>
-  <h2>Created: @product.createdAt.toString()</h2>
-  <h2>Last Updated: @product.lastModified.toString()</h2>
+  <h2>Created: @product.getCreateTime.toString()</h2>
+  <h2>Last Updated: @product.getModifyTime.toString()</h2>
   <h2>Description: @product.description</h2>
 }
