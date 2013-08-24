@@ -21,14 +21,16 @@ class Api extends Controller {
   implicit val tagWrites = writes[Tag]
 
   abstract class ApiResult
-  case class Success(result: JsValue) extends ApiResult
+  case class Success() extends ApiResult
+  case class SuccessWithData(data: JsValue) extends ApiResult
   case class ParseError(e: String) extends ApiResult
   case class ValidationError(e: JsError) extends ApiResult
 
   /* Get the status string for the given API result. */
   def statusString(result: ApiResult): String = { 
     result match {
-      case Success(_) => "OK"
+      case Success() => "OK"
+      case SuccessWithData(_) => "OK"
       case _ => "error"
     }
   }
@@ -36,26 +38,32 @@ class Api extends Controller {
   /* Get the Result constructor for the given ApiResult. */
   def toResult(result: ApiResult) = {
     result match {
-      case Success(_) => Ok
+      case Success() => Ok
+      case SuccessWithData(_) => Ok
       case _ => BadRequest
     }
   }
 
   /* Get the JSON content of the response for the given ApiResult. */
-  def content(result: ApiResult): (String, JsValue) = {
+  def content(result: ApiResult): Option[(String, JsValue)] = {
     result match {
-      case Success(v) => "result" -> v
-      case ParseError(msg) => "message" -> toJson(msg)
-      case ValidationError(e) => "message" -> JsError.toFlatJson(e)
+      case SuccessWithData(v) => Some("result" -> v)
+      case ParseError(msg) => Some("message" -> toJson(msg))
+      case ValidationError(e) => Some("message" -> JsError.toFlatJson(e))
+      case _ => None
     }
   }
 
   def apiResponse(api_result: ApiResult): Result = {
     val result = toResult(api_result)
-    result(toJson(Map(
-      "status" -> toJson(statusString(api_result)),
-      content(api_result)
-    )))
+    var fields = Map("status" -> toJson(statusString(api_result)))
+    var maybeContent = content(api_result)
+    
+    if (maybeContent.isDefined) { 
+      fields += maybeContent.get
+    }
+
+    result(toJson(fields))
   }
 
   /* Wraps one of our API functions, invoking it with the user-provided JsResult

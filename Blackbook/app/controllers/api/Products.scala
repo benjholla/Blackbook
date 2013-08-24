@@ -14,9 +14,8 @@ import models._
 object Products extends Api { 
   /** Handle an API request to list products. */
   def all() = { 
-    apiCall( Success(toJson(models.Product.all())) ) 
+    apiCall( SuccessWithData(toJson(models.Product.all())) ) 
   }
-
  
   /** Handle an API request to create a new product. */
   def create = apiCall { body =>
@@ -24,20 +23,22 @@ object Products extends Api {
     val desc = (body \ "description").validate[String].getOrElse("")
 
     maybeName.map { name =>
-      Success(toJson(Product.create(name, desc)))
-    }.recoverTotal {
-      e => ValidationError(e) 
-    }
+      SuccessWithData(toJson(Product.create(name, desc)))
+    }.recoverTotal(ValidationError)
   }
 
   /** Handle an API request to update a product. */
   def update = apiCall { body =>
     body.validate[Product].map { p =>
       val updated = Product.update(p.id, p.name, p.description)
-      Success(toJson(updated))
-    }.recoverTotal { 
-      e => ValidationError(e)
-    }
+      SuccessWithData(toJson(updated))
+    }.recoverTotal(ValidationError)
   }
 
+  def delete = apiCall { body =>
+    (body \ "id").validate[Long].map { id =>
+      Product.delete(id)
+      Success()
+    }.recoverTotal(ValidationError)
+  }
 }
