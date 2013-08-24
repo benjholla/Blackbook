@@ -2,7 +2,7 @@
 
 @import helper._
 
-@main("Products") {
+@main("Blackbook | Products") {
   <h1>@products.size product(s)</h1>
   
   <table border="1">
@@ -18,7 +18,7 @@
         <td>@product.name</td>
         <td>
         @Product.getTags(product.id).map { tag =>
-            @tag.name
+          @tag.name + " "
         }
         </td>
         <td>
