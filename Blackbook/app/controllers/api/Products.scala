@@ -52,10 +52,19 @@ object Products extends Api {
     apiCall( SuccessWithData(toJson(Product.getTags(id))) )
   }
 
-  def addTag(id: Long) = apiCall { body =>
+  def addTags(id: Long) = apiCall { body =>
     body.validate[List[String]].map { tags =>
       tags.map { tag =>
         Product.addTag(id, tag)
+      }
+      Success()
+    }.recoverTotal(ValidationError)
+  }
+
+  def removeTags(id: Long) = apiCall { body =>
+    body.validate[List[String]].map { tags =>
+      tags.map { tag =>
+        Product.removeTag(id, tag)
       }
       Success()
     }.recoverTotal(ValidationError)

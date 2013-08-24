@@ -39,4 +39,5 @@ GET     /api/products/:id/tags                controllers.api.Products.getTags(i
 POST    /api/products/create                  controllers.api.Products.create
 POST    /api/products/update                  controllers.api.Products.update
 POST    /api/products/delete                  controllers.api.Products.delete
-POST    /api/products/:id/addTag              controllers.api.Products.addTag(id: Long)
+POST    /api/products/:id/addTags             controllers.api.Products.addTags(id: Long)
+POST    /api/products/:id/removeTags          controllers.api.Products.removeTags(id: Long)
