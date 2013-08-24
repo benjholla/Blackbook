@@ -34,6 +34,7 @@ POST    /categories/:id/delete                controllers.Tags.deleteTag(id:Long
 GET     /api/products                         controllers.api.Products.all
 GET     /api/products/:id                     controllers.api.Products.get(id:Long)
 GET     /api/products/:id/tags                controllers.api.Products.getTags(id:Long)
+GET     /api/tags                             controllers.api.Tags.all
 
 # JSON read/write routes
 POST    /api/products/create                  controllers.api.Products.create
