@@ -48,7 +48,11 @@ object Products extends Controller {
       })
   }
 
-  def newProduct = Action { implicit request =>
+  def newProduct() = Action {
+    Ok(views.html.products.newProduct(productForm))
+  }
+  
+  def createProduct = Action { implicit request =>
     productForm.bindFromRequest.fold(
       errors => BadRequest(views.html.products.index(Product.all(), errors)),
       form => {

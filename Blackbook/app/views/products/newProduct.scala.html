@@ -1,0 +1,14 @@
+@(productForm: Form[(String, String)])
+
+@import helper._
+
+@main("Blackbook | Products") {
+  <h1>Add a new product</h1>
+  
+  @form(routes.Products.createProduct) {
+    @inputText(productForm("name")) 
+    @textarea(productForm("description"), args = 'rows -> 3, 'cols -> 50)
+    <input type="submit" value="Create">
+  }
+  
+}

@@ -5,47 +5,36 @@
 @main("Blackbook | Products") {
   <h1>@products.size product(s)</h1>
   
-  <table border="1">
-      <tr>
-      	<td>Product</td>
-      	<td>Categories</td>
-      	<td>View</td>
-      	<td>Edit</td>
-      	<td>Delete</td>
-      </tr>
-    @products.map { product =>
-      <tr>
-        <td>@product.name</td>
-        <td>
-        @Product.getTags(product.id).map { tag =>
-          @tag.name + " "
-        }
-        </td>
-        <td>
-          @form(routes.Products.viewProduct(product.id)) {
-              <input type="submit" value="View">
-          }
-        </td>
-        <td>
-          @form(routes.Products.editProduct(product.id)) {
-              <input type="submit" value="Edit">
-          }
-        </td>
-        <td>
-          @form(routes.Products.deleteProduct(product.id)) {
-              <input type="submit" value="Delete">
-          }
-        </td>
-      </tr>
-    }
-  </table>
-  
-  <h2>Add a new product</h2>
-  
-  @form(routes.Products.newProduct) {
-    @inputText(productForm("name")) 
-    @textarea(productForm("description"), args = 'rows -> 3, 'cols -> 50)
-    <input type="submit" value="Create">
-  }
+  <script type="text/javascript">
+  // on page load 
+  $(document).ready(function(){
+
+	  // calculate the width of the page to know how many table rows we can add
+	  var width = $(document).width();
+	  // product grid cells will be shown at 150px by 150px
+	  var productCellWidth = 150;
+	  // each cell has some left and right padding
+	  var paddingSize = 50;
+	  // calcuate the max number of cells could be displayed horizontally
+	  var numCellsWide = Math.floor(width / (productCellWidth + (2*paddingSize)));
+
+	  // query for the products to display
+	  var productsPath = "/api/products";
+	  $.getJSON(productsPath,function(json){
+		    if(json.status == "OK"){
+		      var products = json.result;
+		      var cellsAdded = 0;
+		      $("#products").empty(); // clear the products table
+		      for(var i=0; i<products.length; i++){
+		    	// alert(JSON.stringify(json.result[i]));
+			  }
+		    } else {
+			  alert("Error: Couldn't load products table.");
+			}
+	    }).error(function() { alert("Error: Couldn't load products table."); });
+  });
+  </script>
+
+  <center><table id="products"></table></center>
   
 }

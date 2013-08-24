@@ -13,13 +13,14 @@ GET     /assets/*file                         controllers.Assets.at(path="/publi
 
 # Products Routes
 GET     /products                             controllers.Products.products
+GET     /products/new                         controllers.Products.newProduct
 GET     /products/:id/edit                    controllers.Products.editProduct(id: Long)
 GET     /products/:id                         controllers.Products.viewProduct(id: Long)
 GET     /products/:id/categories              controllers.Products.tagsForProduct(id: Long)
 GET     /products/:id/files/:filename         controllers.Products.getFile(id: Long, filename:String)
 GET     /products/:id/icon.png                controllers.Products.getIcon(id: Long)
 GET     /products/:id/delete/:filename        controllers.Products.deleteFile(id: Long, filename:String)
-POST    /products                             controllers.Products.newProduct
+POST    /products                             controllers.Products.createProduct
 POST    /products/:id/delete                  controllers.Products.deleteProduct(id:Long)
 POST    /products/:id/update                  controllers.Products.updateProduct(id: Long)
 POST    /products/:id/upload                  controllers.Products.uploadProductFile(id: Long)
