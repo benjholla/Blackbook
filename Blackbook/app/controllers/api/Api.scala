@@ -23,7 +23,7 @@ class Api extends Controller {
   abstract class ApiResult
   case class Success() extends ApiResult
   case class SuccessWithData(data: JsValue) extends ApiResult
-  case class ParseError(e: String) extends ApiResult
+  case class ApiError(msg: String) extends ApiResult
   case class ValidationError(e: JsError) extends ApiResult
 
   /* Get the status string for the given API result. */
@@ -31,6 +31,8 @@ class Api extends Controller {
     result match {
       case Success() => "OK"
       case SuccessWithData(_) => "OK"
+      case ValidationError(_) => "validationError"
+      case ApiError(_) => "apiError"
       case _ => "error"
     }
   }
@@ -48,8 +50,8 @@ class Api extends Controller {
   def content(result: ApiResult): Option[(String, JsValue)] = {
     result match {
       case SuccessWithData(v) => Some("result" -> v)
-      case ParseError(msg) => Some("message" -> toJson(msg))
       case ValidationError(e) => Some("message" -> JsError.toFlatJson(e))
+      case ApiError(msg) => Some("message" -> toJson(msg))
       case _ => None
     }
   }

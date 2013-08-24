@@ -17,4 +17,13 @@ object Tags extends Api {
     apiCall( SuccessWithData(toJson(Tag.all())) )
   }
 
+  /** Get one tag */
+  def get(id: Long) = {
+    apiCall( SuccessWithData(toJson(Tag.find(id))) )
+  }
+
+  /** Get all the products associated with a tag */
+  def getProducts(id: Long) = {
+    apiCall( SuccessWithData(toJson(Tag.getProducts(id))) )
+  }
 }
