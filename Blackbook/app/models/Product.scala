@@ -7,6 +7,7 @@ import play.api.Play.current
 import scala.language.postfixOps
 import util.Db
 import java.util.Date
+import java.io.File
 
 case class Product(id: Long, name: String, description:String=null) {
   def getTags() = { Product.getTags(id) }

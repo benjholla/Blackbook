@@ -5,9 +5,44 @@
 @main(product.name) {
   <h1>Edit Product: @product.name</h1>
   
+  <h2>Categories:</h2>
+  <ul>
+  @Product.getTags(product.id).map { tag =>
+    <li>tag.name</li>
+  }
+  </ul>
+  
   @form(routes.Products.updateProduct(product.id)) {
     @inputText(productForm("name"), args = '_label -> "Name") 
     @textarea(productForm("description"), args = 'rows -> 3, 'cols -> 50, '_label -> "Description")
     <input type="submit" value="Update">
   }
+  
+  <h2>Files:</h2>
+  <table border="1">
+      <tr>
+      	<td>File</td>
+      	<td>Delete</td>
+      	<td>Download</td>
+      </tr>
+      @for(file <- Products.listFiles(product.id)) {
+  	  <tr>
+        <td>@file.getName()</td>
+        <td>@form(routes.Products.deleteFile(product.id,file.getName())) {
+              <input type="submit" value="Delete">
+          }
+        </td>
+        <td>@form(routes.Products.getFile(product.id,file.getName())) {
+              <input type="submit" value="Download">
+          }
+        </td>
+      </tr>
+  }
+  </table>
+
+  <h3>Upload File</h3>
+  @form(action = routes.Products.uploadProductFile(product.id), 'enctype -> "multipart/form-data") {
+    <input type="file" name="fileUpload">
+    <input type="submit">
+   }
 }
