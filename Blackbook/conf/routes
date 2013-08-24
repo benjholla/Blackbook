@@ -26,5 +26,5 @@ POST    /categories/:id/delete      controllers.Tags.deleteTag(id:Long)
 GET     /api/products               controllers.api.Products.all
 
 # JSON read/write routes
-#POST    /api/products/create        controllers.api.Products.create
-#POST    /api/products/update        controllers.api.Products.update
+POST    /api/products/create        controllers.api.Products.create
+POST    /api/products/update        controllers.api.Products.update

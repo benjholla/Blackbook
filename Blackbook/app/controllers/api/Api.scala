@@ -1,4 +1,4 @@
-package controllers
+package controllers.api
 
 import play.api._
 import play.api.mvc._
@@ -11,7 +11,7 @@ import play.api.libs.functional.syntax._
 
 import models._
 
-package object api extends Controller {
+class Api extends Controller {
   // JSON serializers for products
   implicit val productReads = reads[Product]
   implicit val productWrites = writes[Product]
@@ -22,15 +22,14 @@ package object api extends Controller {
 
   abstract class ApiResult
   case class Success(result: JsValue) extends ApiResult
-  case class ApiError(e: String) extends ApiResult
-  case class ParseError(e: JsError) extends ApiResult
+  case class ParseError(e: String) extends ApiResult
+  case class ValidationError(e: JsError) extends ApiResult
 
   /* Get the status string for the given API result. */
   def statusString(result: ApiResult): String = { 
     result match {
       case Success(_) => "OK"
-      case ApiError(_) => "error"
-      case ParseError(_) => "error"
+      case _ => "error"
     }
   }
 
@@ -38,8 +37,7 @@ package object api extends Controller {
   def toResult(result: ApiResult) = {
     result match {
       case Success(_) => Ok
-      case ApiError(_) => BadRequest
-      case ParseError(_) => BadRequest
+      case _ => BadRequest
     }
   }
 
@@ -47,12 +45,12 @@ package object api extends Controller {
   def content(result: ApiResult): (String, JsValue) = {
     result match {
       case Success(v) => "result" -> v
-      case ApiError(msg) => "apiError" -> toJson(msg)
-      case ParseError(e) => "parseError" -> JsError.toFlatJson(e)
+      case ParseError(msg) => "message" -> toJson(msg)
+      case ValidationError(e) => "message" -> JsError.toFlatJson(e)
     }
   }
 
-  def apiCall(api_result: ApiResult) = Action { request =>
+  def apiResponse(api_result: ApiResult): Result = {
     val result = toResult(api_result)
     result(toJson(Map(
       "status" -> toJson(statusString(api_result)),
@@ -62,9 +60,15 @@ package object api extends Controller {
 
   /* Wraps one of our API functions, invoking it with the user-provided JsResult
    * and converting the ApiResult to a Result */
-  /*def apiCall(call: JsValue => ApiResult): = Action(parse.json) { request =>
-      apiCall(call(request.body))
-  }*/
+  def apiCall(api_result: ApiResult) = Action { _ =>
+    apiResponse(api_result)
+  }
+
+  /* Wraps one of our API functions, invoking it with the user-provided JsResult
+   * and converting the ApiResult to a Result */
+  def apiCall(call: JsValue => ApiResult) = Action(parse.json) { request =>
+    apiResponse(call(request.body))
+  }
 
 }
 

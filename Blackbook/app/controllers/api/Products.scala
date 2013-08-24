@@ -11,7 +11,7 @@ import play.api.libs.functional.syntax._
 
 import models._
 
-object Products extends Controller { 
+object Products extends Api { 
   /** Handle an API request to list products. */
   def all() = { 
     apiCall( Success(toJson(models.Product.all())) ) 
@@ -19,50 +19,25 @@ object Products extends Controller {
 
  
   /** Handle an API request to create a new product. */
-  /*def create = Action(parse.json) = {  request =>
-    request.body.validate[JsObject].map { obj =>
-      ( obj \ "name" ).asOpt[String].map { name =>
-        val result = models.Product.create(name)
-        Ok(toJson(Map(
-          "status" -> toJson("OK"),
-          "result" -> toJson(result)
-        )))
-      }.getOrElse {
-        BadRequest(toJson(Map(
-          "status" -> "error",
-          "error" -> "Missing parameter [name]"
-        )))
-      }
-    }.recoverTotal { 
-      e => BadRequest(toJson(Map(
-        "status" -> toJson("error")
-  }
-      
-  
-      obj => 
-      case obj => {
-      }
-    }
-  }
-    ( request.body \ "name" ).asOpt[String].map { name =>
-      val result = models.Product.create(name)
-      Ok(toJson(Map(
-        "status" -> toJson("OK"),
-        "result" -> toJson(result)
-      )))
+  def create = apiCall { body =>
+    val maybeName = (body \ "name").validate[String]
+    val desc = (body \ "description").validate[String].getOrElse("")
+
+    maybeName.map { name =>
+      Success(toJson(Product.create(name, desc)))
     }.recoverTotal {
-      e => BadRequest("Error: " + JsError.toFlatJson(e))
+      e => ValidationError(e) 
     }
-  }*/
+  }
 
   /** Handle an API request to update a product. */
-  /*def update = Action(parse.json) { request =>
-    request.body.validate[Product].map { 
-      Product.update(p.id, p.name, p.description)
-      Ok(toJson(Map("status" -> "OK")))
+  def update = apiCall { body =>
+    body.validate[Product].map { p =>
+      val updated = Product.update(p.id, p.name, p.description)
+      Success(toJson(updated))
     }.recoverTotal { 
-      e => BadRequest("Error: " + JsError.toFlatJson(e))
+      e => ValidationError(e)
     }
-  }*/
+  }
 
 }
