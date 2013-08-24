@@ -8,6 +8,8 @@ import scala.language.postfixOps
 import util.Db
 import java.util.Date
 import java.io.File
+import scala.collection.mutable.ArrayBuffer
+import controllers.Assets
 
 case class Product(id: Long, name: String, description:String=null) {
   def getTags() = { Product.getTags(id) }
@@ -15,6 +17,20 @@ case class Product(id: Long, name: String, description:String=null) {
   def removeTag(tagName: String) = { Product.removeTag(id, tagName) }
   def createdAt():Date = { Product.getCreatedAt(id).get }
   def lastModified():Date = { Product.getLastModified(id).get }
+  def getFiles():List[File] = {
+    var files = ArrayBuffer[File]()
+    for(file <- new File("/tmp/products/" + id + "/files/").listFiles()){
+      files += file
+    }
+    return files.toList
+  }
+  def getIcon():String = {
+    if(new File("/tmp/products/" + id + "/icon.png").exists()){
+      "/products/" + id + "/icon.png" 
+    } else {
+      "/assets/images/default-product-icon.png"
+    }
+  }
 }
 
 object Product {

@@ -76,12 +76,12 @@ object Products extends Controller {
     return new File("/tmp/products/" + id + "/files/" + filename)
   }
   
-  def listFiles(id: Long): List[File] = {
-    var files = ArrayBuffer[File]()
-    for(file <- new File("/tmp/products/" + id + "/files/").listFiles()){
-      files += file
-    }
-    return files.toList
+  private[this] def getProductIconPath(id: Long):File = {
+    return new File("/tmp/products/" + id + "/icon.png")
+  }
+  
+  def getIcon(id: Long) = Action {
+    Ok.sendFile(getProductIconPath(id))
   }
   
   def getFile(id: Long, filename:String) = Action {
@@ -104,4 +104,18 @@ object Products extends Controller {
 	  }
   }
   
+  def uploadProductIcon(id: Long) = Action(parse.multipartFormData) { request =>
+	  request.body.file("iconUpload").map { fileUpload =>
+	    val contentType = fileUpload.contentType
+	    if(contentType.get.toString().equals("image/png")){
+	      fileUpload.ref.moveTo(getProductIconPath(id), replace=true)
+	      Redirect(routes.Products.editProduct(id))
+	    } else {
+	      getProductIconPath(id).delete();
+	      Redirect(routes.Products.editProduct(id)).flashing("error" -> (contentType.get.toString() + " is not a PNG file"))
+	    }
+	  }.getOrElse {
+	    Redirect(routes.Products.editProduct(id)).flashing("error" -> "Missing file")
+	  }
+  }
 }

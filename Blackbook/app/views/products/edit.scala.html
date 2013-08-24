@@ -5,6 +5,17 @@
 @main(product.name) {
   <h1>Edit Product: @product.name</h1>
   
+  <h2>Product Icon</h2>
+  
+  <h2>Icon: @product.getIcon()</h2>
+  <img src="@product.getIcon()" alt="@(product.name + " Icon")" width="200px" height="200px">
+  
+  <h3>Upload Icon</h3>
+  @form(action = routes.Products.uploadProductIcon(product.id), 'enctype -> "multipart/form-data") {
+    <input type="file" name="iconUpload">
+    <input type="submit">
+   }
+  
   <h2>Categories:</h2>
   <ul>
   @Product.getTags(product.id).map { tag =>
@@ -25,7 +36,7 @@
       	<td>Delete</td>
       	<td>Download</td>
       </tr>
-      @for(file <- Products.listFiles(product.id)) {
+      @for(file <- product.getFiles()) {
   	  <tr>
         <td>@file.getName()</td>
         <td>@form(routes.Products.deleteFile(product.id,file.getName())) {
