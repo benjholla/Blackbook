@@ -19,12 +19,12 @@ object Products extends Api {
  
   /** Handle an API request to create a new product. */
   def create = apiCall { body =>
-    val maybeName = (body \ "name").validate[String]
-    val desc = (body \ "description").validate[String].getOrElse("")
+    val created = for {
+      name <- (body \ "name").validate[String]
+      desc <- (body \ "description").validate[String] orElse JsSuccess("")
+    } yield toJson(Product.create(name, desc))
 
-    maybeName.map { name =>
-      SuccessWithData(toJson(Product.create(name, desc)))
-    }.recoverTotal(ValidationError)
+    created.map(SuccessWithData).recoverTotal(ValidationError)
   }
 
   /** Handle an API request to update a product. */
@@ -35,10 +35,15 @@ object Products extends Api {
     }.recoverTotal(ValidationError)
   }
 
+  /** Handle an API request to delete a product. */
   def delete = apiCall { body =>
     (body \ "id").validate[Long].map { id =>
       Product.delete(id)
       Success()
     }.recoverTotal(ValidationError)
+  }
+
+  def get(id: Long) = {
+    apiCall( SuccessWithData(toJson(Product.find(id))) )
   }
 }
