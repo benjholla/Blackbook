@@ -1,18 +1,20 @@
-# Rename some tables.
+# Update timestamp triggers
 
 # --- !Ups
 
-ALTER TABLE Product
-    RENAME TO Products;
+CREATE FUNCTION UpdateLastModified() RETURNS TRIGGER AS 
+  $BODY$ BEGIN NEW.LastModified = now();; return NEW;; END;; $BODY$ 
+  LANGUAGE plpgsql;
 
-ALTER TABLE Product_Tags
-    RENAME TO ProductTags;
+CREATE TRIGGER UpdateProductTimestamp BEFORE UPDATE ON Products 
+  FOR EACH ROW EXECUTE PROCEDURE UpdateLastModified();
+
+CREATE TRIGGER UpdateTagTimestamp BEFORE UPDATE ON Tags
+  FOR EACH ROW EXECUTE PROCEDURE UpdateLastModified();
 
 # --- !Downs
 
-ALTER TABLE Products
-    RENAME TO Product;
-
-ALTER TABLE ProductTags
-    RENAME TO Product_Tags;
+DROP TRIGGER UpdateProductTimestamp;
+DROP TRIGGER UpdateTagTimestamp;
+DROP FUNCTION UpdateLastModified();
 

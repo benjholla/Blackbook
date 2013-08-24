@@ -20,7 +20,7 @@ object Db {
   }
   
   def scopeIdentity()(implicit c: java.sql.Connection): Long = {
-    val query = SQL("SELECT SCOPE_IDENTITY()")
-    query().map( row => row[Long]("SCOPE_IDENTITY()") ).head
+    val query = SQL("SELECT LastVal()")
+    query().map( row => row[Long]("LastVal") ).head
   }
 }

@@ -1,14 +1,30 @@
-# Products schema
- 
+# Original schema
+
 # --- !Ups
 
-CREATE SEQUENCE product_id_seq;
-CREATE TABLE product (
-    id integer NOT NULL DEFAULT nextval('product_id_seq'),
-    label varchar(255)
+CREATE TABLE Products
+(
+  Id serial NOT NULL, 
+  Name text NOT NULL, 
+  Description text, 
+  CreatedAt timestamp with time zone DEFAULT now(), 
+  LastModified timestamp with time zone DEFAULT now(), 
+  CONSTRAINT ProductPrimaryKey PRIMARY KEY (Id), 
+  CONSTRAINT ProductNameUnique UNIQUE (Name)
 );
- 
-# --- !Downs
- 
-DROP TABLE product;
-DROP SEQUENCE product_id_seq;
+
+CREATE TABLE Tags
+(
+  Id serial NOT NULL,
+  Name text NOT NULL,
+  CreatedAt timestamp with time zone DEFAULT now(),
+  LastModified timestamp with time zone DEFAULT now(),
+  CONSTRAINT TagPrimaryKey PRIMARY KEY (Id),
+  CONSTRAINT TagNameUnique UNIQUE (Name)
+);
+
+# --- !Downs 
+
+DROP TABLE Products;
+DROP TABLE Tags;
+
