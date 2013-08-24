@@ -90,7 +90,7 @@ object Product {
     DB.withConnection { implicit c =>
       SQL("UPDATE Products SET Name={name}, Description={description} WHERE Id={id}").on(
         'name -> Db.normalizeName(name), 'description -> description, 'id -> id).executeUpdate()
-      return Product(id, name, description)
+      return Product(id, Db.normalizeName(name), description)
     }
   }
 
