@@ -45,8 +45,11 @@ case class Product(
 
   def getFiles():List[File] = {
     var files = ArrayBuffer[File]()
-    for(file <- new File("/tmp/products/" + id + "/files/").listFiles()){
-      files += file
+    var fileList = new File("/tmp/products/" + id + "/files/").listFiles()
+    if(fileList != null){
+      for(file <- fileList){
+        files += file
+      }
     }
     return files.toList
   }
