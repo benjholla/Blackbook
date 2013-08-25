@@ -19,7 +19,7 @@
   <h2>Categories:</h2>
   <ul>
   @Product.getTags(product.id).map { tag =>
-    <li>tag.name</li>
+    <li>@tag.name</li>
   }
   </ul>
   

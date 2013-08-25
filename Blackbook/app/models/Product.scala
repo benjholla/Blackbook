@@ -144,7 +144,7 @@ object Product {
     DB.withConnection { implicit c =>
       val tag = Tag.findOrCreate(tagName)
       SQL("""
-        MERGE INTO ProductTags(ProductId, TagId) 
+        INSERT INTO ProductTags(ProductId, TagId) 
         VALUES ({productId}, {tagId})
       """).on(
         'productId -> productId,

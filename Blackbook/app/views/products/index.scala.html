@@ -5,6 +5,8 @@
 @main("Blackbook | Products") {
 
   <h1 style="padding-left:20px">Showing @products.size product(s)</h1>
+
+  <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
   
   <script type="text/javascript">
   // given some json, returns the html for a product display cell
@@ -22,12 +24,15 @@
   function refreshProducts() {
 	// calculate the width of the browser to know how many table rows we can add
 	var width = $(window).width();
+	// get the products display windows left position and calculate the product display windows width
+	var productsDisplayLeftPosition = $("#products-display").offset().left;
+	var productsDisplayWidth = width - productsDisplayLeftPosition;
 	// product grid cells are a fixed width
 	var productCellWidth = 240;
 	// each cell has fixed left and right margins
 	var marginSize = 10;
 	// calcuate the max number of cells could be displayed horizontally
-	var numCellsWide = Math.floor(width / (productCellWidth + (2*marginSize)));
+	var numCellsWide = Math.floor(productsDisplayWidth / (productCellWidth + (2*marginSize)));
 
 	// parse json and display result
 	if(productsJSON.status == "OK"){
@@ -54,11 +59,14 @@
   // on page load
   $(document).ready(function(){
 	// query for the products to display
-	var productsPath = "/api/products";
-	$.getJSON(productsPath,function(json){
-	  productsJSON = json;  // update the productsJSON cache
-      refreshProducts();
-	}).error(function() { alert("Error: Couldn't load products table."); });
+	
+	jsRoutes.controllers.api.Products.all().ajax({
+	  success: function(json){
+	  	productsJSON = json;  // update the productsJSON cache
+      	refreshProducts();
+	  }, 
+	  error: function() { alert("Error: Couldn't load products table."); }
+	});
   });
 
   // on window resize redisplay the product cells using the cached products json
@@ -70,6 +78,19 @@
   });
   </script>
 
-  <center><table id="products"></table></center>
+  <div id="sidebar" style="float:left; color:black;">
+    <h2>Actions</h2>
+  	<a href="/products/new" style="width:100%;" class="fancy-button">Add Product</a>
+	<h2>Categories</h2>
+  	<form>
+  	@Tag.all().map { tag =>
+      <input type="checkbox" name="category" value="@tag.name">@tag.name<br>
+    }
+	</form>
+  </div>
+  
+  <div id="products-display">
+  	<center><table id="products"></table></center>
+  </div>
   
 }
