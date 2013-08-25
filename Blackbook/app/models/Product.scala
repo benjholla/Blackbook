@@ -81,9 +81,12 @@ object Product {
     get[Boolean]("Products.Enabled") map (flatten) map ((Product.apply _).tupled)
   }
 
-  def all(): List[Product] = DB.withConnection { implicit c =>
-  SQL("SELECT * FROM Products").as(product *).filter { p => p.isEnabled }
-  }
+  def all(includeDisabled: Boolean = false): List[Product] = 
+    DB.withConnection { implicit c =>
+      SQL("SELECT * FROM Products").as(product *).filter { p => 
+        includeDisabled || p.isEnabled 
+      }
+    }
 
   def create(name: String, description:String): Product = {
     DB.withConnection { implicit c =>
