@@ -18,8 +18,8 @@
 	<p style="width:600px;">
 	When contacting your Sales agent please have your account information ready.
 	</p>
-	<table border="1">
-		<tr><th>Your Account Information</th><th>TODO Username</th></tr>
+	<table>
+		<tr><th style="font-size:120%">Your Account Information:&nbsp;&nbsp;</th><th><input type="text" name="accountInfo" readonly="true" disabled="disabled" value="TODO Username"></th></tr>
 	</table>
 	<br />
 	<h2>Making a payment</h2>
@@ -28,32 +28,38 @@
 	assigned Sales agent will be happy to provide you with further information regarding 
 	this matter.
 	</p>
-	<table border="1">
-		<tr>
-			<th>Payment Method</th>
-			<th>Notes</th>
-		</tr>
-		<tr>
-			<td>Money Order(s)</td>
-			<td>Purchased from <a href="http://www.westernunion.com">Western Union</a> or 
-			<a href="http://www.xoom.com">Xoom</a> using cash or a pre-paid credit card <br />
-			purchased with cash (typically a $500 limit).</td>
-		</tr>
-		<tr>
-			<td>Cashier's Check(s)</td>
-			<td>Must be absent sender identity</td>
-		</tr>
-		<tr>
-			<td>Cash</td>
-			<td>Currency exchange rates computed at time of sale via <a href="http://www.xe.com">XE.com</a></td>
-		</tr>
-		<tr>
-			<td>Bitcoin</td>
-			<td>Must be laundered through one or more of the following: 
-			<a href="http://bitcoinlaundry.com">BitcoinLaundry.com</a>, <br />
-			<a href="http://app.bitlaundry.com">App.BitLaundry.com</a>, or 
-			<a href="https://blockchain.info/wallet/send-shared">Blockchain.info</a></td>
-		</tr>
+	
+	
+	<table id="box-table" summary="Payment Options">
+	    <thead>
+	    	<tr>
+	            <th scope="col">Payment Method</th>
+				<th scope="col">Notes</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	    	<tr>
+	        	<td>Money Order(s)</td>
+				<td>Purchased from <a href="http://www.westernunion.com">Western Union</a> or 
+				<a href="http://www.xoom.com">Xoom</a> using cash or a pre-paid credit card <br />
+				purchased with cash (typically a $500 limit).</td>
+	        </tr>
+	        <tr>
+	        	<td>Cashier's Check(s)</td>
+				<td>Must be absent sender identity</td>
+	        </tr>
+	        <tr>
+	        	<td>Cash</td>
+				<td>Currency exchange rates computed at time of sale via <a href="http://www.xe.com">XE.com</a></td>
+	        </tr>
+	        <tr>
+	        	<td>Bitcoin</td>
+				<td>Must be laundered through one or more of the following: 
+				<a href="http://bitcoinlaundry.com">BitcoinLaundry.com</a>, <br />
+				<a href="http://app.bitlaundry.com">App.BitLaundry.com</a>, or 
+				<a href="https://blockchain.info/wallet/send-shared">Blockchain.info</a></td>
+	        </tr>
+	    </tbody>
 	</table>
 	<br />
 	<h2>Important Notes</h2>
@@ -61,15 +67,22 @@
 	<p style="width:600px;">
 	Please remember that by accessing this web portal and viewing the Cyber Disease Center 
 	product list you have agreed protect the secrecy of this information under our Non 
-	Disclosure Act.  We take this agreement very seriously.
+	Disclosure Agreement.  We take this agreement very seriously.
 	</p>
 	<h3>Contacting Support</h3>
 	<p style="width:600px;">
 	If you unsure of how to contact your assigned Sales representative please call the 
 	following number and enter the authentication code shown below.
 	</p>
-	<table border="1">
-		<tr><th>TODO Phone</th><th>TODO Auth Code</th></tr>
+	<table>
+		<tr>
+			<td style="font-size:120%">Support Number:&nbsp;&nbsp;</td>
+			<td><input type="text" name="phoneNumber" readonly="true" disabled="disabled" value="TODO Phone"></td>
+		</tr>
+		<tr>
+			<td style="font-size:120%">Authentication Code:&nbsp;&nbsp;</td>
+			<td><input type="text" name="authCode" readonly="true" disabled="disabled" value="TODO Auth Code"></td>
+		</tr>
 	</table>
 </div>
 

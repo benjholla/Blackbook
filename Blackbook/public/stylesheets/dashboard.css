@@ -194,3 +194,29 @@ q:before, q:after {
 .icon-home {
   background-position: 0 0;
 }
+
+/* Table Styling */
+#box-table
+{
+	text-align: left;
+	border-collapse: collapse;
+}
+
+#box-table th
+{
+	padding: 8px;
+	background: #81725B;
+	border-top: 2px solid black;
+	border-bottom: 1px solid #fff;
+	color: black;
+}
+
+#box-table td
+{
+	padding: 8px;
+	background: #cfcfcf; 
+	border-bottom: 1px solid #fff;
+	color: black;
+	border-top: 1px solid transparent;
+}
+
