@@ -55,11 +55,7 @@ case class Product(
   }
 
   def getIcon():String = {
-    if(new File("/tmp/products/" + id + "/icon.png").exists()){
-      "/products/" + id + "/icon.png" 
-    } else {
-      "/assets/images/default-product-icon.png"
-    }
+    return "/products/" + id + "/icon.png"
   }
 }
 

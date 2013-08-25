@@ -3,35 +3,65 @@
 @import helper._
 
 @main("Blackbook | Products") {
-  <h1>@products.size product(s)</h1>
+
+  <h1 style="padding-left:20px">Showing @products.size product(s)</h1>
   
   <script type="text/javascript">
-  // on page load 
-  $(document).ready(function(){
+  // given some json, returns the html for a product display cell
+  function createProductCell(product){
+	  var html = '<div class="product">';
+	  html += '<div class="product-name"><a href="/products/' + product.id + '">' + product.name + '</a></div>';
+	  html += '<center><a href="/products/' + product.id + '"><img class="product-icon" src="/products/' + product.id + '/icon.png" alt="' + product.name + ' Icon" width="180px" height="180px" /></a></center>';
+	  html += '</div>';
+	  return html;
+  }
+  
+  function refreshProducts() {
+	// calculate the width of the browser to know how many table rows we can add
+	var width = $(window).width();
+	// product grid cells are a fixed width
+	var productCellWidth = 240;
+	// each cell has fixed left and right margins
+	var marginSize = 10;
+	// calcuate the max number of cells could be displayed horizontally
+	var numCellsWide = Math.floor(width / (productCellWidth + (2*marginSize)));
 
-	  // calculate the width of the page to know how many table rows we can add
-	  var width = $(document).width();
-	  // product grid cells will be shown at 150px by 150px
-	  var productCellWidth = 150;
-	  // each cell has some left and right padding
-	  var paddingSize = 50;
-	  // calcuate the max number of cells could be displayed horizontally
-	  var numCellsWide = Math.floor(width / (productCellWidth + (2*paddingSize)));
-
-	  // query for the products to display
-	  var productsPath = "/api/products";
-	  $.getJSON(productsPath,function(json){
-		    if(json.status == "OK"){
-		      var products = json.result;
-		      var cellsAdded = 0;
-		      $("#products").empty(); // clear the products table
-		      for(var i=0; i<products.length; i++){
-		    	// alert(JSON.stringify(json.result[i]));
-			  }
-		    } else {
-			  alert("Error: Couldn't load products table.");
+	// query for the products to display
+	var productsPath = "/api/products";
+	$.getJSON(productsPath,function(json){
+	   if(json.status == "OK"){
+	     var products = json.result;
+	     $("#products").empty(); // clear the products table
+	     for(var i=0; i<products.length; i++){
+			if(i % numCellsWide == 0){
+				if(i == 0){
+					// first row, just add a new row to get things started
+					$("#products").append("<tr>");
+				} else {
+					// need to start a new row and close the old one
+					$("#products").append("</tr><tr>");
+				}
 			}
-	    }).error(function() { alert("Error: Couldn't load products table."); });
+			$("#products tr:last").append("<td>" + createProductCell(products[i]) + "</td>");
+		 }
+	     $("#products").append("</tr>"); // close the last table row
+	   } else {
+	     alert("Error: Couldn't load products table.");
+	   }
+	 }).error(function() { alert("Error: Couldn't load products table."); });
+  }
+  
+  // on page load
+  $(document).ready(function(){
+	  refreshProducts();
+  });
+
+  // on window resize
+  // use a timer to filter out excessive resize events
+  var resizeTimer;
+  $(window).resize(function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(refreshProducts, 100);
   });
   </script>
 

@@ -5,6 +5,7 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 import models._
+import play.api.Play.current
 import java.io.File
 import scala.collection.mutable.ArrayBuffer
 
@@ -80,12 +81,25 @@ object Products extends Controller {
     return new File("/tmp/products/" + id + "/files/" + filename)
   }
   
+  // This should be used only for determining where to save an icon 
+  // file when one is upload, not for getting the icon file
   private[this] def getProductIconPath(id: Long):File = {
     return new File("/tmp/products/" + id + "/icon.png")
   }
   
+  // This should be used for getting the icon file, 
+  // this includes a default icon file if an icon is not found
+  private[this] def getProductIconFile(id: Long):File = {
+    var file = getProductIconPath(id)
+    if(file.exists()){
+      return file;
+    } else {
+      return Play.getFile("public/images/default-product-icon.png")
+    }
+  }
+  
   def getIcon(id: Long) = Action {
-    Ok.sendFile(getProductIconPath(id))
+    Ok.sendFile(getProductIconFile(id))
   }
   
   def getFile(id: Long, filename:String) = Action {
