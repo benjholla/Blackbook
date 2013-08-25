@@ -1,0 +1,35 @@
+#!/usr/bin/python
+# Run this script to refresh the testing database.
+# Note that any data in the database WILL BE LOST.
+import sys
+
+try:
+  import psycopg2
+except ImportError:
+  print "You need to install the psygopg2 python module to run this script."
+  sys.exit(1)
+
+conn = psycopg2.connect('dbname=postgres user=postgres host=10.0.0.200')
+conn.set_isolation_level(0)
+
+c = conn.cursor()
+
+# Drop any connections to the database.
+print "Killing connections..."
+c.execute("""
+  SELECT pg_terminate_backend(procpid) FROM pg_stat_activity 
+    WHERE datname='blackbook_test';
+  """)
+
+print "Dropping old database..."
+c.execute("""
+  DROP DATABASE IF EXISTS blackbook_test
+  """)
+
+print "Creating new database..."
+c.execute("""
+  CREATE DATABASE blackbook_test
+  """)
+
+print "Done."
+
