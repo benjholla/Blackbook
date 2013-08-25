@@ -11,7 +11,11 @@ object Application extends Controller {
   def index = TODO
   
   def login = Action {
-    Ok(views.html.login(title="Blackbook | Login"))
+    Ok(views.html.login())
+  }
+  
+  def order = Action {
+    Ok(views.html.order())
   }
   
 }

@@ -2,9 +2,16 @@
 
 @import helper._
 
-@main(product.name) {
+@main("Blackbook | " + product.name) {
   <h1>Product: @product.name</h1>
   <h2>Created: @product.getCreateTime.toString()</h2>
   <h2>Last Updated: @product.getModifyTime.toString()</h2>
   <h2>Description: @product.description</h2>
+  
+  
+  <!--Go to /products/:id/edit if Sales or Admin-->
+  @form(routes.Products.editProduct(product.id)) {
+    <input type="submit" value="Edit Product">
+  }
+  
 }

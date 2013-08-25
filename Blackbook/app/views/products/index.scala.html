@@ -15,6 +15,9 @@
 	  html += '</div>';
 	  return html;
   }
+
+  // cache the products json response
+  var productsJSON = null;
   
   function refreshProducts() {
 	// calculate the width of the browser to know how many table rows we can add
@@ -26,13 +29,11 @@
 	// calcuate the max number of cells could be displayed horizontally
 	var numCellsWide = Math.floor(width / (productCellWidth + (2*marginSize)));
 
-	// query for the products to display
-	var productsPath = "/api/products";
-	$.getJSON(productsPath,function(json){
-	   if(json.status == "OK"){
-	     var products = json.result;
-	     $("#products").empty(); // clear the products table
-	     for(var i=0; i<products.length; i++){
+	// parse json and display result
+	if(productsJSON.status == "OK"){
+		var products = productsJSON.result;
+	    $("#products").empty(); // clear the products table
+	    for(var i=0; i<products.length; i++){
 			if(i % numCellsWide == 0){
 				if(i == 0){
 					// first row, just add a new row to get things started
@@ -44,19 +45,23 @@
 			}
 			$("#products tr:last").append("<td>" + createProductCell(products[i]) + "</td>");
 		 }
-	     $("#products").append("</tr>"); // close the last table row
-	   } else {
+	    $("#products").append("</tr>"); // close the last table row
+	} else {
 	     alert("Error: Couldn't load products table.");
-	   }
-	 }).error(function() { alert("Error: Couldn't load products table."); });
+	}
   }
   
   // on page load
   $(document).ready(function(){
-	  refreshProducts();
+	// query for the products to display
+	var productsPath = "/api/products";
+	$.getJSON(productsPath,function(json){
+	  productsJSON = json;  // update the productsJSON cache
+      refreshProducts();
+	}).error(function() { alert("Error: Couldn't load products table."); });
   });
 
-  // on window resize
+  // on window resize redisplay the product cells using the cached products json
   // use a timer to filter out excessive resize events
   var resizeTimer;
   $(window).resize(function() {
