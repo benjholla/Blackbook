@@ -16,8 +16,9 @@ case class Product(
     name: String, 
     description: String = null, 
     createTime: Option[Date] = None,
-    modifyTime: Option[Date] = None
-  ) extends traits.Timestamped {
+    modifyTime: Option[Date] = None,
+    var enabled: Boolean = true
+  ) extends traits.Timestamped with traits.Enableable {
   override def equals(v: Any): Boolean = {
     v match { 
         case p: Product => {
@@ -41,6 +42,15 @@ case class Product(
 
   def getModifyTime() = { 
     modifyTime.getOrElse( Product.getCreatedAt(id).get )
+  }
+
+  def isEnabled() = enabled
+  def setEnabled(enabled: Boolean) = {
+    DB.withConnection { implicit c =>
+      SQL("UPDATE Products SET Enabled = {enabled} WHERE Id = {id}").
+        on('enabled -> enabled, 'id -> id).executeUpdate()
+    }
+    this.enabled = enabled
   }
 
   def getFiles():List[File] = {
@@ -67,11 +77,12 @@ object Product {
     get[String]("Products.Name") ~
     get[String]("Products.Description") ~
     get[Option[Date]]("Products.CreatedAt") ~
-    get[Option[Date]]("Products.LastModified") map (flatten) map ((Product.apply _).tupled)
+    get[Option[Date]]("Products.LastModified") ~
+    get[Boolean]("Products.Enabled") map (flatten) map ((Product.apply _).tupled)
   }
 
   def all(): List[Product] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM Products").as(product *)
+  SQL("SELECT * FROM Products").as(product *).filter { p => p.isEnabled }
   }
 
   def create(name: String, description:String): Product = {
