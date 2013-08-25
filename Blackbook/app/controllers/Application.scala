@@ -17,5 +17,25 @@ object Application extends Controller {
   def order = Action {
     Ok(views.html.order())
   }
+
+  def javascriptRoutes = Action { implicit request =>
+    import controllers.api.routes.javascript._
+    Ok(
+      Routes.javascriptRouter("jsRoutes")(
+        Products.all,
+        Products.create,
+        Products.update,
+        Products.updateMany,
+        Products.delete,
+        Products.get,
+        Products.getTags,
+        Products.addTags,
+        Products.removeTags,
+        Tags.all, 
+        Tags.get,
+        Tags.getProducts
+      )
+    ).as("text/javascript")
+  }
   
 }
