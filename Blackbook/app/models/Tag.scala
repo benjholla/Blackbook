@@ -2,17 +2,32 @@ package models
 
 import anorm._
 import anorm.SqlParser._
-
 import play.api.db._
 import play.api.Play.current
-
+import java.util.Date
 import scala.language.postfixOps
 
 import util._
 
 
-case class Tag(id: Long, name: String) { 
+case class Tag(id: Long, name: String) extends traits.Timestamped { 
   def getProducts() = { Tag.getProducts(id) }
+
+  def getCreateTime(): Date = {
+    DB.withConnection { implicit c =>
+      val query = SQL("SELECT CreatedAt FROM Tags WHERE Id = {id}").
+        on('id -> id)
+      query().map( row => row[Date]("CreatedAt") ).head 
+    }
+  }
+
+  def getModifyTime(): Date = {
+    DB.withConnection { implicit c =>
+      val query = SQL("SELECT LastModified FROM Tags WHERE Id = {id}").
+        on('id -> id)
+      query().map( row => row[Date]("LastModified") ).head 
+    }
+  }
 }
 
 object Tag {

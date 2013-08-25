@@ -17,7 +17,7 @@ case class Product(
     description: String = null, 
     createTime: Option[Date] = None,
     modifyTime: Option[Date] = None
-  ) {
+  ) extends traits.Timestamped {
   override def equals(v: Any): Boolean = {
     v match { 
         case p: Product => {
