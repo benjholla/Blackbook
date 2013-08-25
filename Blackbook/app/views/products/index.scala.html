@@ -4,7 +4,7 @@
 
 @main("Blackbook | Products") {
 
-  <h1 style="padding-left:20px">Showing @products.size product(s)</h1>
+  <h1 id="showing-label" style="padding-left:20px">Showing @products.size product(s)</h1>
 
   <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
   
@@ -20,6 +20,16 @@
 
   // cache the products json response
   var productsJSON = null;
+  var categoryFilter = [];
+
+  // helper function to remove elements from an array
+  function remove(arr, item) {
+      for(var i = arr.length; i--;) {
+          if(arr[i] === item) {
+              arr.splice(i, 1);
+          }
+      }
+  }
   
   function refreshProducts() {
 	// calculate the width of the browser to know how many table rows we can add
@@ -59,7 +69,6 @@
   // on page load
   $(document).ready(function(){
 	// query for the products to display
-	
 	jsRoutes.controllers.api.Products.all().ajax({
 	  success: function(json){
 	  	productsJSON = json;  // update the productsJSON cache
@@ -84,7 +93,17 @@
 	<h2>Categories</h2>
   	<form>
   	@Tag.all().map { tag =>
-      <input type="checkbox" name="category" value="@tag.name">@tag.name<br>
+      <input style="font-size: 120%;" id="category-checkbox-@tag.id" type="checkbox" class="category-checkbox" value="@tag.name">@tag.name<br>
+      <script type="text/javascript">
+      $("#category-checkbox-@tag.id").change(function() {
+          // alert($("#category-checkbox-@tag.id").val() + " is " + $("#category-checkbox-@tag.id").is(":checked"));
+          if($("#category-checkbox-@tag.id").is(":checked")){
+          	categoryFilter.push($("#category-checkbox-@tag.id").val());
+          } else {
+          	remove(categoryFilter, $("#category-checkbox-@tag.id").val());
+          }
+        });
+      </script>
     }
 	</form>
   </div>
