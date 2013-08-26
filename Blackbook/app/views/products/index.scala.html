@@ -1,4 +1,4 @@
-@(products: List[Product], productForm: Form[(String, String)])
+@(products: List[Product], productForm: Form[(String, String)], user: User.User)
 
 @import helper._
 
@@ -11,11 +11,11 @@
   <script type="text/javascript">
   // given some json, returns the html for a product display cell
   function createProductCell(product){
-	  var html = '<div class="product">';
-	  html += '<div class="product-name"><a href="/products/' + product.id + '">' + product.name + '</a></div>';
-	  html += '<center><a href="/products/' + product.id + '"><img class="product-icon" src="/products/' + product.id + '/icon.png" alt="' + product.name + ' Icon" width="180px" height="180px" /></a></center>';
-	  html += '</div>';
-	  return html;
+    var html = '<div class="product">';
+    html += '<div class="product-name"><a href="/products/' + product.id + '">' + product.name + '</a></div>';
+    html += '<center><a href="/products/' + product.id + '"><img class="product-icon" src="/products/' + product.id + '/icon.png" alt="' + product.name + ' Icon" width="180px" height="180px" /></a></center>';
+    html += '</div>';
+    return html;
   }
 
   // cache the products json response
@@ -44,75 +44,75 @@
   
     // for each category query and add to list of products to display
     if(filterProducts){
-	    for(var i=0; i<categoriesFilter.length; i++){
-	    	jsRoutes.controllers.api.Tags.getProducts(categoriesFilter[i]).ajax({
-			  success: function(json){
-			  	if(json.status == "OK"){
-			  	  var categoryProducts = json.result;
-			  	  for(var j=0; j<categoryProducts.length; j++){
-			  	    // remove product if present and then add again so there are no duplicates
-			  	    remove(productsToDisplay, categoryProducts[j].id); 
-			  	    productsToDisplay.push(categoryProducts[j].id);
-			  	  }
-			  	} else {
-			  	  // could not retrieve results, just skipping this category
-			  	}
-			  }, 
-			  error: function() { alert("Error: Couldn't load products table."); },
-			  async: false // Note: this option is important or else productsToDisplay won't be initialized
-			});
-	    }
-	}
+      for(var i=0; i<categoriesFilter.length; i++){
+        jsRoutes.controllers.api.Tags.getProducts(categoriesFilter[i]).ajax({
+        success: function(json){
+          if(json.status == "OK"){
+            var categoryProducts = json.result;
+            for(var j=0; j<categoryProducts.length; j++){
+              // remove product if present and then add again so there are no duplicates
+              remove(productsToDisplay, categoryProducts[j].id); 
+              productsToDisplay.push(categoryProducts[j].id);
+            }
+          } else {
+            // could not retrieve results, just skipping this category
+          }
+        }, 
+        error: function() { alert("Error: Couldn't load products table."); },
+        async: false // Note: this option is important or else productsToDisplay won't be initialized
+      });
+      }
+  }
 
-	// calculate the width of the browser to know how many table rows we can add
-	var width = $(window).width();
-	// get the products display windows left position and calculate the product display windows width
-	var productsDisplayLeftPosition = $("#products-display").offset().left;
-	var productsDisplayWidth = width - productsDisplayLeftPosition;
-	// product grid cells are a fixed width
-	var productCellWidth = 240;
-	// each cell has fixed left and right margins
-	var marginSize = 10;
-	// calcuate the max number of cells could be displayed horizontally
-	var numCellsWide = Math.floor(productsDisplayWidth / (productCellWidth + (2*marginSize)));
+  // calculate the width of the browser to know how many table rows we can add
+  var width = $(window).width();
+  // get the products display windows left position and calculate the product display windows width
+  var productsDisplayLeftPosition = $("#products-display").offset().left;
+  var productsDisplayWidth = width - productsDisplayLeftPosition;
+  // product grid cells are a fixed width
+  var productCellWidth = 240;
+  // each cell has fixed left and right margins
+  var marginSize = 10;
+  // calcuate the max number of cells could be displayed horizontally
+  var numCellsWide = Math.floor(productsDisplayWidth / (productCellWidth + (2*marginSize)));
 
-	// parse json and display result
-	if(productsJSON.status == "OK"){
-		var products = productsJSON.result;
-	    $("#products").empty(); // clear the products table
-	    var numCellsAdded = 0;
-	    for(var i=0; i<products.length; i++){
-	    	// if product is on the list of products to display add it to the display table
-	        if(!filterProducts || productsToDisplay.indexOf(products[i].id) > -1){
-	        	if(numCellsAdded % numCellsWide == 0){
-					if(numCellsAdded == 0){
-						// first row, just add a new row to get things started
-						$("#products").append("<tr>");
-					} else {
-						// need to start a new row and close the old one
-						$("#products").append("</tr><tr>");
-					}
-				}
-				$("#products tr:last").append("<td>" + createProductCell(products[i]) + "</td>");
-				numCellsAdded++;
-	        }
-		 }
-	    $("#products").append("</tr>"); // close the last table row
-	} else {
-	     alert("Error: Couldn't load products table.");
-	}
+  // parse json and display result
+  if(productsJSON.status == "OK"){
+    var products = productsJSON.result;
+      $("#products").empty(); // clear the products table
+      var numCellsAdded = 0;
+      for(var i=0; i<products.length; i++){
+        // if product is on the list of products to display add it to the display table
+          if(!filterProducts || productsToDisplay.indexOf(products[i].id) > -1){
+            if(numCellsAdded % numCellsWide == 0){
+          if(numCellsAdded == 0){
+            // first row, just add a new row to get things started
+            $("#products").append("<tr>");
+          } else {
+            // need to start a new row and close the old one
+            $("#products").append("</tr><tr>");
+          }
+        }
+        $("#products tr:last").append("<td>" + createProductCell(products[i]) + "</td>");
+        numCellsAdded++;
+          }
+     }
+      $("#products").append("</tr>"); // close the last table row
+  } else {
+       alert("Error: Couldn't load products table.");
+  }
   }
   
   // on page load
   $(document).ready(function(){
-	// query for the products to display
-	jsRoutes.controllers.api.Products.all().ajax({
-	  success: function(json){
-	  	productsJSON = json;  // update the productsJSON cache
-      	refreshProducts();
-	  }, 
-	  error: function() { alert("Error: Couldn't load products table."); }
-	});
+  // query for the products to display
+  jsRoutes.controllers.api.Products.all().ajax({
+    success: function(json){
+      productsJSON = json;  // update the productsJSON cache
+        refreshProducts();
+    }, 
+    error: function() { alert("Error: Couldn't load products table."); }
+  });
   });
 
   // on window resize redisplay the product cells using the cached products json
@@ -125,39 +125,41 @@
   </script>
 
   <div id="sidebar" style="float:left; color:black;">
+    @if(user.hasPermission(Permission.EditProducts)) {
     <h2>Actions</h2>
-  	<a href="@routes.Products.newProduct" style="width:100%;" class="fancy-button">Add Product</a>
-	<h2>Categories</h2>
-  	<form>
-  	<input style="font-size: 120%;" id="category-checkbox-all" type="checkbox" class="category-checkbox" checked="checked">All Products (*)<br>
-  	<script type="text/javascript">
+    <a href="@routes.Products.newProduct" style="width:100%;" class="fancy-button">Add Product</a>
+    }
+  <h2>Categories</h2>
+    <form>
+    <input style="font-size: 120%;" id="category-checkbox-all" type="checkbox" class="category-checkbox" checked="checked">All Products (*)<br>
+    <script type="text/javascript">
       $("#category-checkbox-all").change(function() {
           if($("#category-checkbox-all").is(":checked")){
-        	  filterProducts = false;
+            filterProducts = false;
           } else {
-        	  filterProducts = true;
+            filterProducts = true;
           }
           refreshProducts();
         });
       </script>
-  	@Tag.all().map { tag =>
+    @Tag.all().map { tag =>
       <input style="font-size: 120%;" id="category-checkbox-@tag.id" type="checkbox" class="category-checkbox" checked="checked">@tag.name<br>
       <script type="text/javascript">
       $("#category-checkbox-@tag.id").change(function() {
           if($("#category-checkbox-@tag.id").is(":checked")){
-          	categoriesFilter.push(@tag.id);
+            categoriesFilter.push(@tag.id);
           } else {
-          	remove(categoriesFilter, @tag.id);
+            remove(categoriesFilter, @tag.id);
           }
           refreshProducts();
         });
       </script>
     }
-	</form>
+  </form>
   </div>
   
   <div id="products-display">
-  	<center><table id="products"></table></center>
+    <center><table id="products"></table></center>
   </div>
   
 }

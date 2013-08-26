@@ -19,7 +19,7 @@ object Products extends Controller with Secured {
   
   def products = WithPermissions(Perm.ViewProducts) 
   { user => implicit request =>
-    Ok(views.html.products.index(Product.all(), productForm))
+    Ok(views.html.products.index(Product.all(), productForm, user))
   }
   
   def viewProduct(id: Long) = WithPermissions(Perm.ViewProducts)
@@ -27,7 +27,7 @@ object Products extends Controller with Secured {
     val product = Product.find(id)
     product match { 
       case Some(p) => Ok(views.html.products.view(p))
-      case None => BadRequest(views.html.products.index(Product.all(), productForm))
+      case None => BadRequest(views.html.products.index(Product.all(), productForm, user))
     }
   }
   
@@ -51,7 +51,7 @@ object Products extends Controller with Secured {
         val product = Product.find(id)
 	    product match { 
 	      case Some(p) => {Product.update(p.id, name, description); Redirect(routes.Products.editProduct(p.id))}
-	      case None => BadRequest(views.html.products.index(Product.all(), productForm))
+	      case None => BadRequest(views.html.products.index(Product.all(), productForm, user))
 	    }
       })
   }
@@ -88,7 +88,7 @@ object Products extends Controller with Secured {
 
     product match { 
       case Some(p) => Ok(views.html.product_tags(p))
-      case None => BadRequest(views.html.products.index(Product.all(), productForm))
+      case None => BadRequest(views.html.products.index(Product.all(), productForm, user))
     }
   }
   
