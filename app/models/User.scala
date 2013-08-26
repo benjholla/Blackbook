@@ -56,14 +56,16 @@ object User {
     def name() = "username"
     def hasPermission(perm: Permission.Value) = ((permissions & perm.id) != 0)
     def authenticate(password: String): Boolean = {
-      if (password == this.password) {
-        DB.withConnection{ implicit c =>
-          SQL("UPDATE Users SET LastLogin = now() WHERE Id = {id}").
-            on('id -> id).executeUpdate()
-        }
-        return true
-      } 
-      else return false
+      DB.withConnection { implicit c => 
+        val query = SQL("""
+          UPDATE Users SET LastLogin = now() 
+          WHERE Id = {id} 
+          AND Name = {name}
+          AND Password = {password}
+        """).on('id -> id, 'name -> username, 'password -> password)
+
+        return query.executeUpdate() > 0
+      }
     }
   }
 
