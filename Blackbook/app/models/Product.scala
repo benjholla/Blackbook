@@ -63,10 +63,6 @@ case class Product(
     }
     return files.toList
   }
-
-  def getIcon():String = {
-    return "/products/" + id + "/icon.png"
-  }
 }
 
 object Product {

@@ -45,21 +45,25 @@ object Application extends Controller with Secured {
   def users = TODO
 
   def javascriptRoutes = Action { implicit request =>
-    import controllers.api.routes.javascript._
+    import controllers.api.routes.{javascript => capi}
+    import controllers.routes.{javascript => c}
     Ok(
       Routes.javascriptRouter("jsRoutes")(
-        Products.all,
-        Products.create,
-        Products.update,
-        Products.updateMany,
-        Products.delete,
-        Products.get,
-        Products.getTags,
-        Products.addTags,
-        Products.removeTags,
-        Tags.all, 
-        Tags.get,
-        Tags.getProducts
+        capi.Products.all,
+        capi.Products.create,
+        capi.Products.update,
+        capi.Products.updateMany,
+        capi.Products.delete,
+        capi.Products.get,
+        capi.Products.getTags,
+        capi.Products.addTags,
+        capi.Products.removeTags,
+        capi.Tags.all, 
+        capi.Tags.get,
+        capi.Tags.getProducts,
+        c.Products.viewProduct,
+        c.Products.editProduct,
+        c.Products.getIcon
       )
     ).as("text/javascript")
   }

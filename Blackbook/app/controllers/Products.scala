@@ -99,7 +99,7 @@ object Products extends Controller with Secured {
   // This should be used only for determining where to save an icon 
   // file when one is upload, not for getting the icon file
   private[this] def getProductIconPath(id: Long):File = {
-    return new File("/tmp/products/" + id + "/icon.png")
+    return new File("/tmp/products/" + id + "/icon")
   }
   
   // This should be used for getting the icon file, 
@@ -150,7 +150,7 @@ object Products extends Controller with Secured {
   { user => request => 
 	  request.body.file("iconUpload").map { fileUpload =>
 	    val contentType = fileUpload.contentType
-	    if(contentType.get.toString().equals("image/png")){
+	    if(contentType.get.toString().startsWith("image/")){
 	      fileUpload.ref.moveTo(getProductIconPath(id), replace=true)
 	      Redirect(routes.Products.editProduct(id))
 	    } else {

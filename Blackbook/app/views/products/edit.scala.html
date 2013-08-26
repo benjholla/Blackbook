@@ -13,7 +13,7 @@
     <a href="@routes.Products.viewProduct(product.id)" style="width:100%;" class="fancy-button">View Product</a>
   </div>
   <div id="product-display">
-  	<img class="product-icon" src="@product.getIcon()" alt="@product.name Icon" width="180px" height="180px" />
+  	<img class="product-icon" src="@routes.Products.getIcon(product.id)" alt="@product.name Icon" width="180px" height="180px" />
   	<br />
   	<br />
   	<h2>Icon</h2>

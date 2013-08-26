@@ -13,7 +13,7 @@
   function createProductCell(product){
     var html = '<div class="product">';
     html += '<div class="product-name"><a href="/products/' + product.id + '">' + product.name + '</a></div>';
-    html += '<center><a href="/products/' + product.id + '"><img class="product-icon" src="/products/' + product.id + '/icon.png" alt="' + product.name + ' Icon" width="180px" height="180px" /></a></center>';
+    html += '<center><a href="/products/' + product.id + '"><img class="product-icon" src="/products/' + product.id + '/icon" alt="' + product.name + ' Icon" width="180px" height="180px" /></a></center>';
     html += '</div>';
     return html;
   }

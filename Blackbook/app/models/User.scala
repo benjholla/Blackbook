@@ -7,6 +7,7 @@ import java.io.File
 import java.util.Date
 import play.api.Play.current
 import play.api.db._
+import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.collection.immutable.BitSet
 import util.Db
