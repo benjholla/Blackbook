@@ -7,7 +7,10 @@ GET     /                                     controllers.Application.index
 
 # Login page
 GET     /login                                controllers.Application.login
-GET     /order                                controllers.Application.order
+POST    /login                                controllers.Application.authenticate
+GET     /logout                               controllers.Application.logout
+
+
 
 # JS Routes
 GET     /assets/javascripts/routes          controllers.Application.javascriptRoutes
@@ -37,6 +40,9 @@ POST    /categories/:id/delete                controllers.Tags.deleteTag(id:Long
 
 # User routes
 GET     /users				      controllers.Application.users
+
+# Static stuff
+GET     /order                                controllers.Application.order
 
 # JSON read-only routes
 GET     /api/products                         controllers.api.Products.all

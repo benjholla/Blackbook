@@ -1,3 +1,4 @@
+@(loginForm: Form[(String, String)])(implicit flash: Flash)
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
@@ -9,27 +10,52 @@
 </head>
 <body> 
   <div id="header">
-    <img src="@routes.Assets.at("images/blackbook.png")" alt="Blackbook" title="Blackbook" />
+    <img 
+      src="@routes.Assets.at("images/blackbook.png")" 
+      alt="Blackbook" 
+      title="Blackbook" 
+    />
   </div>
   <div id="content">
-		<center>
-			<section class="window valign">
-				<form method="post" action="#" class="login">
-				    <p>
-				      <label for="login">Username:</label>
-				      <input type="text" name="login" id="username" value="">
-				    </p>
-				    <p>
-				      <label for="password">Password:</label>
-				      <input type="password" name="password" id="password" value="">
-				    </p>
-				    <p class="login-submit">
-				      <button type="submit" class="login-button">Login</button>
-				    </p>
-				    <p id="login-message">Cyber Disease Center: Login Portal</p>
-				  </form>
-			</div>
-		</center>
+    <center>
+      <section class="window valign">
+        @helper.form(action = routes.Application.authenticate, 'class -> "login") {
+          <p>
+            <label for="login">Username:</label>
+            <input 
+              type="text" 
+              name="username" 
+              id="username" 
+              value="@loginForm("username").value"
+            />
+          </p>
+          <p>
+            <label for="password">Password:</label>
+            <input 
+              type="password" 
+              name="password" 
+              id="password" 
+              value="@loginForm("password").value"
+            />
+          </p>
+          <p class="login-submit">
+            <button type="submit" class="login-button">Login</button>
+          </p>
+          @loginForm.errors.map { error =>
+            <p class="error">
+              @error.message
+            </p>
+          }
+
+          @flash.get("success").map { message =>
+            <p class="success">
+              @message
+            </p>
+          }
+      <!--<p id="login-message">Cyber Disease Center: Login Portal</p>-->
+        }
+      </div>
+    </center>
   </div>
 </body>
 </html>
