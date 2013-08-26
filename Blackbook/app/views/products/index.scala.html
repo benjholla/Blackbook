@@ -20,7 +20,13 @@
 
   // cache the products json response
   var productsJSON = null;
-  var categoryFilter = [];
+  
+  var filterProducts = false;
+  
+  // messy hack to init array to a list of all categories
+  var categoriesFilter = [@Tag.all().map {tag =>@tag.id,}-1]; // a list of actively enabled categories
+  // pop off the -1 last element place holder
+  categoriesFilter.pop();
 
   // helper function to remove elements from an array
   function remove(arr, item) {
@@ -32,6 +38,32 @@
   }
   
   function refreshProducts() {
+  
+    // a set of products to display
+    var productsToDisplay = [];
+  
+    // for each category query and add to list of products to display
+    if(filterProducts){
+	    for(var i=0; i<categoriesFilter.length; i++){
+	    	jsRoutes.controllers.api.Tags.getProducts(categoriesFilter[i]).ajax({
+			  success: function(json){
+			  	if(json.status == "OK"){
+			  	  var categoryProducts = json.result;
+			  	  for(var j=0; j<categoryProducts.length; j++){
+			  	    // remove product if present and then add again so there are no duplicates
+			  	    remove(productsToDisplay, categoryProducts[j].id); 
+			  	    productsToDisplay.push(categoryProducts[j].id);
+			  	  }
+			  	} else {
+			  	  // could not retrieve results, just skipping this category
+			  	}
+			  }, 
+			  error: function() { alert("Error: Couldn't load products table."); },
+			  async: false // Note: this option is important or else productsToDisplay won't be initialized
+			});
+	    }
+	}
+
 	// calculate the width of the browser to know how many table rows we can add
 	var width = $(window).width();
 	// get the products display windows left position and calculate the product display windows width
@@ -49,16 +81,19 @@
 		var products = productsJSON.result;
 	    $("#products").empty(); // clear the products table
 	    for(var i=0; i<products.length; i++){
-			if(i % numCellsWide == 0){
-				if(i == 0){
-					// first row, just add a new row to get things started
-					$("#products").append("<tr>");
-				} else {
-					// need to start a new row and close the old one
-					$("#products").append("</tr><tr>");
+	    	// if product is on the list of products to display add it to the display table
+	        if(!filterProducts || productsToDisplay.indexOf(products[i].id) > -1){
+	        	if(i % numCellsWide == 0){
+					if(i == 0){
+						// first row, just add a new row to get things started
+						$("#products").append("<tr>");
+					} else {
+						// need to start a new row and close the old one
+						$("#products").append("</tr><tr>");
+					}
 				}
-			}
-			$("#products tr:last").append("<td>" + createProductCell(products[i]) + "</td>");
+				$("#products tr:last").append("<td>" + createProductCell(products[i]) + "</td>");
+	        }
 		 }
 	    $("#products").append("</tr>"); // close the last table row
 	} else {
@@ -92,16 +127,27 @@
   	<a href="/products/new" style="width:100%;" class="fancy-button">Add Product</a>
 	<h2>Categories</h2>
   	<form>
+  	<input style="font-size: 120%;" id="category-checkbox-all" type="checkbox" class="category-checkbox" checked="checked">All Products (*)<br>
+  	<script type="text/javascript">
+      $("#category-checkbox-all").change(function() {
+          if($("#category-checkbox-all").is(":checked")){
+        	  filterProducts = false;
+          } else {
+        	  filterProducts = true;
+          }
+          refreshProducts();
+        });
+      </script>
   	@Tag.all().map { tag =>
-      <input style="font-size: 120%;" id="category-checkbox-@tag.id" type="checkbox" class="category-checkbox" value="@tag.name">@tag.name<br>
+      <input style="font-size: 120%;" id="category-checkbox-@tag.id" type="checkbox" class="category-checkbox" checked="checked">@tag.name<br>
       <script type="text/javascript">
       $("#category-checkbox-@tag.id").change(function() {
-          // alert($("#category-checkbox-@tag.id").val() + " is " + $("#category-checkbox-@tag.id").is(":checked"));
           if($("#category-checkbox-@tag.id").is(":checked")){
-          	categoryFilter.push($("#category-checkbox-@tag.id").val());
+          	categoriesFilter.push(@tag.id);
           } else {
-          	remove(categoryFilter, $("#category-checkbox-@tag.id").val());
+          	remove(categoriesFilter, @tag.id);
           }
+          refreshProducts();
         });
       </script>
     }
