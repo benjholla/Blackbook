@@ -2,18 +2,20 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                                     controllers.Products.products
+# Fake Wordpress decoy site
+GET     /                                     controllers.Application.home
+GET     /about                                controllers.Application.about
+GET     /human-rights                         controllers.Application.humanRights
+GET     /clean-water                          controllers.Application.cleanWater
+GET     /mobile-aid                           controllers.Application.mobileAid
 
 # Login page
 GET     /login                                controllers.Application.login
 POST    /login                                controllers.Application.authenticate
 GET     /logout                               controllers.Application.logout
 
-
-
 # JS Routes
-GET     /assets/javascripts/routes          controllers.Application.javascriptRoutes
+GET     /assets/javascripts/routes            controllers.Application.javascriptRoutes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                         controllers.Assets.at(path="/public", file)
@@ -39,7 +41,10 @@ POST    /categories                           controllers.Tags.newTag
 POST    /categories/:id/delete                controllers.Tags.deleteTag(id:Long)
 
 # User routes
-GET     /users				      controllers.Application.users
+GET     /users				                  controllers.Application.users
+
+# Transactions
+GET     /ledger                               controllers.Application.transactions
 
 # Static stuff
 GET     /order                                controllers.Application.order

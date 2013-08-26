@@ -14,22 +14,19 @@
 	    <nav>
 	      <ul class="nav">
 	        <!--Go to / for all users-->
-	        <li class="nav"><a href="/" class="nav-icon" title="Home"><span class="icon-home">Home</span></a></li>
-	        
-	        <!--Go to /products for all users-->
-	        <li class="nav"><a href="/products" title="Products">Products</a></li>
+	        <li class="nav"><a href="@routes.Products.products()" class="nav-icon" title="Home"><span class="icon-home">Products</span>&nbsp;&nbsp;Products</a></li>
 	        
 	        <!--Go to /users if Admin-->
-	        <li class="nav"><a href="/users" title="Users">Users</a></li>
+	        <li class="nav"><a href="@routes.Application.users()" title="Users">Users</a></li>
 	        
 	        <!--Go to /transactions if Accounting or Admin-->
-	        <li class="nav"><a href="/transactions" title="Ledger">Ledger</a></li>
+	        <li class="nav"><a href="@routes.Application.transactions()" title="Ledger">Ledger</a></li>
 	        
 	        <!--Go to /order if Client or Admin-->
-	        <li class="nav"><a href="/order" title="Order">Order</a></li>
+	        <li class="nav"><a href="@routes.Application.order()" title="Order">Order</a></li>
 	        
 	        <!--Go to /logout for all users-->
-	        <li class="nav"><a href="/logout" title="Contact">Logout</a></li>
+	        <li class="nav"><a href="@routes.Application.logout()" title="Contact">Logout</a></li>
 	      </ul>
 	    </nav>
 	  </section>

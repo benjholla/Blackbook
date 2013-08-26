@@ -11,6 +11,7 @@ import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.collection.immutable.BitSet
 import util.Db
+import scala.language.implicitConversions
 
 object Permission extends Enumeration {
   val ViewProducts = Value(1)

@@ -17,8 +17,26 @@ object Application extends Controller with Secured {
       case (u, p) => User.authenticate(u, p).isDefined })
   ) 
 
-  def index = Action {
-    Redirect(routes.Application.login)
+  def transactions = TODO
+  
+  def home = Action {
+    Ok(views.html.decoy.home())
+  }
+  
+  def about = Action {
+    Ok(views.html.decoy.about())
+  }
+  
+  def humanRights = Action {
+    Ok(views.html.decoy.human_rights())
+  }
+  
+  def cleanWater = Action {
+    Ok(views.html.decoy.clean_water())
+  }
+  
+  def mobileAid = Action {
+    Ok(views.html.decoy.mobile_aid())
   }
   
   def login = Action { implicit request => 
@@ -26,9 +44,7 @@ object Application extends Controller with Secured {
   }
 
   def logout = Action { 
-    Redirect(routes.Application.login).withNewSession.flashing(
-      "success" -> "You have been logged out."
-    )
+    Redirect(routes.Application.home).withNewSession
   }
 
   def authenticate = Action { implicit request =>
