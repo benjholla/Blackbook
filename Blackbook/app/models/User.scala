@@ -53,7 +53,16 @@ object User {
     ) extends User {
     def name() = "username"
     def hasPermission(perm: Permission.Value) = ((permissions & perm.id) != 0)
-    def authenticate(password: String) = password == this.password
+    def authenticate(password: String): Boolean = {
+      if (password == this.password) {
+        DB.withConnection{ implicit c =>
+          SQL("UPDATE Users SET LastLogin = now() WHERE Id = {id}").
+            on('id -> id).executeUpdate()
+        }
+        return true
+      } 
+      else return false
+    }
   }
 
   // Parses a DB user from a SQL result set.
