@@ -22,3 +22,12 @@ server.pid
 *.eml
 *~
 *.class
+.history
+dist
+/.idea
+/out
+/.idea_modules
+/.classpath
+/.project
+/RUNNING_PID
+/.settings
