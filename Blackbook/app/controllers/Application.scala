@@ -82,6 +82,15 @@ trait Secured {
     }
   }
 
+  def getLoggedInUser(request: RequestHeader): Option[User.User] =
+    username(request) match { 
+      case Some(user) => User.getUser(user)
+      case None => None
+    }
+
+  def isLoggedIn(request: RequestHeader): Boolean = 
+    getLoggedInUser(request).isDefined
+    
   private def WithPredicate
     (pred: User.User => Boolean)
     (f: => User.User => Request[AnyContent] => Result) = IsAuthenticated 
