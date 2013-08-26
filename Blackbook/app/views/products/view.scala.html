@@ -3,15 +3,59 @@
 @import helper._
 
 @main("Blackbook | " + product.name) {
-  <h1>Product: @product.name</h1>
-  <h2>Created: @product.getCreateTime.toString()</h2>
-  <h2>Last Updated: @product.getModifyTime.toString()</h2>
-  <h2>Description: @product.description</h2>
   
+  <h1 id="showing-label" style="padding-left:20px">Product: @product.name</h1>
+  <div id="sidebar" style="float:left; color:black;">
+    <h2>Actions</h2>
+    <a href="@routes.Products.products()" style="width:100%;" class="fancy-button">Browse Products</a>
+    <br />
+    <br />
+    <a href="@routes.Products.editProduct(product.id)" style="width:100%;" class="fancy-button">Edit Product</a>
+  </div>
+  <div id="product-display">
   
-  <!--Go to /products/:id/edit if Sales or Admin-->
-  @form(routes.Products.editProduct(product.id)) {
-    <input type="submit" value="Edit Product">
-  }
+  	<img class="product-icon" src="@product.getIcon()" alt="@product.name Icon" width="180px" height="180px" />
+  	
+  	<br />
+  	<br />
+  	<h2>Categories:</h2>
+  	<p style="font-size: 120%;">[@Product.getTags(product.id).map { tag =>
+    	@tag.name 
+  	}]</p>
+  	
+  	<br />
+  	<h2>Files:</h2>
+  	@if(product.getFiles().size > 0) {
+  	<table id="box-table" summary="Product Files">
+	    <tr>
+	    	<th>File</th>
+	    	<th>Download</th>
+	    </tr>
+	    @for(file <- product.getFiles()) {
+		<tr>
+	      <td>@file.getName()</td>
+	    </tr>
+	    <td>@form(routes.Products.getFile(product.id,file.getName())) {
+              <input class="fancy-button" type="submit" value="Download">
+          }
+        </td>
+	}
+	</table>
+  	} else {
+  		<h3>No attachments</h3>
+  	}
+  	
+  	<br />
+  	<h2>Product Description:</h2>
+  	@if(product.description.length > 0){
+  	<div id="product-description">
+  		@play.api.templates.Html(product.description)
+  	</div>
+  	} else {
+  		<h3>No description</h3>
+  	}
+  	
+
+  </div>
   
 }

@@ -2,13 +2,19 @@
 
 @import helper._
 
-@main("Blackbook | Products") {
-  <h1>Add a new product</h1>
+@main("Blackbook | New Product") {
   
+  <h1 id="showing-label" style="padding-left:20px">New Product</h1>
+  <div id="sidebar" style="float:left; color:black;">
+    <h2>Actions</h2>
+    <a href="@routes.Products.products()" style="width:100%;" class="fancy-button">Browse Products</a>
+  </div>
+  <div id="product-display">
   @form(routes.Products.createProduct) {
-    @inputText(productForm("name")) 
-    @textarea(productForm("description"), args = 'rows -> 3, 'cols -> 50)
-    <input type="submit" value="Create">
+   	@inputText(productForm("name"), args = '_label -> "Name") 
+   	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 100, '_label -> "Description")
+   	<input class="fancy-button" type="submit" value="Create">
   }
+  </div>
   
 }
