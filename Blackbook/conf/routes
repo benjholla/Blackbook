@@ -35,6 +35,9 @@ GET     /categories                           controllers.Tags.tags
 POST    /categories                           controllers.Tags.newTag
 POST    /categories/:id/delete                controllers.Tags.deleteTag(id:Long)
 
+# User routes
+GET     /users				      controllers.Application.users
+
 # JSON read-only routes
 GET     /api/products                         controllers.api.Products.all
 GET     /api/products/:id                     controllers.api.Products.get(id:Long)

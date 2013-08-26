@@ -18,6 +18,8 @@ object Application extends Controller {
     Ok(views.html.order())
   }
 
+  def users = TODO
+
   def javascriptRoutes = Action { implicit request =>
     import controllers.api.routes.javascript._
     Ok(
