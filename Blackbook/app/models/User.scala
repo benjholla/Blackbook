@@ -18,18 +18,21 @@ object Permission extends Enumeration {
   val EditLedger = Value(8)
   val ViewUsers = Value(16)
   val EditUsers = Value(32)
+
+  type Set = Permission.ValueSet
+  implicit def wrapValue(p: Permission.Value): Permission.Set = { 
+    ValueSet(p)
+  }
 }
 
 object User {
-  type Permissions = Set[Permission.Value]
-
   var userMap: Map[String, User] = Map()
 
   trait User {
     def name(): String
 
     def hasPermission(perm: Permission.Value): Boolean
-    def hasPermissions(perms: Permissions): Boolean =
+    def hasPermissions(perms: Permission.Set): Boolean =
       perms.forall(hasPermission)
 
     def authenticate(password: String): Boolean
@@ -49,7 +52,7 @@ object User {
       enabled: Boolean
     ) extends User {
     def name() = "username"
-    def hasPermission(perm: Permission.Value) = true
+    def hasPermission(perm: Permission.Value) = ((permissions & perm.id) != 0)
     def authenticate(password: String) = password == this.password
   }
 
@@ -85,6 +88,5 @@ object User {
       user => user.authenticate(password) 
     }
   }
-
 }
 

@@ -73,18 +73,31 @@ trait Secured {
 
   private def onUnauthorized(request: RequestHeader) = Results.NotFound
 
-  def IsAuthenticated(f: => String => Request[AnyContent] => Result) = 
-    Security.Authenticated(username, onUnauthorized) 
-  { user =>
-    Action(request => f(user)(request))
+  def IsAuthenticated(f: => User.User => Request[AnyContent] => Result) = 
+    Security.Authenticated(username, onUnauthorized) { auth_name => 
+    User.getUser(auth_name) map { user =>
+      Action(request => f(user)(request))
+    } getOrElse { 
+      Action(request => onUnauthorized(request))
+    }
   }
 
-  def WithPermission(perm: Permission.Value)(f: => String => Request[AnyContent] => Result) = 
-    IsAuthenticated { user => request => 
-    if (User.getUser(user) exists { u => u.hasPermission(perm) }) {
+  private def WithPredicate
+    (pred: User.User => Boolean)
+    (f: => User.User => Request[AnyContent] => Result) = IsAuthenticated 
+  { user => request => 
+    if (pred(user)) {
       f(user)(request)
     } else {
-      Results.NotFound
+      onUnauthorized(request)
     }
+  }
+
+  def WithPermissions
+    (perms: Permission.Set)
+    (f: => User.User => Request[AnyContent] => Result) = WithPredicate
+  { user => user.hasPermissions(perms) }
+  { user => request => 
+    f(user)(request)
   }
 }

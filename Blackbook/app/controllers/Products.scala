@@ -5,22 +5,25 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 import models._
+import models.{Permission => Perm}
 import play.api.Play.current
 import java.io.File
 import scala.collection.mutable.ArrayBuffer
 
-object Products extends Controller {
+object Products extends Controller with Secured {
 
   val productForm = Form (
     tuple("name" -> nonEmptyText,
           "description" -> nonEmptyText)
   )
   
-  def products = Action {
+  def products = WithPermissions(Perm.ViewProducts) 
+  { user => implicit request =>
     Ok(views.html.products.index(Product.all(), productForm))
   }
   
-  def viewProduct(id: Long) = Action {
+  def viewProduct(id: Long) = WithPermissions(Perm.ViewProducts)
+  { user => implicit request => 
     val product = Product.find(id)
     product match { 
       case Some(p) => Ok(views.html.products.view(p))
@@ -28,7 +31,9 @@ object Products extends Controller {
     }
   }
   
-  def editProduct(id: Long) = Action {
+  def editProduct(id: Long) = 
+    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+  { user => implicit request =>
     val product = Product.find(id)
     product match { 
       case Some(p) => Ok(views.html.products.edit(p,productForm.fill((p.name, p.description))))
@@ -36,7 +41,9 @@ object Products extends Controller {
     }
   }
   
-  def updateProduct(id: Long) = Action { implicit request =>
+  def updateProduct(id: Long) = 
+    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+  { user => implicit request =>
     productForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.products.edit(Product.find(id).get, formWithErrors)),
       form => {
@@ -49,11 +56,15 @@ object Products extends Controller {
       })
   }
 
-  def newProduct() = Action {
+  def newProduct() = 
+    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+  { user => implicit request =>
     Ok(views.html.products.newProduct(productForm))
   }
   
-  def createProduct = Action { implicit request =>
+  def createProduct = 
+    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+  { user => implicit request =>
     productForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.products.newProduct(formWithErrors)),
       form => {
@@ -63,12 +74,16 @@ object Products extends Controller {
       })
   }
 
-  def deleteProduct(id: Long) = Action {
+  def deleteProduct(id: Long) = 
+    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+  { user => implicit request =>
     Product.delete(id)
     Redirect(routes.Products.products)
   }
 
-  def tagsForProduct(id: Long) = Action { 
+  def tagsForProduct(id: Long) = 
+    WithPermissions(Perm.ViewProducts)
+  { user => implicit request =>
     val product = Product.find(id)
 
     product match { 
@@ -98,15 +113,19 @@ object Products extends Controller {
     }
   }
   
-  def getIcon(id: Long) = Action {
+  def getIcon(id: Long) = WithPermissions(Perm.ViewProducts) 
+  { user => implicit request => 
     Ok.sendFile(getProductIconFile(id))
   }
   
-  def getFile(id: Long, filename:String) = Action {
+  def getFile(id: Long, filename:String) = WithPermissions(Perm.ViewProducts) 
+  { user => implicit request => 
     Ok.sendFile(getProductFilePath(id, filename))
   }
   
-  def deleteFile(id: Long, filename:String) = Action {
+  def deleteFile(id: Long, filename:String) = 
+    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+  { user => implicit request => 
     getProductFilePath(id, filename).delete()
     Redirect(routes.Products.editProduct(id))
   }
