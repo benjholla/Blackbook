@@ -69,7 +69,9 @@ object Application extends Controller with Secured {
 trait Secured {
   private def username(request: RequestHeader) = request.session.get("username")
 
-  private def onUnauthorized(request: RequestHeader) = Results.NotFound
+  private def onUnauthorized(request: RequestHeader) = 
+    if (isLoggedIn(request)) Results.Unauthorized
+    else Results.NotFound
 
   private def IsAuthenticatedBase[A]
     (b: BodyParser[A] = parse.anyContent)
