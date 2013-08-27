@@ -62,18 +62,6 @@ trait Api {
     result(toJson(fields))
   }
 
-  /* Wraps one of our API functions, invoking it with the user-provided JsResult
-   * and converting the ApiResult to a Result */
-  /*def apiCall(api_result: ApiResult) = Action { _ =>
-    apiResponse(api_result)
-  }*/
-
-  /* Wraps one of our API functions, invoking it with the user-provided JsResult
-   * and converting the ApiResult to a Result */
-  /*def apiCall(call: JsValue => ApiResult) = Action(parse.json) { request =>
-    apiResponse(call(request.body))
-  }*/
-
   object ApiCall
   {
     def apply[A <: Any](b: BodyParser[A])(f: => A => ApiResult) = Action(b) 
@@ -82,16 +70,6 @@ trait Api {
     def apply(f: => ApiResult) = Action
     { apiResponse(f) }
   }
-
-  /*
-  def ApiCall[A <: Any]
-    (b: BodyParser[A])
-    (f: => A => ApiResult) = ApiCallBase[A](b)(f)
-
-  def ApiCall(f: => AnyContent => ApiResult) = 
-    ApiCallBase[AnyContent](parse.anyContent)(f)
-    */
-
 }
 
 trait SecuredApi extends Api with controllers.Secured {
