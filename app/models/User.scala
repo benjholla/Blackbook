@@ -25,6 +25,10 @@ object Permission extends Enumeration {
   implicit def wrapValue(p: Permission.Value): Permission.Set = { 
     ValueSet(p)
   }
+
+  implicit def setToLong(ps: Permission.Set): Long = ps.foldLeft(0) { (l, r) =>
+    l | r.id
+  }
 }
 
 object User {
@@ -33,6 +37,9 @@ object User {
   trait User {
     def name(): String
 
+    def password(): String
+    def enabled(): Boolean
+
     def hasPermission(perm: Permission.Value): Boolean
     def hasPermissions(perms: Permission.Set): Boolean =
       perms.forall(hasPermission)
@@ -40,13 +47,16 @@ object User {
     def getPermissions(): Permission.Set =
       Permission.values filter hasPermission
 
-    def authenticate(password: String): Boolean
+    def authenticate(token: String): Boolean = token == password
+
+    def update(u: User): Unit = {}
   }
 
   class TestingAdmin extends User {
     def name() = "test"
+    def password() = "secret"
+    def enabled() = true
     def hasPermission(perm: Permission.Value) = true
-    def authenticate(password: String) = password == "secret"
   }
 
   case class DbUser
@@ -58,7 +68,7 @@ object User {
     ) extends User {
     def name() = "username"
     def hasPermission(perm: Permission.Value) = ((permissions & perm.id) != 0)
-    def authenticate(password: String): Boolean = {
+    override def authenticate(password: String): Boolean = {
       DB.withConnection { implicit c => 
         val query = SQL("""
           UPDATE Users SET LastLogin = now() 
@@ -92,7 +102,7 @@ object User {
     }.headOption orElse testUser(username)
   }
 
-  def users(): Map[String, User] = {
+  def all(): Map[String, User] = {
     val dbUsers = DB.withConnection { implicit c =>
       SQL("SELECT * FROM Users").as(dbUser *)
     } map { user => user.name -> user } toMap
