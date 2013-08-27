@@ -14,8 +14,8 @@
   
     <h2>Name and Description:</h2>
   	@form(routes.Products.updateProduct(product.id)) {
-    	@inputText(productForm("name"), args = '_label -> "Name") 
-    	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 100, '_label -> "Description")
+    	@inputText(productForm("name"), args = '_label -> "Name", 'class -> "fancy-input") 
+    	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 90, '_label -> "Description", 'class -> "fancy-text-input")
     	<input class="fancy-button" type="submit" value="Update">
   	}
   	
@@ -159,4 +159,6 @@
 	  <input class="fancy-button" type="submit" value="Upload File">
 	}
   
+  <br />
+  <br />
 }

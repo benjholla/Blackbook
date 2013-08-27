@@ -25,6 +25,23 @@ a:active {
   color:#cfcfcf;
 }  
 
+/* Some input forms styling */
+.fancy-input {
+	width: 200px;
+	display: block;
+	border: 1px solid #999;
+	height: 25px;
+	padding-left: 5px;
+	font-size: 120%
+}
+
+.fancy-text-input {
+	display: block;
+	border: 1px solid #999;
+	padding: 5px;
+	font-size: 120%
+}
+
 /* Product display cell */
 .product {
 	padding: 0px;

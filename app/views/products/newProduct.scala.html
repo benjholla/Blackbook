@@ -11,8 +11,8 @@
   </div>
   <div id="product-display">
   @form(routes.Products.createProduct) {
-   	@inputText(productForm("name"), args = '_label -> "Name") 
-   	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 100, '_label -> "Description")
+   	@inputText(productForm("name"), args = '_label -> "Name", 'class -> "fancy-input") 
+   	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 90, '_label -> "Description", 'class -> "fancy-text-input")
    	<input class="fancy-button" type="submit" value="Create">
   }
   </div>
