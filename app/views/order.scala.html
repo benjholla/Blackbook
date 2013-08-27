@@ -23,7 +23,8 @@
 	When contacting your Sales agent please have your account information ready.
 	</p>
 	<table>
-		<tr><th style="font-size:120%">Your Username:&nbsp;&nbsp;</th><th><input class="fancy-input" type="text" name="accountInfo" readonly="true" disabled="disabled" value="@user.name"></th></tr>
+		<tr><td style="font-size:120%">Your Username:&nbsp;&nbsp;</td><td><input class="fancy-input" type="text" name="accountInfo" readonly="true" disabled="disabled" value="@user.name"></td></tr>
+		<tr><td style="font-size:120%">Your User ID:&nbsp;&nbsp;</td><td><input class="fancy-input" type="text" name="accountInfo" readonly="true" disabled="disabled" value="TODO"></td></tr>
 	</table>
 	
 	<br />
@@ -78,16 +79,17 @@
 	<h3>Contacting Support</h3>
 	<p style="width:600px;">
 	If you unsure of how to contact your assigned Sales representative please call the 
-	following number and enter the authentication code shown below.
+	following number and enter the authentication code shown below.  Note: The authentication code
+	shown below will expire at Midnight (@{java.util.TimeZone.getDefault().getDisplayName()}).
 	</p>
 	<table>
 		<tr>
-			<td style="font-size:120%">Support Number:&nbsp;&nbsp;</td>
+			<td style="font-size:120%">Telephone:&nbsp;&nbsp;</td>
 			<td><input class="fancy-input" type="text" name="phoneNumber" readonly="true" disabled="disabled" value="+1 515-200-1301"></td>
 		</tr>
 		<tr>
 			<td style="font-size:120%">Authentication Code:&nbsp;&nbsp;</td>
-			<td><input class="fancy-input" type="text" name="authCode" readonly="true" disabled="disabled" value="TODO Auth Code"></td>
+			<td><input class="fancy-input" type="text" name="authCode" readonly="true" disabled="disabled" value="@util.auth_code.AuthCode.getAuthCode(user.name)"></td>
 		</tr>
 	</table>
 </div>
