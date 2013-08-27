@@ -1,0 +1,15 @@
+package util
+
+import play.api._
+import play.api.mvc._
+import play.api.mvc.Results._
+
+class ExtendedHeaders(rh: RequestHeader) {
+  def referer = {
+    rh.headers.get("REFERER") getOrElse controllers.routes.Application.home().url
+  }
+}
+
+object ExtendedHeaders {
+  implicit def extendedHeaders(rh: RequestHeader) = new ExtendedHeaders(rh)
+}
