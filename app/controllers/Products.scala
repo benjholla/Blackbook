@@ -101,7 +101,7 @@ object Products extends Controller with Secured {
     if(file.exists()){
       return file;
     } else {
-      return Play.getFile("public/images/default-product-icon.png")
+      return Play.getFile("./public/images/default-product-icon.png")
     }
   }
   
