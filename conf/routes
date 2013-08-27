@@ -25,7 +25,6 @@ GET     /products                             controllers.Products.products
 GET     /products/new                         controllers.Products.newProduct
 GET     /products/:id/edit                    controllers.Products.editProduct(id: Long)
 GET     /products/:id                         controllers.Products.viewProduct(id: Long)
-GET     /products/:id/categories              controllers.Products.tagsForProduct(id: Long)
 GET     /products/:id/files/:filename         controllers.Products.getFile(id: Long, filename:String)
 GET     /products/:id/icon                    controllers.Products.getIcon(id: Long)
 GET     /products/:id/delete/:filename        controllers.Products.deleteFile(id: Long, filename:String)

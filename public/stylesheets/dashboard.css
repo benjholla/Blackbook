@@ -294,6 +294,7 @@ q:before, q:after {
 	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
 	background-color:#dfdfdf;
+	color: black;
 }
 
 .fancy-button:active {

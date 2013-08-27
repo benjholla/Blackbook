@@ -3,6 +3,7 @@ package util
 import play.api._
 import play.api.mvc._
 import play.api.mvc.Results._
+import scala.language.implicitConversions
 
 class ExtendedHeaders(rh: RequestHeader) {
   def referer = {

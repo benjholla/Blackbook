@@ -81,17 +81,6 @@ object Products extends Controller with Secured {
     Product.delete(id)
     Redirect(routes.Products.products)
   }
-
-  def tagsForProduct(id: Long) = 
-    WithPermissions(Perm.ViewProducts)
-  { implicit user => implicit request =>
-    val product = Product.find(id)
-
-    product match { 
-      case Some(p) => Ok(views.html.product_tags(p))
-      case None => BadRequest(views.html.products.index(Product.all(), productForm))
-    }
-  }
   
   private[this] def uploadPath = "./uploads/products/"
   

@@ -1,3 +1,7 @@
+@(user: User.User)
+
+@import helper._
+
 @main("Blackbook | Order") {
 
 <div style="margin-left:20px">
@@ -19,8 +23,9 @@
 	When contacting your Sales agent please have your account information ready.
 	</p>
 	<table>
-		<tr><th style="font-size:120%">Your Account Information:&nbsp;&nbsp;</th><th><input type="text" name="accountInfo" readonly="true" disabled="disabled" value="TODO Username"></th></tr>
+		<tr><th style="font-size:120%">Your Username:&nbsp;&nbsp;</th><th><input type="text" name="accountInfo" readonly="true" disabled="disabled" value="@user.name"></th></tr>
 	</table>
+	
 	<br />
 	<h2>Making a Payment</h2>
 	<p style="width:600px;">
@@ -28,8 +33,7 @@
 	assigned Sales agent will be happy to provide you with further information regarding 
 	this matter.
 	</p>
-	
-	
+
 	<table class="box-table" summary="Payment Options">
 	    <thead>
 	    	<tr>
@@ -61,6 +65,7 @@
 	        </tr>
 	    </tbody>
 	</table>
+	
 	<br />
 	<h2>Important Notes</h2>
 	<h3>Privacy Information</h3>
@@ -69,6 +74,7 @@
 	product list you have agreed protect the secrecy of this information under our Non-Disclosure 
 	Agreement.  We take this agreement very seriously.
 	</p>
+	
 	<h3>Contacting Support</h3>
 	<p style="width:600px;">
 	If you unsure of how to contact your assigned Sales representative please call the 
@@ -77,7 +83,7 @@
 	<table>
 		<tr>
 			<td style="font-size:120%">Support Number:&nbsp;&nbsp;</td>
-			<td><input type="text" name="phoneNumber" readonly="true" disabled="disabled" value="TODO Phone"></td>
+			<td><input type="text" name="phoneNumber" readonly="true" disabled="disabled" value="+1 515-200-1301"></td>
 		</tr>
 		<tr>
 			<td style="font-size:120%">Authentication Code:&nbsp;&nbsp;</td>
@@ -85,5 +91,4 @@
 		</tr>
 	</table>
 </div>
-
 }
