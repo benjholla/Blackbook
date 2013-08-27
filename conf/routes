@@ -41,7 +41,7 @@ POST    /categories                           controllers.Tags.newTag
 POST    /categories/:id/delete                controllers.Tags.deleteTag(id:Long)
 
 # User routes
-GET     /users				                  controllers.Application.users
+GET     /users                                controllers.Application.users
 
 # Transactions
 GET     /ledger                               controllers.Application.transactions
