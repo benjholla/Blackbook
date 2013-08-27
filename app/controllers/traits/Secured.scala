@@ -5,9 +5,10 @@ import play.api.mvc._
 import play.api.mvc.BodyParsers._
 
 trait Secured {
-  private def username(request: RequestHeader) = request.session.get("username")
+  protected def username(request: RequestHeader) = 
+    request.session.get("username")
 
-  private def onUnauthorized(request: RequestHeader) = 
+  protected def onUnauthorized(request: RequestHeader) = 
     if (isLoggedIn(request)) Results.Unauthorized
     else Results.NotFound
 

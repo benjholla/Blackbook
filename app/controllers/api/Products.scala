@@ -16,12 +16,13 @@ import json.TagJson._
 object Products extends Controller with SecuredApi { 
   
   /** Handle an API request to list products. */
-  def all() = ApiCall { 
+  def all() = SecuredApiCall(Permission.ViewProducts) { 
     SuccessWithData(toJson(models.Product.all())) 
   }
  
   /** Handle an API request to create a new product. */
-  def create = ApiCall(parse.json) { body =>
+  def create = SecuredApiCall(Permission.EditProducts)(parse.json) 
+  { body =>
     val created = for {
       name <- (body \ "name").validate[String]
       desc <- (body \ "description").validate[String] orElse JsSuccess("")
@@ -31,7 +32,8 @@ object Products extends Controller with SecuredApi {
   }
 
   /** Handle an API request to update a product. */
-  def update(id: Long) = ApiCall(parse.json) { body => 
+  def update(id: Long) = SecuredApiCall(Permission.EditProducts)(parse.json) 
+  { body => 
     val updated = for {
       bid <- (body \ "id").validate[Long] orElse JsSuccess(id)
       name <- (body \ "name").validate[String]
@@ -48,7 +50,8 @@ object Products extends Controller with SecuredApi {
   }
 
   /** Handle an API request to update a list of products. */
-  def updateMany = ApiCall(parse.json) { body =>
+  def updateMany = SecuredApiCall(Permission.EditProducts)(parse.json) 
+  { body =>
     body.validate[List[Product]].map { plist =>
       val updated = plist map { p =>
         Product.update(p.id, p.name, p.description)
@@ -58,23 +61,24 @@ object Products extends Controller with SecuredApi {
   }
 
   /** Handle an API request to delete a product. */
-  def delete(id: Long) = ApiCall {
+  def delete(id: Long) = SecuredApiCall(Permission.EditProducts) {
     Product.delete(id)
     Success()
   }
   
   /** Get a single product. */
-  def get(id: Long) = ApiCall {
+  def get(id: Long) = SecuredApiCall(Permission.ViewProducts) {
     SuccessWithData(toJson(Product.find(id)))
   }
 
   /** Get all the tags for a product. */
-  def getTags(id: Long) = ApiCall {
+  def getTags(id: Long) = SecuredApiCall(Permission.ViewProducts) {
     SuccessWithData(toJson(Product.getTags(id)))
   }
 
   /** Add tags to a product. */
-  def addTags(id: Long) = ApiCall(parse.json) { body =>
+  def addTags(id: Long) = SecuredApiCall(Permission.EditProducts)(parse.json) 
+  { body =>
     body.validate[List[String]].map { tags =>
       tags.map { tag =>
         Product.addTag(id, tag)
@@ -84,7 +88,9 @@ object Products extends Controller with SecuredApi {
   }
 
   /** Remove tags from a product. */
-  def removeTags(id: Long) = ApiCall(parse.json) { body =>
+  def removeTags(id: Long) = 
+    SecuredApiCall(Permission.EditProducts)(parse.json) 
+  { body =>
     body.validate[List[String]].map { tags =>
       tags.map { tag =>
         Product.removeTag(id, tag)

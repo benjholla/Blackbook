@@ -22,6 +22,8 @@ object Permission extends Enumeration {
   val EditUsers = Value(32)
 
   type Set = Permission.ValueSet
+  def Set() = Permission.ValueSet()
+
   implicit def wrapValue(p: Permission.Value): Permission.Set = { 
     ValueSet(p)
   }

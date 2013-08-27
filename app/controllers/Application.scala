@@ -55,9 +55,8 @@ object Application extends Controller with Secured {
     )
   }
   
-  def order = IsAuthenticated { implicit user => implicit request => {
+  def order = IsAuthenticated { implicit user => implicit request => 
 	  Ok(views.html.order(user))
-  	}
   }
 
   def users = TODO

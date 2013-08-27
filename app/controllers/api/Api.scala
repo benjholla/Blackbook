@@ -73,5 +73,21 @@ trait Api {
 }
 
 trait SecuredApi extends Api with controllers.traits.Secured {
+  case class SecuredApiCall(perms: Permission.Set = Permission.Set()) {
+    def apply[A <: Any](b: BodyParser[A])(f: => A => ApiResult) = 
+    { 
+      Security.Authenticated(username, onUnauthorized)
+      { auth_name => Action(b) 
+        { request => 
+          getLoggedInUser(request).
+            filter { user => user.hasPermissions(perms) }.
+            map { user => apiResponse(f(request.body)) }.
+            getOrElse { onUnauthorized(request) }
+        }
+      }
+    }
 
+    def apply(f: => ApiResult): EssentialAction = 
+     apply(parse.anyContent) { content => f }
+  }
 }

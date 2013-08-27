@@ -13,19 +13,19 @@ import models._
 import json.ProductJson._
 import json.TagJson._
 
-object Tags extends Controller with Api { 
+object Tags extends Controller with SecuredApi { 
   /** Get all the tags. */
-  def all() = ApiCall {
+  def all() = SecuredApiCall(Permission.ViewProducts) {
     SuccessWithData(toJson(Tag.all()))
   }
 
   /** Get one tag */
-  def get(id: Long) = ApiCall {
+  def get(id: Long) = SecuredApiCall(Permission.ViewProducts) {
     SuccessWithData(toJson(Tag.find(id)))
   }
 
   /** Get all the products associated with a tag */
-  def getProducts(id: Long) = ApiCall {
+  def getProducts(id: Long) = SecuredApiCall(Permission.ViewProducts) {
     SuccessWithData(toJson(Tag.getProducts(id)))
   }
 }
