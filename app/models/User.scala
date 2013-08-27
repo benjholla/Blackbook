@@ -20,6 +20,7 @@ object Permission extends Enumeration {
   val EditLedger = Value(8)
   val ViewUsers = Value(16)
   val EditUsers = Value(32)
+  val DownloadFile = Value(64)
 
   type Set = Permission.ValueSet
   def Set() = Permission.ValueSet()

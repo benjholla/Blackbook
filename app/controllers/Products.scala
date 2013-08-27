@@ -110,7 +110,8 @@ object Products extends Controller with Secured {
     Ok.sendFile(getProductIconFile(id))
   }
   
-  def getFile(id: Long, filename:String) = WithPermissions(Perm.ViewProducts) 
+  def getFile(id: Long, filename:String) = 
+    WithPermissions(Perm.ViewProducts + Perm.DownloadFile)
   { implicit user => implicit request => 
     Ok.sendFile(getProductFilePath(id, filename))
   }
