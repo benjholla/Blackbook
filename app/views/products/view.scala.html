@@ -4,7 +4,6 @@
 
 @main("Blackbook | " + product.name) {
   
-  <h1 id="showing-label" style="padding-left:20px">Product: @product.name</h1>
   <div id="sidebar" style="float:left; color:black;">
     <h2>Actions</h2>
     <a href="@routes.Products.products()" style="width:100%;" class="fancy-button">Browse Products</a>
@@ -13,7 +12,19 @@
     <a href="@routes.Products.editProduct(product.id)" style="width:100%;" class="fancy-button">Edit Product</a>
   </div>
   <div id="product-display">
+  	
+  	<h1>@product.name</h1>
+  	<br />
+  	<h2>Description:</h2>
+  	@if(product.description.length > 0){
+  	<div id="product-description">
+  		@play.api.templates.Html(product.description)
+  	</div>
+  	} else {
+  		<h3>No description</h3>
+  	}
   
+    <br />
   	<img class="product-icon" src="@routes.Products.getIcon(product.id)" alt="@product.name Icon" width="180px" height="180px" />
   	
   	<br />
@@ -46,15 +57,7 @@
   	}
   	
   	<br />
-  	<h2>Product Description:</h2>
-  	@if(product.description.length > 0){
-  	<div id="product-description">
-  		@play.api.templates.Html(product.description)
-  	</div>
-  	} else {
-  		<h3>No description</h3>
-  	}
-  	
+  	<br />
 
   </div>
   

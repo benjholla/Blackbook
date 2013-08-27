@@ -4,6 +4,16 @@
 
 @main("Blackbook | Products") {
   <script type="text/javascript">
+  
+  // cache the total number of products
+  var totalProducts = @products.size;
+  
+  // cache the products json response
+  var productsJSON = null;
+  
+  // by default product filtering is turned off
+  var filterProducts = false;
+  
   // given some json, returns the html for a product display cell
   function createProductCell(product){
     var html = '<div class="product">';
@@ -12,16 +22,17 @@
     html += '</div>';
     return html;
   }
-
-  // cache the products json response
-  var productsJSON = null;
+  // messy hack to init array to a list of all categories id's
   
-  var filterProducts = false;
   
-  // messy hack to init array to a list of all categories
-  var categoriesFilter = [@Tag.all().map {tag =>@tag.id,}-1]; // a list of actively enabled categories
-  // pop off the -1 last element place holder
-  categoriesFilter.pop();
+  
+  var categoriesFilter = [@play.api.templates.Html({
+				  			var result = ""
+				   	    	for(tag <- Tag.all()) {
+				   		    	result += "\"" + tag.name + "\"" + " "
+				   	    	}
+				   	    	result.trim().replace(" ", ",");
+				   	    })];
 
   // helper function to remove elements from an array
   function remove(arr, item) {
@@ -120,11 +131,13 @@
   </script>
 
   <div id="sidebar" style="float:left; color:black;">
-    @if(user.hasPermission(Permission.EditProducts)) {
-    <h2>Actions</h2>
-    <a href="@routes.Products.newProduct" style="width:100%;" class="fancy-button">Add Product</a>
-    }
+  @if(user.hasPermission(Permission.EditProducts)) {
+  <h2>Actions</h2>
+  <a href="@routes.Products.newProduct" style="width:100%;" class="fancy-button">Add Product</a>
+  }
+  
   <h2>Categories</h2>
+    <p id="products-showing">Showing: @products.size/@products.size Product(s)</p>
     <form>
     <input style="font-size: 120%;" id="category-checkbox-all" type="checkbox" class="category-checkbox" checked="checked">All Products (*)<br>
     <script type="text/javascript">
@@ -156,5 +169,8 @@
   <div id="products-display">
     <center><table id="products"></table></center>
   </div>
+  
+  <br />
+  <br />
   
 }

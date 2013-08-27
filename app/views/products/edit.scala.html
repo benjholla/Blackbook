@@ -3,7 +3,6 @@
 @import helper._
 
 @main("Blackbook | Edit " + product.name) {
-  <h1 id="showing-label" style="padding-left:20px">Product: @product.name</h1>
   <div id="sidebar" style="float:left; color:black;">
     <h2>Actions</h2>
     <a href="@routes.Products.products()" style="width:100%;" class="fancy-button">Browse Products</a>
@@ -12,6 +11,16 @@
     <a href="@routes.Products.viewProduct(product.id)" style="width:100%;" class="fancy-button">View Product</a>
   </div>
   <div id="product-display">
+  
+    <h2>Name and Description:</h2>
+  	@form(routes.Products.updateProduct(product.id)) {
+    	@inputText(productForm("name"), args = '_label -> "Name") 
+    	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 100, '_label -> "Description")
+    	<input class="fancy-button" type="submit" value="Update">
+  	}
+  	
+  	<br /><hr /><br />
+  
   	<img class="product-icon" src="@routes.Products.getIcon(product.id)" alt="@product.name Icon" width="180px" height="180px" />
   	<br />
   	<br />
@@ -22,16 +31,7 @@
 	}
   	
   	<br /><hr /><br />
-  	
-  	<h2>Name and Description:</h2>
-  	@form(routes.Products.updateProduct(product.id)) {
-    	@inputText(productForm("name"), args = '_label -> "Name") 
-    	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 100, '_label -> "Description")
-    	<input class="fancy-button" type="submit" value="Update">
-  	}
-  	
-  	<br /><hr /><br />
-  	
+
   	<h2>Categories:</h2>
   	@if(Product.getTags(product.id).size > 0) {
   	<table id="categories-table" class="box-table" summary="Categories">
@@ -158,6 +158,7 @@
 	  <input type="file" name="fileUpload">
 	  <input class="fancy-button" type="submit" value="Upload File">
 	}
+	
 	<br />
 	<br />
   
