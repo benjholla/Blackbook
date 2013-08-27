@@ -10,20 +10,22 @@ import play.api.libs.json.Writes._
 import play.api.libs.functional.syntax._
 
 import models._
+import json.ProductJson._
+import json.TagJson._
 
-object Tags extends Api { 
+object Tags extends Controller with Api { 
   /** Get all the tags. */
-  def all() = {
-    apiCall( SuccessWithData(toJson(Tag.all())) )
+  def all() = ApiCall {
+    SuccessWithData(toJson(Tag.all()))
   }
 
   /** Get one tag */
-  def get(id: Long) = {
-    apiCall( SuccessWithData(toJson(Tag.find(id))) )
+  def get(id: Long) = ApiCall {
+    SuccessWithData(toJson(Tag.find(id)))
   }
 
   /** Get all the products associated with a tag */
-  def getProducts(id: Long) = {
-    apiCall( SuccessWithData(toJson(Tag.getProducts(id))) )
+  def getProducts(id: Long) = ApiCall {
+    SuccessWithData(toJson(Tag.getProducts(id)))
   }
 }

@@ -2,24 +2,18 @@ package controllers.api
 
 import play.api._
 import play.api.mvc._
+import play.api.mvc.BodyParsers._
 import play.api.data._
 import play.api.libs.json._
-import play.api.libs.json.Json._
+import play.api.libs.json.Json.toJson
 import play.api.libs.json.Reads._
 import play.api.libs.json.Writes._
 import play.api.libs.functional.syntax._
+import play.api.mvc.Results._
 
 import models._
 
-class Api extends Controller {
-  // JSON serializers for products
-  implicit val productReads = reads[Product]
-  implicit val productWrites = writes[Product]
-  
-  // JSON serializers for tags
-  implicit val tagReads = reads[Tag]
-  implicit val tagWrites = writes[Tag]
-
+trait Api {
   abstract class ApiResult
   case class Success() extends ApiResult
   case class SuccessWithData(data: JsValue) extends ApiResult
@@ -70,15 +64,36 @@ class Api extends Controller {
 
   /* Wraps one of our API functions, invoking it with the user-provided JsResult
    * and converting the ApiResult to a Result */
-  def apiCall(api_result: ApiResult) = Action { _ =>
+  /*def apiCall(api_result: ApiResult) = Action { _ =>
     apiResponse(api_result)
-  }
+  }*/
 
   /* Wraps one of our API functions, invoking it with the user-provided JsResult
    * and converting the ApiResult to a Result */
-  def apiCall(call: JsValue => ApiResult) = Action(parse.json) { request =>
+  /*def apiCall(call: JsValue => ApiResult) = Action(parse.json) { request =>
     apiResponse(call(request.body))
+  }*/
+
+  object ApiCall
+  {
+    def apply[A <: Any](b: BodyParser[A])(f: => A => ApiResult) = Action(b) 
+    { request => apiResponse(f(request.body)) }
+
+    def apply(f: => ApiResult) = Action
+    { apiResponse(f) }
   }
+
+  /*
+  def ApiCall[A <: Any]
+    (b: BodyParser[A])
+    (f: => A => ApiResult) = ApiCallBase[A](b)(f)
+
+  def ApiCall(f: => AnyContent => ApiResult) = 
+    ApiCallBase[AnyContent](parse.anyContent)(f)
+    */
 
 }
 
+trait SecuredApi extends Api with controllers.Secured {
+
+}
