@@ -50,6 +50,8 @@ GET     /api/products/:id/tags                controllers.api.Products.getTags(i
 GET     /api/tags                             controllers.api.Tags.all
 GET     /api/tags/:id                         controllers.api.Tags.get(id:Long)
 GET     /api/tags/:id/products                controllers.api.Tags.getProducts(id:Long)
+GET     /api/users                            controllers.api.Users.all
+GET     /api/users/:name                      controllers.api.Users.get(name:String)
 
 # JSON read/write routes
 POST    /api/products/create                  controllers.api.Products.create
@@ -58,4 +60,5 @@ POST    /api/products/:id/update              controllers.api.Products.update(id
 POST    /api/products/:id/delete              controllers.api.Products.delete(id: Long)
 POST    /api/products/:id/addTags             controllers.api.Products.addTags(id: Long)
 POST    /api/products/:id/removeTags          controllers.api.Products.removeTags(id: Long)
+POST    /api/users/update                     controllers.api.Users.update
 
