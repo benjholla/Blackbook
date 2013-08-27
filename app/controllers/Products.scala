@@ -1,14 +1,15 @@
 package controllers
 
-import play.api._
-import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
+import java.io.File
 import models._
 import models.{Permission => Perm}
+import play.api._
+import play.api.data._
+import play.api.data.Forms._
+import play.api.mvc._
 import play.api.Play.current
-import java.io.File
 import scala.collection.mutable.ArrayBuffer
+import traits._
 
 object Products extends Controller with Secured {
 
