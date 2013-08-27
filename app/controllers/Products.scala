@@ -10,6 +10,7 @@ import play.api.mvc._
 import play.api.Play.current
 import scala.collection.mutable.ArrayBuffer
 import traits._
+import util.Db
 
 object Products extends Controller with Secured {
 
@@ -82,16 +83,15 @@ object Products extends Controller with Secured {
     Redirect(routes.Products.products)
   }
   
-  private[this] def uploadPath = "./uploads/products/"
   
   private[this] def getProductFilePath(id: Long, filename:String):File = {
-    return new File(uploadPath + id + "/files/" + filename)
+    return new File(Db.uploadsPath() + id + "/files/" + filename)
   }
   
   // This should be used only for determining where to save an icon 
   // file when one is upload, not for getting the icon file
   private[this] def getProductIconPath(id: Long):File = {
-    return new File(uploadPath + id + "/icon")
+    return new File(Db.uploadsPath() + id + "/icon")
   }
   
   // This should be used for getting the icon file, 
@@ -101,7 +101,7 @@ object Products extends Controller with Secured {
     if(file.exists()){
       return file;
     } else {
-      return Play.getFile("./public/images/default-product-icon.png")
+      return Play.getFile(Db.defaultProductIconPath())
     }
   }
   

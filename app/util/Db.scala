@@ -21,4 +21,12 @@ object Db {
     val query = SQL("SELECT LastVal()")
     query().map( row => row[Long]("LastVal") ).head
   }
+  
+  def uploadsPath():String = {
+    "./uploads/products/"
+  }
+  
+  def defaultProductIconPath():String = {
+    "./public/images/default-product-icon.png"
+  }
 }

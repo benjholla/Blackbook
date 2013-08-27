@@ -55,7 +55,7 @@ case class Product(
 
   def getFiles():List[File] = {
     var files = ArrayBuffer[File]()
-    var fileList = new File("./uploads/products/" + id + "/files/").listFiles()
+    var fileList = new File(Db.uploadsPath() + id + "/files/").listFiles()
     if(fileList != null){
       for(file <- fileList){
         files += file
