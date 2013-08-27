@@ -35,11 +35,6 @@ POST    /products/:id/update                  controllers.Products.updateProduct
 POST    /products/:id/upload                  controllers.Products.uploadProductFile(id: Long)
 POST    /products/:id/icon                    controllers.Products.uploadProductIcon(id: Long)
 
-# Tag Routes
-GET     /categories                           controllers.Tags.tags
-POST    /categories                           controllers.Tags.newTag
-POST    /categories/:id/delete                controllers.Tags.deleteTag(id:Long)
-
 # User routes
 GET     /users                                controllers.Application.users
 
