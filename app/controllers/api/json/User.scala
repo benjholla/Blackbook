@@ -4,6 +4,7 @@ import play.api.libs.json._
 import play.api.libs.json.Json._
 import play.api.libs.json.Reads._
 import play.api.libs.json.Writes._
+import scala.language.implicitConversions
 
 import models._
 

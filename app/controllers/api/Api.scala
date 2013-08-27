@@ -72,6 +72,6 @@ trait Api {
   }
 }
 
-trait SecuredApi extends Api with controllers.Secured {
+trait SecuredApi extends Api with controllers.traits.Secured {
 
 }
