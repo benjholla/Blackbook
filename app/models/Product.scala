@@ -114,7 +114,7 @@ object Product {
   
   def find(name: String): Option[Product] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM Products WHERE Name = {name}").on(
-      'name -> Db.normalizeName(name)).as(product *).headOption
+      'name -> name).as(product *).headOption
   }
   
   def getCreatedAt(id: Long): Option[Date] = DB.withConnection { implicit c =>
@@ -141,7 +141,7 @@ object Product {
 
   def addTag(productId: Long, tagName: String) = { 
     DB.withConnection { implicit c =>
-      val tag = Tag.findOrCreate(tagName)
+      val tag = Tag.findOrCreate(Db.normalizeName(tagName))
       SQL("""
         INSERT INTO ProductTags(ProductId, TagId) 
         VALUES ({productId}, {tagId})
@@ -153,7 +153,7 @@ object Product {
 
   def removeTag(productId: Long, tagName: String) = {
     DB.withConnection { implicit c =>
-      for ( tag <- Tag.find(tagName) ) {
+      for (tag <- Tag.find(tagName)) {
         SQL("""
           DELETE FROM ProductTags
           WHERE ProductId = {productId} 

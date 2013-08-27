@@ -4,19 +4,17 @@ import anorm._
 object Db { 
   
   /**
-   * Returns true if the the name is normalized
-   * Matches true if the input is a word character or whitespace
+   * Returns true if name normalizes to a valid string
    */
   def isValidName(name:String):Boolean = {
-    name.trim().matches(raw"[\w\s]+")
+    normalizeName(name).length() > 0
   }
   
   /**
-   * Normalize a name for insertion into the database
-   * This function replaces whitespace with an underscore and make lowercase
+   * Makes name lower case, replaces invalid characters with an underscore
    */
   def normalizeName(name:String):String = {
-    name.replaceAll(raw"[\s_]+", "_").toLowerCase()
+    name.trim().replaceAll("[^A-Za-z0-9_.]+", "_").toLowerCase()
   }
   
   def scopeIdentity()(implicit c: java.sql.Connection): Long = {

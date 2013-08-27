@@ -34,9 +34,16 @@
   	<br />
   	<br />
   	<h2>Categories:</h2>
-  	<p style="font-size: 120%;">[@Product.getTags(product.id).map { tag =>
-    	@tag.name 
-  	}]</p>
+  	@if(Product.getTags(product.id).size > 0) {
+  		<p style="font-size: 120%;">
+  		@Product.getTags(product.id).map { tag =>
+    		@tag.name 
+  		}
+  		</p>
+  	} else {
+  		<h3>No Categories</h3>
+  	}
+  	
   	
   	<br />
   	<h2>Files:</h2>
