@@ -26,7 +26,7 @@
   	<br />
   	<h2>Files:</h2>
   	@if(product.getFiles().size > 0) {
-  	<table id="box-table" summary="Product Files">
+  	<table class="box-table" summary="Product Files">
 	    <tr>
 	    	<th>File</th>
 	    	<th>Download</th>
@@ -34,11 +34,11 @@
 	    @for(file <- product.getFiles()) {
 		<tr>
 	      <td>@file.getName()</td>
-	    </tr>
-	    <td>@form(routes.Products.getFile(product.id,file.getName())) {
+	      <td>@form(routes.Products.getFile(product.id,file.getName())) {
               <input class="fancy-button" type="submit" value="Download">
           }
-        </td>
+          </td>
+        </tr>
 	}
 	</table>
   	} else {

@@ -3,7 +3,6 @@
 @import helper._
 
 @main("Blackbook | Edit " + product.name) {
-
   <h1 id="showing-label" style="padding-left:20px">Product: @product.name</h1>
   <div id="sidebar" style="float:left; color:black;">
     <h2>Actions</h2>
@@ -34,15 +33,107 @@
   	<br /><hr /><br />
   	
   	<h2>Categories:</h2>
-  	<p style="font-size: 120%;">[@Product.getTags(product.id).map { tag =>
-    	@tag.name 
-  	}]</p>
+  	@if(Product.getTags(product.id).size > 0) {
+  	<table id="categories-table" class="box-table" summary="Categories">
+	    <tr>
+	    	<th>Category</th>
+	    	<th>Delete</th>
+	    </tr>
+	    @for(tag <- Product.getTags(product.id)) {
+	    <tr>
+	      <td>@tag.name</td>
+	      <td><input id="delete-category-@tag.id-button" class="fancy-button" type="submit" value="Delete"></td>
+	      <input type="hidden" id="delete-category-@tag.id" value="@tag.name" />
+	      <script type="text/javascript">
+	      $('#delete-category-@tag.id-button').click(function() {
+		      jsRoutes.controllers.api.Products.removeTags(@product.id).ajax({
+	            type: 'post',
+	            dataType: 'json',
+	            contentType:"text/json; charset=utf-8",
+	            success: function(json){
+		          if(json.status == "OK"){
+		            availableTags.push("@tag.name");
+		            if($("#categories-table > tbody > tr").length <= 2){
+		              // table will be empty just remove the whole table
+		              $("#categories-table").remove();
+		            } else {
+		              // just remove the single row
+		              $('#delete-category-@tag.id-button').closest('tr').remove();
+		            }
+		          } else {
+		            alert("Error: " + json.status);
+		          }
+		        },
+		        error: function() { alert("Error: Could not add category to product."); },
+	            data: "[\"" + $("#delete-category-@tag.id").val() + "\"]"
+	          });
+	        });
+	      </script>
+	    </tr>
+	    }
+	</table>
+	} else {
+  		<h3>No Categories</h3>
+  	}
+  	
+  	<h3>Add Product to Categories</h3>
+  	<div class="ui-widget">
+	  <label for="categories">Category: </label>
+	  <input id="categories" />
+	  <input id="add-category-button" class="fancy-button" type="submit" value="Add">
+	</div>
+  	<br />
+  	
+  	<script type="text/javascript">
+  	    $('#add-category-button').click(function() {
+  	    
+  	      if($("#categories").val().length == 0){
+  	      	alert("Enter a Category");
+  	      	return;
+  	      }
+  	    
+	      jsRoutes.controllers.api.Products.addTags(@product.id).ajax({
+            type: 'post',
+            dataType: 'json',
+            contentType:"text/json; charset=utf-8",
+            success: function(json){
+	          if(json.status == "OK"){
+	            location.reload(); // being lazy, instead of using jquery to append the table just reload the page
+	          } else {
+	            alert("Error: " + json.status);
+	          }
+	        },
+	        error: function() { alert("Error: Could not add category to product."); },
+            data: "[\"" + $("#categories").val() + "\"]"
+          });
+        });
+
+  		var availableTags = [@play.api.templates.Html({
+					  			var result = ""
+					   	    	for(tag <- Tag.all()) {
+					   		    	var tagAvailable = true
+					   		    	var tags = Product.getTags(product.id)
+					   		    	for(usedTag <- tags){
+					   		    		if(tag.name.equals(usedTag.name)){
+					   		    			tagAvailable = false
+					   		    		}
+					   		    	}
+					   		    	if(tagAvailable) {
+					   		    		result += "\"" + tag.name + "\"" + " "
+					   		    	}
+					   	    	}
+					   	    	result.trim().replace(" ", ",");
+					   	    })];
+   	    $("#categories").autocomplete({
+   	      source: availableTags
+   	    });
+	</script>
   	
   	<br /><hr /><br />
   	
   	<h2>Files:</h2>
   	@if(product.getFiles().size > 0) {
-  	<table id="box-table" summary="Product Files">
+  	<table class="box-table" summary="Product Files">
 	    <tr>
 	    	<th>File</th>
 	    	<th>Delete</th>
@@ -50,12 +141,13 @@
 	    @for(file <- product.getFiles()) {
 		<tr>
 	      <td>@file.getName()</td>
-	      <td>@form(routes.Products.deleteFile(product.id,file.getName())) {
+	      	<td>
+	      	@form(routes.Products.deleteFile(product.id,file.getName())) {
               <input class="fancy-button" type="submit" value="Delete">
-          }
-        </td>
+          	}
+        	</td>
 	    </tr>
-	}
+		}
 	</table>
   	} else {
   		<h3>No attachments</h3>
