@@ -93,14 +93,16 @@ object Products extends Controller with Secured {
     }
   }
   
+  private[this] def uploadPath = "./uploads/products/"
+  
   private[this] def getProductFilePath(id: Long, filename:String):File = {
-    return new File("/tmp/products/" + id + "/files/" + filename)
+    return new File(uploadPath + id + "/files/" + filename)
   }
   
   // This should be used only for determining where to save an icon 
   // file when one is upload, not for getting the icon file
   private[this] def getProductIconPath(id: Long):File = {
-    return new File("/tmp/products/" + id + "/icon")
+    return new File(uploadPath + id + "/icon")
   }
   
   // This should be used for getting the icon file, 
