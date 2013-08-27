@@ -37,6 +37,9 @@ object User {
     def hasPermissions(perms: Permission.Set): Boolean =
       perms.forall(hasPermission)
 
+    def getPermissions(): Permission.Set =
+      Permission.values filter hasPermission
+
     def authenticate(password: String): Boolean
   }
 
@@ -87,6 +90,15 @@ object User {
       SQL("SELECT * FROM Users WHERE Name = {name}").
         on('name -> username).as(dbUser *)
     }.headOption orElse testUser(username)
+  }
+
+  def users(): Map[String, User] = {
+    val dbUsers = DB.withConnection { implicit c =>
+      SQL("SELECT * FROM Users").as(dbUser *)
+    } map { user => user.name -> user } toMap
+
+    userMap = userMap ++ dbUsers
+    userMap
   }
 
   def getUser(username: String): Option[User] = {
