@@ -9,8 +9,7 @@ trait Secured {
     request.session.get("username")
 
   protected def onUnauthorized(request: RequestHeader) = 
-    if (isLoggedIn(request)) Results.Unauthorized
-    else Results.NotFound
+    controllers.Application.notFound(request)
   
   implicit def getLoggedInUser(implicit request: RequestHeader): User.User = { 
     username(request) map { name: String => 

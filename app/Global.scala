@@ -6,7 +6,7 @@ import util.ExtendedHeaders._
 
 object Global extends GlobalSettings { 
   override def onHandlerNotFound(request: RequestHeader) = { 
-    NotFound(views.html.decoy.not_found())
+    controllers.Application.notFound(request)
   }
 }
 
