@@ -17,34 +17,14 @@ object Application extends Controller with Secured {
       case (u, p) => User.authenticate(u, p).anyPermissions })
   ) 
 
-  def transactions = TODO
-  
-  def home = Action {
-    Ok(views.html.decoy.home())
-  }
-  
-  def about = Action {
-    Ok(views.html.decoy.about())
-  }
-  
-  def humanRights = Action {
-    Ok(views.html.decoy.human_rights())
-  }
-  
-  def cleanWater = Action {
-    Ok(views.html.decoy.clean_water())
-  }
-  
-  def mobileAid = Action {
-    Ok(views.html.decoy.mobile_aid())
-  }
+  def transactions = TODO 
   
   def login = Action { implicit request => 
     Ok(views.html.login(loginForm))
   }
 
   def logout = Action { 
-    Redirect(routes.Application.home).withNewSession
+    Redirect(routes.Decoy.home).withNewSession
   }
 
   def authenticate = Action { implicit request =>
@@ -53,7 +33,7 @@ object Application extends Controller with Secured {
       user => Redirect(routes.Products.products).withSession("username" -> user._1)
     )
   }
-  
+
   def order = WithPermissions(Permission.ViewProducts)
   { implicit request =>
 	  Ok(views.html.order(getLoggedInUser(request)))

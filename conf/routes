@@ -3,11 +3,11 @@
 # ~~~~
 
 # Fake Wordpress decoy site
-GET     /                                     controllers.Application.home
-GET     /about                                controllers.Application.about
-GET     /human-rights                         controllers.Application.humanRights
-GET     /clean-water                          controllers.Application.cleanWater
-GET     /mobile-aid                           controllers.Application.mobileAid
+GET     /                                     controllers.Decoy.home
+GET     /about                                controllers.Decoy.about
+GET     /human-rights                         controllers.Decoy.humanRights
+GET     /clean-water                          controllers.Decoy.cleanWater
+GET     /mobile-aid                           controllers.Decoy.mobileAid
 
 # Login page
 GET     /login                                controllers.Application.login

@@ -7,7 +7,7 @@ import scala.language.implicitConversions
 
 class ExtendedHeaders(rh: RequestHeader) {
   def referer = {
-    rh.headers.get("REFERER") getOrElse controllers.routes.Application.home().url
+    rh.headers.get("REFERER") getOrElse controllers.routes.Decoy.home().url
   }
 }
 
