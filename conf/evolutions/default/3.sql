@@ -14,7 +14,6 @@ CREATE TRIGGER UpdateTagTimestamp BEFORE UPDATE ON Tags
 
 # --- !Downs
 
-DROP TRIGGER UpdateProductTimestamp;
-DROP TRIGGER UpdateTagTimestamp;
+DROP TRIGGER UpdateProductTimestamp ON ProductTags;
+DROP TRIGGER UpdateTagTimestamp ON ProductTags;
 DROP FUNCTION UpdateLastModified();
-

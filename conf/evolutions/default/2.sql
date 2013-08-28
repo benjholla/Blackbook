@@ -12,4 +12,4 @@ CREATE TABLE ProductTags
 
 # --- !Downs
 
-DROP TABLE ProductTags
+DROP TABLE ProductTags;
