@@ -1,4 +1,5 @@
-@(title: String)(content: Html)
+@(title: String)(content: Html)(implicit user: User.User = User.NullUser())
+  @require(user.anyPermissions(), "Viewing user has no permissions. Did you forget to pass an implicit user?")
 
 <!DOCTYPE html>
 <head>
@@ -12,27 +13,10 @@
 </head>
 <body> 
   <div id="header">
-    <img src="@routes.Assets.at("images/blackbook.png")" width="500px" height="68px" alt="Blackbook" title="Blackbook" />
-    <section class="nav-container">
-	    <nav>
-	      <ul class="nav">
-	        <!--Go to / for all users-->
-	        <li class="nav"><a href="@routes.Products.products()" class="nav-icon" title="Home"><span class="icon-home">Products</span>&nbsp;&nbsp;Products</a></li>
-	        
-	        <!--Go to /users if Admin-->
-	        <li class="nav"><a href="@routes.Application.users()" title="Users">Users</a></li>
-	        
-	        <!--Go to /transactions if Accounting or Admin-->
-	        <li class="nav"><a href="@routes.Application.transactions()" title="Ledger">Ledger</a></li>
-	        
-	        <!--Go to /order if Client or Admin-->
-	        <li class="nav"><a href="@routes.Application.order()" title="Order">Order</a></li>
-	        
-	        <!--Go to /logout for all users-->
-	        <li class="nav"><a href="@routes.Application.logout()" title="Contact">Logout</a></li>
-	      </ul>
-	    </nav>
-	  </section>
+    <img src="@routes.Assets.at("images/blackbook.png")" 
+         width="500px" height="68px" 
+         alt="Blackbook" title="Blackbook" />
+    @widgets.navbar(user)
   </div>
   <div id="content">
     @content

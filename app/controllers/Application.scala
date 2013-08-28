@@ -44,11 +44,11 @@ object Application extends Controller with Secured {
 
   def order = WithPermissions(Permission.ViewProducts)
   { implicit request =>
-	  Ok(views.html.order(getLoggedInUser(request)))
+	  Ok(views.html.order())
   }
 
   def users = WithPermissions(Permission.ViewUsers) { 
-    request => Ok(views.html.users.index(User.all))
+    implicit request => Ok(views.html.users.index(User.all))
   }
 
   def javascriptRoutes = Action { implicit request =>

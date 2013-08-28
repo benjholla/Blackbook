@@ -1,0 +1,48 @@
+@(user: User.User)
+<section class="nav-container">
+  <nav>
+    <ul class="nav">
+      @if(user.hasPermission(Permission.ViewProducts)) { 
+        <li class="nav">
+          <a href="@routes.Products.products()" class="nav-icon" title="Home">
+            <span class="icon-home">
+              Products
+            </span>
+            &nbsp;&nbsp;Products
+          </a>
+        </li>
+      }
+
+      @if(user.hasPermission(Permission.ViewUsers)) { 
+        <li class="nav">
+          <a href="@routes.Application.users()" title="Users">
+            Users
+          </a>
+        </li>
+      }
+      
+      @if(user.hasPermission(Permission.ViewLedger)) { 
+        <li class="nav">
+          <a href="@routes.Application.transactions()" title="Ledger">
+            Ledger
+          </a>
+        </li>
+      }
+
+
+      @if(user.hasPermission(Permission.ViewProducts) && 
+        !user.hasPermission(Permission.EditProducts)) {
+        <li class="nav">
+          <a href="@routes.Application.order()" title="Order">
+            Order
+          </a>
+        </li>
+      }
+      <li class="nav">
+        <a href="@routes.Application.logout()" title="Contact">
+          Logout
+        </a>
+      </li>
+    </ul>
+  </nav>
+</section>
