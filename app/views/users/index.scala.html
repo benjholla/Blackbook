@@ -1,0 +1,16 @@
+@(users: Map[String, User.User])
+
+@import helper._
+
+@main("Blackbook | Users") {
+  <div id="sidebar">
+    <h2>Users</h2>
+
+    <ul>
+    @users.map { user =>
+      <li>@user._2.name</li>
+    }
+    </ul>
+  </div>
+}
+

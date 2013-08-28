@@ -9,13 +9,12 @@ import models._
 import traits._
 
 object Application extends Controller with Secured {
-
   val loginForm = Form(
     tuple( 
       "username" -> text,
       "password" -> text 
     ) verifying ( "Invalid username or password", result => result match {
-      case (u, p) => User.authenticate(u, p).isDefined })
+      case (u, p) => User.authenticate(u, p).anyPermissions })
   ) 
 
   def transactions = TODO
@@ -55,11 +54,14 @@ object Application extends Controller with Secured {
     )
   }
   
-  def order = IsAuthenticated { implicit user => implicit request => 
-	  Ok(views.html.order(user))
+  def order = WithPermissions(Permission.ViewProducts)
+  { implicit request =>
+	  Ok(views.html.order(getLoggedInUser(request)))
   }
 
-  def users = TODO
+  def users = WithPermissions(Permission.ViewUsers) { 
+    request => Ok(views.html.users.index(User.all))
+  }
 
   def javascriptRoutes = Action { implicit request =>
     import controllers.api.routes.{javascript => capi}

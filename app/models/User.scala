@@ -50,16 +50,27 @@ object User {
     def getPermissions(): Permission.Set =
       Permission.values filter hasPermission
 
+    def anyPermissions(): Boolean = 
+      getPermissions != Permission.Set.empty
+
     def authenticate(token: String): Boolean = token == password
 
     def update(u: User): Unit = {}
   }
 
-  class TestingAdmin extends User {
+  case class TestUser() extends User {
     def name() = "test"
     def password() = "secret"
     def enabled() = true
     def hasPermission(perm: Permission.Value) = true
+    //override def anyPermissions() = true
+  }
+
+  case class NullUser() extends User { 
+    def name() = ""
+    def password() = ""
+    def enabled() = false
+    def hasPermission(prem: Permission.Value) = false
   }
 
   case class DbUser
@@ -94,15 +105,16 @@ object User {
     get[Boolean]("Users.Enabled") map (flatten) map ((DbUser.apply _).tupled)
   }
 
-  private def testUser(username: String): Option[User] = {
-    if (username == "test") { Some(new TestingAdmin()) } else { None }
+  private def localUser(username: String): User = {
+    if (username == "test") TestUser()
+    else NullUser()
   }
 
-  private def factory(username: String): Option[User] = {
+  private def factory(username: String): User = {
     DB.withConnection { implicit c =>
       SQL("SELECT * FROM Users WHERE Name = {name}").
         on('name -> username).as(dbUser *)
-    }.headOption orElse testUser(username)
+    }.headOption getOrElse localUser(username)
   }
 
   def all(): Map[String, User] = {
@@ -114,17 +126,18 @@ object User {
     userMap
   }
 
-  def getUser(username: String): Option[User] = {
-    userMap.get(username) orElse factory(username) map { user =>
-      userMap += (username -> user)
-      user
+  def getUser(username: String): User = {
+    userMap.get(username) getOrElse { 
+      val new_user = factory(username) 
+      userMap += (username -> new_user)
+      new_user
     }
   }
 
-  def authenticate(username: String, password: String): Option[User] = {
-    getUser(username) filter { 
-      user => user.authenticate(password) 
-    }
+  def authenticate(username: String, password: String): User = {
+    val user = getUser(username)
+    if (user.authenticate(password)) user
+    else NullUser()
   }
 }
 

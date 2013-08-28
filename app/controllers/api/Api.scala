@@ -79,10 +79,9 @@ trait SecuredApi extends Api with controllers.traits.Secured {
       Security.Authenticated(username, onUnauthorized)
       { auth_name => Action(b) 
         { request => 
-          getLoggedInUser(request).
-            filter { user => user.hasPermissions(perms) }.
-            map { user => apiResponse(f(request.body)) }.
-            getOrElse { onUnauthorized(request) }
+          val user = getLoggedInUser(request)
+          if (user.hasPermissions(perms)) apiResponse(f(request.body))
+          else onUnauthorized(request)
         }
       }
     }

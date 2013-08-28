@@ -20,12 +20,12 @@ object Products extends Controller with Secured {
   )
   
   def products = WithPermissions(Perm.ViewProducts) 
-  { implicit user => implicit request =>
+  { implicit request => 
     Ok(views.html.products.index(Product.all(), productForm))
   }
   
   def viewProduct(id: Long) = WithPermissions(Perm.ViewProducts)
-  { implicit user => implicit request => 
+  { implicit request => 
     val product = Product.find(id)
     product match { 
       case Some(p) => Ok(views.html.products.view(p))
@@ -35,7 +35,7 @@ object Products extends Controller with Secured {
   
   def editProduct(id: Long) = 
     WithPermissions(Perm.ViewProducts + Perm.EditProducts)
-  { implicit user => implicit request =>
+  { implicit request =>
     val product = Product.find(id)
     product match { 
       case Some(p) => Ok(views.html.products.edit(p,productForm.fill((p.name, p.description))))
@@ -45,7 +45,7 @@ object Products extends Controller with Secured {
   
   def updateProduct(id: Long) = 
     WithPermissions(Perm.ViewProducts + Perm.EditProducts)
-  { implicit user => implicit request =>
+  { implicit request =>
     productForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.products.edit(Product.find(id).get, formWithErrors)),
       form => {
@@ -60,13 +60,13 @@ object Products extends Controller with Secured {
 
   def newProduct() = 
     WithPermissions(Perm.ViewProducts + Perm.EditProducts)
-  { implicit user => implicit request =>
+  { implicit request =>
     Ok(views.html.products.newProduct(productForm))
   }
   
   def createProduct = 
     WithPermissions(Perm.ViewProducts + Perm.EditProducts)
-  { implicit user => implicit request =>
+  { implicit request =>
     productForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.products.newProduct(formWithErrors)),
       form => {
@@ -78,7 +78,7 @@ object Products extends Controller with Secured {
 
   def deleteProduct(id: Long) = 
     WithPermissions(Perm.ViewProducts + Perm.EditProducts)
-  { implicit user => implicit request =>
+  { implicit request =>
     Product.delete(id)
     Redirect(routes.Products.products)
   }
@@ -106,27 +106,26 @@ object Products extends Controller with Secured {
   }
   
   def getIcon(id: Long) = WithPermissions(Perm.ViewProducts) 
-  { implicit user => implicit request => 
+  { implicit request => 
     Ok.sendFile(getProductIconFile(id))
   }
   
   def getFile(id: Long, filename:String) = 
     WithPermissions(Perm.ViewProducts + Perm.DownloadFile)
-  { implicit user => implicit request => 
+  { implicit request => 
     Ok.sendFile(getProductFilePath(id, filename))
   }
   
   def deleteFile(id: Long, filename:String) = 
     WithPermissions(Perm.ViewProducts + Perm.EditProducts)
-  { implicit user => implicit request => 
+  { implicit request => 
     getProductFilePath(id, filename).delete()
     Redirect(routes.Products.editProduct(id))
   }
   
   def uploadProductFile(id: Long) = 
-    WithPermissions(Perm.ViewProducts + Perm.EditProducts).
-    ParseWith(parse.multipartFormData)
-  { implicit user => implicit request =>
+    WithPermissions(Perm.ViewProducts + Perm.EditProducts)(parse.multipartFormData)
+  { implicit request =>
 	  request.body.file("fileUpload").map { fileUpload =>
 	    val filename = fileUpload.filename 
 	    val contentType = fileUpload.contentType
@@ -138,9 +137,8 @@ object Products extends Controller with Secured {
   }
   
   def uploadProductIcon(id: Long) = 
-    WithPermissions(Perm.ViewProducts + Perm.EditProducts).
-    ParseWith(parse.multipartFormData)
-  { user => request => 
+    WithPermissions(Perm.ViewProducts + Perm.EditProducts)(parse.multipartFormData)
+  { request => 
 	  request.body.file("iconUpload").map { fileUpload =>
 	    val contentType = fileUpload.contentType
 	    if(contentType.get.toString().startsWith("image/")){

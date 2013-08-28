@@ -16,15 +16,14 @@ object Users extends Controller with SecuredApi {
   }
 
   def get(name: String) = SecuredApiCall(Permission.ViewUsers) {
-    SuccessWithData(toJson(User.getUser(name) map jsFromUser))
+    SuccessWithData(toJson(jsFromUser(User.getUser(name))))
   }
 
   def update = SecuredApiCall(Permission.EditUsers)(parse.json)
   { body =>
     body.validate[JsUser].map { jsUser =>
-      User.getUser(jsUser.name) map { user =>
-        Success()
-      } getOrElse { ApiError("User not found") }
+      User.getUser(jsUser.name).update(jsUser)
+      Success()
     }.recoverTotal(ValidationError)
   }
 }

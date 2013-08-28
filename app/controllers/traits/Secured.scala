@@ -5,72 +5,39 @@ import play.api.mvc._
 import play.api.mvc.BodyParsers._
 
 trait Secured {
-  protected def username(request: RequestHeader) = 
+  protected def username(request: RequestHeader): Option[String] = 
     request.session.get("username")
 
   protected def onUnauthorized(request: RequestHeader) = 
     if (isLoggedIn(request)) Results.Unauthorized
     else Results.NotFound
+  
+  implicit def getLoggedInUser(implicit request: RequestHeader): User.User = { 
+    username(request) map { name: String => 
+      User.getUser(name)
+    } getOrElse(User.NullUser())
+  }
 
-  private def IsAuthenticatedBase[A]
-    (b: BodyParser[A] = parse.anyContent)
-    (f: => User.User => Request[A] => Result) = 
-  {
-    Security.Authenticated(username, onUnauthorized) 
-    { auth_name => Action(b) { 
-        request => getLoggedInUser(request) map { 
-          user => f(user)(request) 
-        } getOrElse { 
-          onUnauthorized(request)
+  def isLoggedIn(request: RequestHeader): Boolean = 
+    getLoggedInUser(request).anyPermissions
+
+  case class WithPermissions(perms: Permission.Set = Permission.Set()) {
+    def apply[A <: Any]
+      (b: BodyParser[A])
+      (f: => Request[A] => Result) = 
+    {
+      Security.Authenticated(username, onUnauthorized) 
+      { auth_name => Action(b)
+        { implicit request => 
+          implicit val user = getLoggedInUser(request)
+          if (user.hasPermissions(perms)) f(request)
+          else onUnauthorized(request)
         }
       }
     }
-  }
 
-  def IsAuthenticated[A <: Any]
-    (b: BodyParser[A])
-    (f: => User.User => Request[A] => Result) = 
-    IsAuthenticatedBase[A](b)(f)
-  def IsAuthenticated(f: => User.User => Request[AnyContent] => Result) = 
-    IsAuthenticatedBase[AnyContent](parse.anyContent)(f)
-
-  def getLoggedInUser(request: RequestHeader): Option[User.User] =
-    username(request) match { 
-      case Some(user) => User.getUser(user)
-      case None => None
-    }
-
-  def isLoggedIn(request: RequestHeader): Boolean = 
-    getLoggedInUser(request).isDefined
-    
-  private def WithPredicate[A <: Any]
-    (b: BodyParser[A] = parse.anyContent)
-    (pred: User.User => Boolean)
-    (f: => User.User => Request[A] => Result) = IsAuthenticated[A](b)
-  { user => request => 
-    if (pred(user)) {
-      f(user)(request)
-    } else {
-      onUnauthorized(request)
-    }
-  }
-
-  private def WithPermissionsBase[A <: Any]
-    (b: BodyParser[A] = parse.anyContent)
-    (perms: Permission.Set)
-    (f: => User.User => Request[A] => Result) = WithPredicate[A](b)
-  { user => user.hasPermissions(perms) }
-  { user => request => 
-    f(user)(request)
-  }
-
-  case class WithPermissions[A <: Any](perms: Permission.Set) {
-    def ParseWith(b: BodyParser[A])
-      (f: => User.User => Request[A] => Result): EssentialAction = 
-        WithPermissionsBase[A](b)(perms)(f)
-
-    def apply(f: => User.User => Request[AnyContent] => Result): EssentialAction = 
-      WithPermissionsBase[AnyContent](parse.anyContent)(perms)(f)
+    def apply(f: => Request[AnyContent] => Result): EssentialAction = 
+      apply(parse.anyContent) { implicit request => f(request) }
   }
 }
 

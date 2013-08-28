@@ -14,7 +14,11 @@ object UserJson {
       password: String,
       permissions: Long,
       enabled: Boolean
-    ) {}
+    ) extends User.User 
+  {
+    def hasPermission(perm: Permission.Value): Boolean =
+      (permissions & perm.id) != 0
+  }
 
   implicit val userReads = reads[JsUser]
   implicit val userWrites = writes[JsUser]
