@@ -38,7 +38,9 @@ POST    /products/:id/icon                    controllers.Products.uploadProduct
 GET     /users                                controllers.Application.users
 
 # Transactions
-GET     /ledger                               controllers.Application.transactions
+GET     /ledger                               controllers.Transactions.transactions
+GET     /ledger/edit                          controllers.Transactions.newTransaction
+POST    /ledger                               controllers.Transactions.createTransaction
 
 # Static stuff
 GET     /order                                controllers.Application.order

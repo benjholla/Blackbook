@@ -23,7 +23,7 @@
       
       @if(user.hasPermission(Permission.ViewLedger)) { 
         <li class="nav">
-          <a href="@routes.Application.transactions()" title="Ledger">
+          <a href="@routes.Transactions.transactions()" title="Ledger">
             Ledger
           </a>
         </li>
@@ -37,6 +37,7 @@
           </a>
         </li>
       }
+      
       <li class="nav">
         <a href="@routes.Application.logout()" title="Contact">
           Logout

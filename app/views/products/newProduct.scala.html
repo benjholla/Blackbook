@@ -9,7 +9,7 @@
     <h2>Actions</h2>
     <a href="@routes.Products.products()" style="width:100%;" class="fancy-button">Browse Products</a>
   </div>
-  <div id="product-display">
+  <div id="dashboard-content">
   @form(routes.Products.createProduct) {
    	@inputText(productForm("name"), args = '_label -> "Name", 'class -> "fancy-input") 
    	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 90, '_label -> "Description", 'class -> "fancy-text-input")

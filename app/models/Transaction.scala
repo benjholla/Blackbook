@@ -62,7 +62,7 @@ object Transaction {
 
   def create(productId: Long, userName: String, quantity: Int, amount: BigDecimal, notes: String): Transaction = { 
     DB.withConnection { implicit c =>
-      SQL("INSERT INTO Transactions(ProductId,UserName,Quantity,Amount,Notes) VALUES ({productId, userName, quantity, amount, notes})").on(
+      SQL("INSERT INTO Transactions(ProductId,UserName,Quantity,Amount,Notes) VALUES ({productId}, {userName}, {quantity}, {amount}, {notes})").on(
         'productId -> productId, 'userName -> userName, 'quantity -> quantity, 'amount -> amount, 'notes -> notes).executeUpdate()
       return Transaction(Db.scopeIdentity(), productId, userName, quantity, amount, notes, false)
     }

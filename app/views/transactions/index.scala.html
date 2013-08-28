@@ -1,0 +1,36 @@
+@(transactions: List[Transaction])(implicit user: User.User)
+
+@import helper._
+
+@main("Blackbook | Transactions") {
+  <div id="sidebar" style="float:left; color:black;">
+    <h2>Actions</h2>
+    <a href="@routes.Transactions.newTransaction()" style="width:100%;" class="fancy-button">Add Transaction</a>
+  </div>
+  <div id="dashboard-content">
+	  <table class="box-table" summary="Transactions">
+	    <tr>
+	    	<th>Transaction</th>
+	    	<th>Client</th>
+	    	<th>Purchase</th>
+	    	<th>Amount</th>
+	    	<th>Purchased</th>
+	    	<th>Cancelled</th>
+	    	<th>Notes</th>
+	    </tr>
+	    @for(transaction <- transactions) {
+		<tr>
+	      <td>@transaction.id</td>
+	      <td>@transaction.userName</td>
+	      <td>@transaction.productId X @transaction.quantity</td>
+	      <td>@transaction.amount</td>
+	      <td>@transaction.getCreateTime().toString()</td>
+	      <td>@if(transaction.cancelled){Cancelled}else{<a href="#" style="width:100%;" class="fancy-button">Cancel</a>}</td>
+	      <td>@transaction.notes</td>
+	    </tr>
+		}
+	</table>
+  </div>
+  <br />
+  <br />
+}

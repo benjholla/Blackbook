@@ -1,0 +1,21 @@
+@(transactionForm: Form[(Int, String, Int, BigDecimal, String)])(implicit user: User.User)
+
+@import helper._
+
+@main("Blackbook | Transactions") {
+  <div id="sidebar" style="float:left; color:black;">
+    <h2>Actions</h2>
+    <a href="@routes.Transactions.transactions()" style="width:100%;" class="fancy-button">View Ledger</a>
+  </div>
+  <div id="dashboard-content">
+  
+  @form(routes.Transactions.createTransaction) {
+   	@inputText(transactionForm("productId"), args = '_label -> "Product ID", 'class -> "fancy-input")
+   	@inputText(transactionForm("userName"), args = '_label -> "Client Username", 'class -> "fancy-input")
+   	@inputText(transactionForm("quantity"), args = '_label -> "Quantity", 'class -> "fancy-input")
+   	@inputText(transactionForm("amount"), args = '_label -> "Amount", 'class -> "fancy-input")
+   	@textarea(transactionForm("notes"), args = 'rows -> 5, 'cols -> 50, '_label -> "Notes", 'class -> "fancy-text-input")
+   	<input class="fancy-button" type="submit" value="Create">
+  }
+  </div>
+}

@@ -16,9 +16,7 @@ object Application extends Controller with Secured {
     ) verifying ( "Invalid username or password", result => result match {
       case (u, p) => User.authenticate(u, p).anyPermissions })
   ) 
-
-  def transactions = TODO 
- 
+  
   def notFound(request: RequestHeader): Result = {
     val template = 
       if (isLoggedIn(request)) { views.html.not_found() } 
