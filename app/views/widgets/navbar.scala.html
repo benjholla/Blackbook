@@ -30,8 +30,7 @@
       }
 
 
-      @if(user.hasPermission(Permission.ViewProducts) && 
-        !user.hasPermission(Permission.EditProducts)) {
+      @if(user.hasRole(Roles.Client) && !user.hasRole(Roles.Sales)) {
         <li class="nav">
           <a href="@routes.Application.order()" title="Order">
             Order

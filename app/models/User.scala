@@ -46,6 +46,8 @@ object User {
     def hasPermission(perm: Permission.Value): Boolean
     def hasPermissions(perms: Permission.Set): Boolean =
       perms.forall(hasPermission)
+    def hasRole(role: Permission.Set): Boolean = 
+      hasPermissions(role)
 
     def getPermissions(): Permission.Set =
       Permission.values filter hasPermission
