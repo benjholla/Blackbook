@@ -2,13 +2,15 @@
 <section class="nav-container">
   <nav>
     <ul class="nav">
+      <li class="nav">
+        <a href="@routes.Application.messages()" class="nav-icon" title="Home">
+	  <span class="icon-home">Messages<span/>
+	</a>
+      </li>
       @if(user.hasPermission(Permission.ViewProducts)) { 
         <li class="nav">
-          <a href="@routes.Products.products()" class="nav-icon" title="Home">
-            <span class="icon-home">
-              Products
-            </span>
-            &nbsp;&nbsp;Products
+          <a href="@routes.Products.products()" title="Messages">
+            Products
           </a>
         </li>
       }

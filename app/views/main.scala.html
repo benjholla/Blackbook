@@ -1,5 +1,4 @@
-@(title: String)(content: Html)(implicit user: User.User = User.NullUser())
-  @require(user.anyPermissions(), "Viewing user has no permissions. Did you forget to pass an implicit user?")
+@(title: String)(content: Html)(implicit user: User.User)
 
 <!DOCTYPE html>
 <head>

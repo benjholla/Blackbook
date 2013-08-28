@@ -4,6 +4,7 @@ import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
+import java.util.Date
 
 import models._
 import traits._
@@ -36,8 +37,13 @@ object Application extends Controller with Secured {
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.login(formWithErrors)),
-      user => Redirect(routes.Products.products).withSession("username" -> user._1)
+      user => Redirect(routes.Application.messages).withSession("username" -> user._1)
     )
+  }
+
+  def messages = WithPermissions() 
+  { implicit request => 
+    Ok(views.html.messages(List[(Date, String)](new Date() -> "Welcome")))
   }
 
   def order = WithPermissions(Permission.ViewProducts)

@@ -20,6 +20,9 @@ GET     /assets/javascripts/routes            controllers.Application.javascript
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                         controllers.Assets.at(path="/public", file)
 
+# Messages
+GET     /messages                             controllers.Application.messages
+
 # Products Routes
 GET     /products                             controllers.Products.products
 GET     /products/new                         controllers.Products.newProduct

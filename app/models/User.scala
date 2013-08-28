@@ -35,8 +35,6 @@ object Permission extends Enumeration {
 }
 
 object User {
-  var userMap: Map[String, User] = Map()
-
   trait User {
     def name(): String
 
@@ -112,28 +110,17 @@ object User {
     else NullUser()
   }
 
-  private def factory(username: String): User = {
+  def getUser(username: String): User = {
     DB.withConnection { implicit c =>
       SQL("SELECT * FROM Users WHERE Name = {name}").
         on('name -> username).as(dbUser *)
     }.headOption getOrElse localUser(username)
   }
 
-  def all(): Map[String, User] = {
-    val dbUsers = DB.withConnection { implicit c =>
+  def all(): List[User] = {
+    DB.withConnection { implicit c =>
       SQL("SELECT * FROM Users").as(dbUser *)
-    } map { user => user.name -> user } toMap
-
-    userMap = userMap ++ dbUsers
-    userMap
-  }
-
-  def getUser(username: String): User = {
-    userMap.get(username) getOrElse { 
-      val new_user = factory(username) 
-      userMap += (username -> new_user)
-      new_user
-    }
+    }  
   }
 
   def authenticate(username: String, password: String): User = {

@@ -1,0 +1,17 @@
+/* Used to style the message table. */
+table.message-table {
+  font-family: "Courier New", Monospace; 
+  font-size: 12px;
+  margin-left:40px;
+  border-color: white;
+  width: 40%;
+}
+
+table.message-table tr {
+  text-align: left;
+}
+
+table.message-table td {
+}
+table.message-table th { 
+}

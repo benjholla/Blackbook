@@ -1,0 +1,19 @@
+@(messages: List[(java.util.Date, String)])(implicit user: User.User)
+
+@main("Blackbook | Welcome") {
+  <div style="margin-left:20px">
+  <h1>Recent Messages</h1>
+  </div>
+  <link rel="stylesheet" href="@routes.Assets.at("stylesheets/message-table.css")" />
+  <table class="message-table" id="message-table">
+    <tr>
+      <th>Time</th>
+      <th>Message</th>
+    </tr>
+    @messages.map { case (d, m) => 
+      <td>@d.toString</td>
+      <td>@m</td>
+    }
+  </table>
+
+}

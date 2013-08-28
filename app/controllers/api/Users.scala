@@ -12,7 +12,7 @@ import json.UserJson._
 
 object Users extends Controller with SecuredApi { 
   def all() = SecuredApiCall(Permission.ViewUsers) {
-    SuccessWithData(toJson(models.User.all.values map jsFromUser))
+    SuccessWithData(toJson(models.User.all map jsFromUser))
   }
 
   def get(name: String) = SecuredApiCall(Permission.ViewUsers) {

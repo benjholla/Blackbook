@@ -1,4 +1,4 @@
-@(users: Map[String, User.User])(implicit user: User.User)
+@(users: List[User.User])(implicit user: User.User)
 
 @import helper._
 
@@ -8,7 +8,7 @@
 
     <ul>
     @users.map { user =>
-      <li>@user._2.name</li>
+      <li>@user.name</li>
     }
     </ul>
   </div>
