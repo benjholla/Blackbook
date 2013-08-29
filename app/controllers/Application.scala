@@ -25,6 +25,14 @@ object Application extends Controller with Secured {
 
     NotFound(template)
   }
+  
+  def error(request: RequestHeader): Result = {
+    val template = 
+      if (isLoggedIn(request)) { views.html.error() } 
+      else { views.html.decoy.not_found() }
+
+    NotFound(template)
+  }
 
   def login = Action { implicit request => 
     Ok(views.html.login(loginForm))
