@@ -3,14 +3,42 @@
 @import helper._
 
 @main("Blackbook | Users") {
-  <div id="sidebar">
-    <h2>Users</h2>
+  <link rel="stylesheet" 
+    type="text/css" 
+    src="@routes.Assets.at("stylesheets/users.css")"
+  >
+  <script type="text/javascript">
+    function newUser() {
+      // TODO
+    }
 
-    <ul>
+    function postNewUser() {
+      // TODO
+    }
+
+    function viewUser(id) {
+      // TODO
+    }
+
+    function editUser() {
+      // TODO
+    }
+    
+    window.onload = function() { 
+      var new_user = document.getElementById("new_user");
+      new_user.onclick = newUser;
+    }
+  </script>
+  <div id="sidebar">
+    <h2>Actions</h2>
+    <a class="fancy-button" id="new_user">New User</a>
+    <h2>Users</h2>
+    <ul class="userlist">
     @users.map { user =>
       <li>@user.name</li>
     }
     </ul>
+
   </div>
 }
 
