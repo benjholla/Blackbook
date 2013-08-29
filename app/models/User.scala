@@ -37,6 +37,7 @@ object Permission extends Enumeration {
 object User {
   trait User {
     def name(): String
+    def email(): String = ""
 
     def password(): String
     def enabled(): Boolean
@@ -75,9 +76,9 @@ object User {
   }
 
   case class DbUser
-    ( id: Long,
-      username: String,
+    ( username: String,
       password: String,
+      override val email: String,
       permissions: Long,
       enabled: Boolean
     ) extends User {
@@ -87,10 +88,9 @@ object User {
       DB.withConnection { implicit c => 
         val query = SQL("""
           UPDATE Users SET LastLogin = now() 
-          WHERE Id = {id} 
-          AND Name = {name}
+          WHERE Name = {name}
           AND Password = {password}
-        """).on('id -> id, 'name -> username, 'password -> password)
+        """).on('name -> username, 'password -> password)
 
         return query.executeUpdate() > 0
       }
@@ -99,9 +99,9 @@ object User {
 
   // Parses a DB user from a SQL result set.
   val dbUser = {
-    get[Long]("Users.Id") ~
     get[String]("Users.Name") ~
     get[String]("Users.Password") ~
+    get[String]("Users.Email") ~
     get[Long]("Users.Permissions") ~
     get[Boolean]("Users.Enabled") map (flatten) map ((DbUser.apply _).tupled)
   }
