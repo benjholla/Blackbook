@@ -9,64 +9,66 @@
     <a href="@routes.Products.products()" style="width:100%;" class="fancy-button">Browse Products</a>
     <br />
     <br />
+    @if(user.hasPermission(Permission.EditProducts)) {
     <a href="@routes.Products.editProduct(product.id)" style="width:100%;" class="fancy-button">Edit Product</a>
+    }
   </div>
   <div id="dashboard-content">
-  	
-  	<h1>@product.name</h1>
-  	<br />
-  	<h2>Description:</h2>
-  	@if(product.description.length > 0){
-  	<div id="product-description">
-  		@play.api.templates.Html(product.description)
-  	</div>
-  	} else {
-  		<h3>No description</h3>
-  	}
+    
+    <h1>@product.name</h1>
+    <br />
+    <h2>Description:</h2>
+    @if(product.description.length > 0){
+    <div id="product-description">
+      @play.api.templates.Html(product.description)
+    </div>
+    } else {
+      <h3>No description</h3>
+    }
   
     <br />
     <h2>Created At: @product.createTime</h2>
-  	<h2>Last Modified At: @product.modifyTime</h2>
+    <h2>Last Modified At: @product.modifyTime</h2>
   
     <br />
-  	<img class="product-icon" src="@routes.Products.getIcon(product.id)" alt="@product.name Icon" width="180px" height="180px" />
-  	
-  	<br />
-  	<br />
-  	<h2>Categories:</h2>
-  	@if(Product.getTags(product.id).size > 0) {
-  		<p style="font-size: 120%;">
-  		@Product.getTags(product.id).map { tag =>
-    		@tag.name 
-  		}
-  		</p>
-  	} else {
-  		<h3>No Categories</h3>
-  	}
-  	
-  	
-  	<br />
-  	<h2>Files:</h2>
-  	@if(product.getFiles().size > 0) {
-  	<table class="box-table" summary="Product Files">
-	    <tr>
-	    	<th>File</th>
-	    	<th>Download</th>
-	    </tr>
-	    @for(file <- product.getFiles()) {
-		<tr>
-	      <td>@file.getName()</td>
-	      <td>@form(routes.Products.getFile(product.id,file.getName())) {
+    <img class="product-icon" src="@routes.Products.getIcon(product.id)" alt="@product.name Icon" width="180px" height="180px" />
+    
+    <br />
+    <br />
+    <h2>Categories:</h2>
+    @if(Product.getTags(product.id).size > 0) {
+      <p style="font-size: 120%;">
+      @Product.getTags(product.id).map { tag =>
+        @tag.name 
+      }
+      </p>
+    } else {
+      <h3>No Categories</h3>
+    }
+    
+    
+    <br />
+    <h2>Files:</h2>
+    @if(product.getFiles().size > 0) {
+    <table class="box-table" summary="Product Files">
+      <tr>
+        <th>File</th>
+        <th>Download</th>
+      </tr>
+      @for(file <- product.getFiles()) {
+    <tr>
+        <td>@file.getName()</td>
+        <td>@form(routes.Products.getFile(product.id,file.getName())) {
               <input class="fancy-button" type="submit" value="Download">
           }
           </td>
         </tr>
-	}
-	</table>
-  	} else {
-  		<h3>No attachments</h3>
-  	}
-  	
+  }
+  </table>
+    } else {
+      <h3>No attachments</h3>
+    }
+    
   </div>
   <br />
   <br />

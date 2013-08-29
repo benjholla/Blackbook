@@ -82,7 +82,7 @@ object User {
       permissions: Long,
       enabled: Boolean
     ) extends User {
-    def name() = "username"
+    def name() = username
     def hasPermission(perm: Permission.Value) = ((permissions & perm.id) != 0)
     override def authenticate(password: String): Boolean = {
       DB.withConnection { implicit c => 
