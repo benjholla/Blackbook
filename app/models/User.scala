@@ -65,7 +65,6 @@ object User {
     def password() = "secret"
     def enabled() = true
     def hasPermission(perm: Permission.Value) = true
-    //override def anyPermissions() = true
   }
 
   case class NullUser() extends User { 

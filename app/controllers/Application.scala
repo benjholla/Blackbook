@@ -51,10 +51,6 @@ object Application extends Controller with Secured {
 	  Ok(views.html.order())
   }
 
-  def users = WithPermissions(Permission.ViewUsers) { 
-    implicit request => Ok(views.html.users.index(User.all))
-  }
-
   def javascriptRoutes = WithSomePermissions()
   { implicit request =>
     import controllers.api.routes.{javascript => capi}
@@ -78,7 +74,8 @@ object Application extends Controller with Secured {
         capi.Users.update,
         c.Products.viewProduct,
         c.Products.editProduct,
-        c.Products.getIcon
+        c.Products.getIcon,
+        c.Users.user
       )
     ).as("text/javascript")
   }
