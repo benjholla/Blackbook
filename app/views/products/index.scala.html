@@ -131,6 +131,7 @@
       }
   }
 
+  @if(user.hasPermission(Permission.ViewProducts)) { 
    // on page load
   $(document).ready(function () {
       // query for the products to display
@@ -144,6 +145,7 @@
           }
       });
   });
+  }
 
    // on window resize redisplay the product cells using the cached products json
    // use a timer to filter out excessive resize events

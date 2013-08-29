@@ -7,7 +7,7 @@
 	  <span class="icon-home">Messages<span/>
 	</a>
       </li>
-      @if(user.hasPermission(Permission.ViewProducts)) { 
+      @if(user.hasSomePermission(Permission.ViewProducts + Permission.EditProducts)) { 
         <li class="nav">
           <a href="@routes.Products.products()" title="Messages">
             Products
@@ -15,7 +15,7 @@
         </li>
       }
 
-      @if(user.hasPermission(Permission.ViewUsers)) { 
+      @if(user.hasSomePermission(Permission.ViewUsers + Permission.EditUsers)) { 
         <li class="nav">
           <a href="@routes.Application.users()" title="Users">
             Users
@@ -23,7 +23,7 @@
         </li>
       }
       
-      @if(user.hasPermission(Permission.ViewLedger)) { 
+      @if(user.hasSomePermission(Permission.ViewLedger + Permission.EditLedger)) { 
         <li class="nav">
           <a href="@routes.Transactions.transactions()" title="Ledger">
             Ledger

@@ -19,12 +19,13 @@ object Products extends Controller with Secured {
           "description" -> nonEmptyText)
   )
   
-  def products = WithPermissions(Perm.ViewProducts) 
+  def products = WithSomePermission(Perm.ViewProducts + Perm.EditProducts) 
   { implicit request => 
     Ok(views.html.products.index(Product.all()))
   }
   
-  def viewProduct(id: Long) = WithPermissions(Perm.ViewProducts)
+  def viewProduct(id: Long) = 
+    WithSomePermission(Perm.ViewProducts + Perm.EditProducts)
   { implicit request => 
     val product = Product.find(id)
     product match { 
@@ -34,7 +35,7 @@ object Products extends Controller with Secured {
   }
   
   def editProduct(id: Long) = 
-    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+    WithPermission(Perm.ViewProducts + Perm.EditProducts)
   { implicit request =>
     val product = Product.find(id)
     product match { 
@@ -59,20 +60,25 @@ object Products extends Controller with Secured {
   }
 
   def newProduct() = 
-    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+    WithPermission(Perm.EditProducts)
   { implicit request =>
     Ok(views.html.products.newProduct(productForm))
   }
   
   def createProduct = 
-    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+    WithPermission(Perm.EditProducts)
   { implicit request =>
     productForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.products.newProduct(formWithErrors)),
       form => {
         val (name, description) = form
         val product = Product.create(name, description)
-        Redirect(routes.Products.editProduct(product.id))
+
+        if (getLoggedInUser.hasPermission(Perm.ViewProducts)) {
+          Redirect(routes.Products.editProduct(product.id))
+        } else {
+          Redirect(routes.Products.products)
+        }
       })
   }
 
@@ -111,7 +117,7 @@ object Products extends Controller with Secured {
   }
   
   def getFile(id: Long, filename:String) = 
-    WithPermissions(Perm.ViewProducts + Perm.DownloadFile)
+    WithPermissions(Perm.DownloadFile)
   { implicit request => 
     Ok.sendFile(getProductFilePath(id, filename))
   }
