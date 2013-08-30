@@ -39,8 +39,9 @@ POST    /products/:id/icon                    controllers.Products.uploadProduct
 
 # User routes
 GET     /users                                controllers.Users.users
-GET     /users/:name                          controllers.Users.user(name: String)
 GET     /users/new                            controllers.Users.newUser()
+GET     /users/:name                          controllers.Users.viewUser(name: String)
+POST    /users                                controllers.Users.createUser()
 
 # Transactions
 GET     /ledger                               controllers.Transactions.transactions

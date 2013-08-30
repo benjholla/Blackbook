@@ -1,0 +1,25 @@
+@(users: List[User.User], userForm: Form[(String, String, String, Long)])(implicit user: User.User)
+
+@import helper._
+
+@main("Blackbook | New User") {
+
+  <div id="sidebar" style="float:left; color:black;">
+  <h2>Actions</h2>
+  @if(user.hasPermission(Permission.EditUsers)) {
+    <a href="@routes.Users.users()" style="width:100%;" class="fancy-button">Browse Users</a>
+  }
+  </div>
+  <div id="dashboard-content">
+  @form(routes.Users.createUser) {
+   	@inputText(userForm("name"), args = '_label -> "Username", 'class -> "fancy-input") 
+   	@inputText(userForm("password"), args = '_label -> "Password", 'class -> "fancy-input") 
+   	@inputText(userForm("email"), args = '_label -> "Email", 'class -> "fancy-input") 
+   	@inputText(userForm("permissions"), args = '_label -> "Permissions", 'class -> "fancy-input") 
+   	<input class="fancy-button" type="submit" value="Create">
+  }
+  </div>
+}
+
+
+

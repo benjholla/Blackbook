@@ -83,7 +83,7 @@ object Application extends Controller with Secured {
         c.Products.viewProduct,
         c.Products.editProduct,
         c.Products.getIcon,
-        c.Users.user
+        c.Users.viewUser
       )
     ).as("text/javascript")
   }

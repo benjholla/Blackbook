@@ -17,10 +17,9 @@
         
         ul.append(
           $('<li>').append(
-            $("<a>").
-              append(user.name).
-              click(onViewUser).
-              data('user', user)
+            $("<a>").append(user.name)
+                    .click(onViewUser)
+                    .data('user', user)
         ));
       }
     }
@@ -46,43 +45,32 @@
       }
     }
 
-    function onNewUser() {
-      alert("onNewUser not implemented.");
-    }
-
-    function postNewUser() {
-      alert("postNewUser not implemented.");
-    }
-
     function onViewUser(eventData) {
       clearContent();
 
       var user = $(eventData.target).data('user');
 
-      jsRoutes.controllers.Users.user(user.name).ajax({
+      jsRoutes.controllers.Users.viewUser(user.name).ajax({
         success: setContent,
         dataType: "html"
-        });
+      });
     }
 
     function onEditUser() {
       alert("onEditUser not implemented.");
     }
 
-    
-    window.onload = function() { 
-      $("#new-user").click(onNewUser);
-
-      refreshUsers();
-    }
+    $(document).ready(function() {
+  		refreshUsers();
+	});
   </script>
   <div id="sidebar">
+  	<h2>Actions</h2>
     @if(user.hasPermission(Permission.EditUsers)) {
-    <h2>Actions</h2>
-    <a class="fancy-button" id="new-user">New User</a>
+    <a href="@routes.Users.newUser()" style="width:100%;" class="fancy-button">New User</a>
     }
-    <h2>Users</h2>
     @if(user.hasPermission(Permission.ViewUsers)) {
+    <h2>Users</h2>
     <ul class="userlist" id="userlist">
     </ul>
     }

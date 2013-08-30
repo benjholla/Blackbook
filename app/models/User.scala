@@ -111,6 +111,13 @@ object User {
     else NullUser()
   }
 
+  def createUser(username:String, password:String, email:String, permissions:Long) = {
+    DB.withConnection { implicit c =>
+      SQL("INSERT INTO Users(Name,Password,Email,Permissions) VALUES ({name},{password},{email},{permissions})").on(
+        'name -> Db.normalizeName(username), 'password -> password, 'email -> email, 'permissions -> permissions).executeUpdate()
+    }
+  }
+  
   def getUser(username: String): User = {
     DB.withConnection { implicit c =>
       SQL("SELECT * FROM Users WHERE Name = {name}").
