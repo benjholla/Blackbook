@@ -22,11 +22,13 @@
 		<tr>
 	      <td>@transaction.id</td>
 	      <td>@transaction.userName</td>
-	      <td>@transaction.productId X @transaction.quantity</td>
-	      <td>@transaction.amount</td>
+	      <td>@Product.find(transaction.productId).get.name
+	          @if(transaction.quantity > 1){&nbsp;(x @transaction.quantity)}
+	      </td>
+	      <td>$@transaction.amount.setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble</td>
 	      <td>@transaction.getCreateTime().toString()</td>
 	      <td>@if(transaction.cancelled){Cancelled}else{<a href="#" style="width:100%;" class="fancy-button">Cancel</a>}</td>
-	      <td>@transaction.notes</td>
+	      <td><p style="max-width: 400px;">@transaction.notes</p></td>
 	    </tr>
 		}
 	</table>
