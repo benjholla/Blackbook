@@ -1,0 +1,31 @@
+@(userToView: User.User)(implicit user: User.User)
+<h1>User: @userToView.name</h1>
+
+<table class="box-table" style="width: 100%;">
+  <tr>
+    <th>E-mail</th>
+    <td>@userToView.email</td>
+  </tr>
+  <tr>
+    <th>Password</th>
+    <td>@userToView.password</td>
+  </tr>
+  <tr>
+    <th>Permissions</th>
+    <td>
+    @userToView.getPermissions.map { p =>
+      @p.toString<br />
+    }
+    </td>
+  </tr>
+  <tr>
+    <th>Enabled</th>
+    <td>@userToView.enabled</td>
+  </td>
+</table>
+<br />
+<br />
+@if(user.hasPermission(Permission.ViewUsers)) {
+	<a href="@routes.Users.editUser(userToView.name)" class="fancy-button">Edit User</a>
+}
+  

@@ -111,14 +111,28 @@ object User {
     else NullUser()
   }
 
-  def createUser(username:String, password:String, email:String, permissions:Long) = {
+  def create(username:String, password:String, email:String, permissions:Long) = {
     DB.withConnection { implicit c =>
       SQL("INSERT INTO Users(Name,Password,Email,Permissions) VALUES ({name},{password},{email},{permissions})").on(
         'name -> Db.normalizeName(username), 'password -> password, 'email -> email, 'permissions -> permissions).executeUpdate()
     }
   }
   
-  def getUser(username: String): User = {
+  def update(username:String, password:String, email:String, permissions:Long) = {
+    DB.withConnection { implicit c =>
+      SQL("UPDATE Users SET Password={password}, Email={email}, Permissions={permissions} WHERE Name={username}").on(
+        'username -> username, 'password -> password, 'email -> email, 'permissions -> permissions).executeUpdate()
+    }
+  }
+  
+  def disable(username:String) = {
+    DB.withConnection { implicit c =>
+      SQL("UPDATE Users SET Enabled=no WHERE Name={username}").on(
+        'username -> username).executeUpdate()
+    }
+  }
+  
+  def find(username: String): User = {
     DB.withConnection { implicit c =>
       SQL("SELECT * FROM Users WHERE Name = {name}").
         on('name -> username).as(dbUser *)
@@ -132,7 +146,7 @@ object User {
   }
 
   def authenticate(username: String, password: String): User = {
-    val user = getUser(username)
+    val user = find(username)
     if (user.authenticate(password)) user
     else NullUser()
   }

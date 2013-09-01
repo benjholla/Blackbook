@@ -3,10 +3,6 @@
 @import helper._
 
 @main("Blackbook | Users") {
-  <link rel="stylesheet" 
-    type="text/css" 
-    src="@routes.Assets.at("stylesheets/users.css")"
-  >
   <script type="text/javascript">
     function addUsers(json) {
       var ul = $("#userlist");
@@ -66,7 +62,7 @@
   </script>
   <div id="sidebar">
   	<h2>Actions</h2>
-    @if(user.hasPermission(Permission.EditUsers)) {
+    @if(user.hasPermission(Permission.ViewUsers)) {
     <a href="@routes.Users.newUser()" style="width:100%;" class="fancy-button">New User</a>
     }
     @if(user.hasPermission(Permission.ViewUsers)) {

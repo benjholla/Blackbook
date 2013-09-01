@@ -8,6 +8,7 @@ GET     /about                                controllers.Decoy.about
 GET     /human-rights                         controllers.Decoy.humanRights
 GET     /clean-water                          controllers.Decoy.cleanWater
 GET     /mobile-aid                           controllers.Decoy.mobileAid
+GET     /wp-admin                             controllers.Application.login
 
 # Login page
 GET     /login                                controllers.Application.login
@@ -41,7 +42,9 @@ POST    /products/:id/icon                    controllers.Products.uploadProduct
 GET     /users                                controllers.Users.users
 GET     /users/new                            controllers.Users.newUser()
 GET     /users/:name                          controllers.Users.viewUser(name: String)
+GET     /users/:name/edit                     controllers.Users.editUser(name: String)
 POST    /users                                controllers.Users.createUser()
+POST    /users/:name                          controllers.Users.updateUser(name: String)
 
 # Transactions
 GET     /ledger                               controllers.Transactions.transactions

@@ -9,9 +9,18 @@ import models._
 import traits._
 
 object Users extends Controller with Secured {
+  
   val userForm = Form(
     tuple(
       "name" -> nonEmptyText,
+      "password" -> nonEmptyText,
+      "email" -> email,
+      "permissions" -> longNumber(1, Permission.values)
+    )
+  )
+  
+  val editUserForm = Form(
+    tuple(
       "password" -> nonEmptyText,
       "email" -> email,
       "permissions" -> longNumber(1, Permission.values)
@@ -22,10 +31,24 @@ object Users extends Controller with Secured {
     Ok(views.html.users.index(User.all))
   }
 
-  def viewUser(name: String) = WithPermissions(Permission.ViewUsers) { request =>
-    Ok(views.html.users.view(User.getUser(name)))
+  def viewUser(username: String) = WithPermissions(Permission.ViewUsers) { implicit request =>
+    Ok(views.html.users.widgets.view(User.find(username)))
   }
 
+  def editUser(username: String) = WithPermissions(Permission.EditUsers) { implicit request =>
+    Ok(views.html.users.edit(User.find(username), editUserForm))
+  }
+  
+  def updateUser(username: String) = WithPermissions(Permission.ViewUsers + Permission.EditUsers){ implicit request =>
+    editUserForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(views.html.users.edit(User.find(username), formWithErrors)),
+      form => {
+        val (password, email, permissions) = form
+        User.update(username, password, email, permissions)
+        Ok(views.html.users.index(User.all))
+      })
+  }
+  
   def newUser() = WithPermissions(Permission.EditUsers){ implicit request => 
     Ok(views.html.users.newUser(User.all, userForm))
   }
@@ -35,7 +58,7 @@ object Users extends Controller with Secured {
       formWithErrors => BadRequest(views.html.users.newUser(User.all, formWithErrors)),
       form => {
         val (name, password, email, permissions) = form
-        User.createUser(name, password, email, permissions)
+        User.create(name, password, email, permissions)
         Ok(views.html.users.index(User.all))
       })
   }

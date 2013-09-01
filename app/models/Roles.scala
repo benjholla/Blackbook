@@ -10,14 +10,11 @@ object Roles {
     Permission.ViewLedger
 
   val Accounting = 
+    Permission.ViewProducts + 
     Permission.ViewLedger + 
     Permission.EditLedger
 
   val Admin = 
-    Permission.ViewUsers + 
-    Permission.EditUsers
-
-  val Owner = 
     Permission.values
 
 }

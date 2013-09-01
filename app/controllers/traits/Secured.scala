@@ -13,7 +13,7 @@ trait Secured {
   
   implicit def getLoggedInUser(implicit request: RequestHeader): User.User = { 
     username(request) map { name: String => 
-      User.getUser(name)
+      User.find(name)
     } getOrElse(User.NullUser())
   }
 

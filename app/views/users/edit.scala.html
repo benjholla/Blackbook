@@ -1,0 +1,25 @@
+@(userToEdit: User.User, userForm: Form[(String, String, Long)])(implicit user: User.User)
+
+@import helper._
+
+@main("Blackbook | Edit User") {
+
+  <div id="sidebar" style="float:left; color:black;">
+  <h2>Actions</h2>
+  @if(user.hasPermission(Permission.ViewUsers)) {
+    <a href="@routes.Users.users()" style="width:100%;" class="fancy-button">Browse Users</a>
+  }
+  </div>
+  <div id="dashboard-content">
+  <h1>User: @userToEdit.name</h1>
+  @form(routes.Users.updateUser(userToEdit.name)) {
+   	@inputText(userForm("password"), args = '_label -> "Password", 'class -> "fancy-input") 
+   	@inputText(userForm("email"), args = '_label -> "Email", 'class -> "fancy-input") 
+   	@inputText(userForm("permissions"), args = '_label -> "Permissions", 'class -> "fancy-input") 
+   	<input class="fancy-button" type="submit" value="Update">
+  }
+  </div>
+}
+
+
+
