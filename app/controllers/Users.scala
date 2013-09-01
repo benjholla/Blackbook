@@ -36,7 +36,8 @@ object Users extends Controller with Secured {
   }
 
   def editUser(username: String) = WithPermissions(Permission.EditUsers) { implicit request =>
-    Ok(views.html.users.edit(User.find(username), editUserForm))
+    var user = User.find(username);
+    Ok(views.html.users.edit(User.find(username), editUserForm.fill((user.password, user.email, Permission.setToLong(user.getPermissions())))))
   }
   
   def updateUser(username: String) = WithPermissions(Permission.ViewUsers + Permission.EditUsers){ implicit request =>

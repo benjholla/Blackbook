@@ -2,7 +2,7 @@
 
 @import helper._
 
-@main("Blackbook | Edit User") {
+@main("Blackbook | Edit " + userToEdit.name) {
 
   <div id="sidebar" style="float:left; color:black;">
   <h2>Actions</h2>
@@ -13,12 +13,113 @@
   <div id="dashboard-content">
   <h1>User: @userToEdit.name</h1>
   @form(routes.Users.updateUser(userToEdit.name)) {
-   	@inputText(userForm("password"), args = '_label -> "Password", 'class -> "fancy-input") 
    	@inputText(userForm("email"), args = '_label -> "Email", 'class -> "fancy-input") 
-   	@inputText(userForm("permissions"), args = '_label -> "Permissions", 'class -> "fancy-input") 
+   	@inputText(userForm("password"), args = '_label -> "Password", 'class -> "fancy-input") 
+   	<input type="hidden" id="permissions" name="permissions" value="@Permission.setToLong(userToEdit.getPermissions())">
+   	<div>
+	   	<div style="float:left;">
+		   	<label for="role">Role</label><br />
+		   	<input type="radio" name="role" value="None" checked="checked">None<br>
+		   	<input type="radio" name="role" value="Client">Client<br>
+		   	<input type="radio" name="role" value="Sales">Sales<br>
+		   	<input type="radio" name="role" value="Accounting">Accounting<br>
+		   	<input type="radio" name="role" value="Administrator">Administrator<br>
+		   	<input type="radio" name="role" value="Custom">Custom<br>
+		   	<br />
+	   	</div>
+	   	<div style="float:right;">
+		   	@Permission.values.map { perm =>
+		      <input type="checkbox" name="permission-types" id="@perm.toString()" value="@perm.toString()" disabled="disabled">@perm.toString<br />
+		    }
+		   	<br />
+	   	</div>
+   	</div>
    	<input class="fancy-button" type="submit" value="Update">
   }
   </div>
+  
+  <script type="text/javascript">
+	// create a set of handy permission mappings
+	var permsValueToNameMap = {};
+	@Permission.values.map { perm =>
+		permsValueToNameMap["@Permission.setToLong(perm)"] = "@perm.toString()";
+	}
+	
+	var permsNameToValueMap = {};
+	@Permission.values.map { perm =>
+		permsNameToValueMap["@perm.toString()"] = "@Permission.setToLong(perm)";
+	}
+	
+	// helper function to set the individual role permissions values
+	function setPermissions(value) {
+	    // clear all perms
+		@Permission.values.map { perm =>
+			$("#@perm.toString()").prop('checked', false);
+		}
+		// set the selected perms
+	    var numPerms = @Permission.values.size;
+	    var permsValue = 0;
+	    for (var i = 0; (i < numPerms || i < 32); i++) {
+	    	var permValue = value & (1 << i);
+	        var perm = permsValueToNameMap[permValue];
+	        if (perm != undefined) {
+	            $("#" + perm).prop('checked', true);
+	            permsValue += permValue;
+	        }
+	    }
+	    $("#permissions").val("" + permsValue);
+	}
+	
+	// helper function to enable/disable the permission checkboxes
+	function setCheckboxesEnabled(enabled) {
+	    @Permission.values.map { perm =>
+			$("#@perm.toString()").prop('disabled', !enabled);
+		}
+	}
+	
+	// helper function for updating individual permissions when the role radio selector is updated
+	function radioValueChanged() {
+        var radioValue = $(this).val();
+        if (radioValue == "None") {
+            setCheckboxesEnabled(false);
+            setPermissions(0);
+        } else if (radioValue == "Client") {
+            setCheckboxesEnabled(false);
+            setPermissions("@Permission.setToLong(Roles.Client)");
+        } else if (radioValue == "Sales") {
+            setCheckboxesEnabled(false);
+            setPermissions("@Permission.setToLong(Roles.Sales)");
+        } else if (radioValue == "Accounting") {
+            setCheckboxesEnabled(false);
+            setPermissions("@Permission.setToLong(Roles.Accounting)");
+        } else if (radioValue == "Administrator") {
+            setCheckboxesEnabled(false);
+            setPermissions("@Permission.setToLong(Roles.Admin)");
+        } else if (radioValue == "Custom") {
+            // just start with the role values of the last selected role
+            setCheckboxesEnabled(true);
+        }
+    }
+    
+    // helper function for updating the hidden field when a permission checkbox is changed
+	function checkboxValueChanged() {
+        var checkboxValue = $(this).val();
+        var permValue = permsNameToValueMap[checkboxValue];
+        if(permValue != undefined){
+        	if($(this).is(":checked")){
+        		$("#permissions").val("" + (parseInt($("#permissions").val()) + parseInt(permValue)));
+        	} else {
+        		$("#permissions").val("" + (parseInt($("#permissions").val()) - parseInt(permValue)));
+        	}
+        }
+    }
+	
+	// setup role radio and permission checkbox listeners
+	$(document).ready(function () {
+        $("input[name='role']").change(radioValueChanged);
+        $("input[name='permission-types']").change(checkboxValueChanged);
+    });
+	</script>
 }
 
 
