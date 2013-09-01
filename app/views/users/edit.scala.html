@@ -19,12 +19,12 @@
    	<div>
 	   	<div style="float:left;">
 		   	<label for="role">Role</label><br />
-		   	<input type="radio" name="role" value="None" checked="checked">None<br>
-		   	<input type="radio" name="role" value="Client">Client<br>
-		   	<input type="radio" name="role" value="Sales">Sales<br>
-		   	<input type="radio" name="role" value="Accounting">Accounting<br>
-		   	<input type="radio" name="role" value="Administrator">Administrator<br>
-		   	<input type="radio" name="role" value="Custom">Custom<br>
+		   	<input id="none-radio" type="radio" name="role" value="None" checked="checked">None<br>
+		   	<input id="client-radio" type="radio" name="role" value="Client">Client<br>
+		   	<input id="sales-radio" type="radio" name="role" value="Sales">Sales<br>
+		   	<input id="accounting-radio" type="radio" name="role" value="Accounting">Accounting<br>
+		   	<input id="admin-radio" type="radio" name="role" value="Administrator">Administrator<br>
+		   	<input id="custom-radio" type="radio" name="role" value="Custom">Custom<br>
 		   	<br />
 	   	</div>
 	   	<div style="float:right;">
@@ -116,6 +116,43 @@
 	
 	// setup role radio and permission checkbox listeners
 	$(document).ready(function () {
+		
+		// sets the default value according to the current permission level
+		function setDefaultPermissions(value) {
+		    if(value == 0){
+		    	$("#none-radio").prop('checked',true);
+		    } else if(value == @Permission.setToLong(Roles.Client)){
+		    	$("#client-radio").prop('checked',true);
+		    } else if(value == @Permission.setToLong(Roles.Sales)){
+		    	$("#sales-radio").prop('checked',true);
+		    } else if(value == @Permission.setToLong(Roles.Accounting)){
+		    	$("#accounting-radio").prop('checked',true);
+		    } else if(value == @Permission.setToLong(Roles.Admin)){
+		    	$("#admin-radio").prop('checked',true);
+		    } else {
+		    	$("#custom-radio").prop('checked',true);
+		    }
+		
+		    // clear all perms
+			@Permission.values.map { perm =>
+				$("#@perm.toString()").prop('checked', false);
+			}
+			// set the selected perms
+		    var numPerms = @Permission.values.size;
+		    var permsValue = 0;
+		    for (var i = 0; (i < numPerms || i < 32); i++) {
+		    	var permValue = value & (1 << i);
+		        var perm = permsValueToNameMap[permValue];
+		        if (perm != undefined) {
+		            $("#" + perm).prop('checked', true);
+		            permsValue += permValue;
+		        }
+		    }
+		    $("#permissions").val("" + permsValue);
+		}
+		
+		setDefaultPermissions(@Permission.setToLong(userToEdit.getPermissions()));
+		
         $("input[name='role']").change(radioValueChanged);
         $("input[name='permission-types']").change(checkboxValueChanged);
     });
