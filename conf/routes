@@ -8,7 +8,7 @@ GET     /about                                controllers.Decoy.about
 GET     /human-rights                         controllers.Decoy.humanRights
 GET     /clean-water                          controllers.Decoy.cleanWater
 GET     /mobile-aid                           controllers.Decoy.mobileAid
-GET     /wp-admin                             controllers.Application.login
+GET     /wp-admin                             controllers.Decoy.wpAdmin
 
 # Login page
 GET     /login                                controllers.Application.login

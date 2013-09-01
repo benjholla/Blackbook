@@ -22,4 +22,8 @@ object Decoy extends Controller {
   def mobileAid = Action {
     Ok(views.html.decoy.mobile_aid())
   }
+  
+  def wpAdmin = Action {
+    Redirect(routes.Application.login())
+  }
 }
