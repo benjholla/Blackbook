@@ -56,28 +56,29 @@
     <tbody>
       <tr>
         <td>Money Order(s)</td>
-        <td>Purchased from 
+        <td><p style="width: 500px;">Purchased from 
           <a href="http://www.westernunion.com">Western Union</a> or 
           <a href="http://www.xoom.com">Xoom</a> using cash or a pre-paid credit
-          card purchased with cash (typically a $500 limit).
+          card purchased with cash (typically a $500 limit).</p>
         </td>
           </tr>
           <tr>
             <td>Cashier's Check(s)</td>
-            <td>Must be absent sender identity</td>
+            <td><p style="width: 500px;">Must be absent sender identity</p></td>
           </tr>
           <tr>
             <td>Cash</td>
-            <td>Currency exchange rates computed at time of sale via 
-              <a href="http://www.xe.com">XE.com</a>
+            <td><p style="width: 500px;">Currency exchange rates computed at time of sale according to 
+              <a href="http://www.xe.com">XE.com</a>.</p>
             </td>
           </tr>
           <tr>
             <td>Bitcoin</td>
-            <td>Must be laundered through one or more of the following: 
+            <td><p style="width: 500px;">Must be laundered through one or more of the following: 
               <a href="http://bitcoinlaundry.com">BitcoinLaundry.com</a>,
               <a href="http://app.bitlaundry.com">App.BitLaundry.com</a>, or
-              <a href="https://blockchain.info/wallet/send-shared">Blockchain.info</a>
+              <a href="https://blockchain.info/wallet/send-shared">Blockchain.info</a>.
+              Exchange rate is computed at time of sale according to <a href="https://www.mtgox.com/">Mt. Gox</a>.</p>
             </td>
           </tr>
       </tbody>
@@ -93,33 +94,5 @@
     seriously.
   </p>
   
-  <h3>Contacting Support</h3>
-  <p style="width:600px;">
-    If you unsure of how to contact your assigned Sales representative please 
-    call the following number and enter the authentication code shown below.  
-    Note: The authentication code shown below will expire at Midnight 
-    (@{java.util.TimeZone.getDefault().getDisplayName()}).
-  </p>
-  <table>
-    <tr>
-      <td style="font-size:120%">Telephone:&nbsp;&nbsp;</td>
-      <td>
-        <input class="fancy-input" type="text" name="phoneNumber" 
-          readonly="true" disabled="disabled" value="+1 515-200-1301">
-      </td>
-    </tr>
-    <tr>
-      <td style="font-size:120%">Authentication Code:&nbsp;&nbsp;</td>
-      <td>
-        <input class="fancy-input" 
-          type="text" 
-          name="authCode" 
-          readonly="true" 
-          disabled="disabled" 
-          value="@util.auth_code.AuthCode.getAuthCode(user.name)"
-        >
-      </td>
-    </tr>
-  </table>
 </div>
 }

@@ -57,7 +57,7 @@ object Transaction {
   }
 
   def all(): List[Transaction] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM Transactions").as(transaction *)
+    SQL("SELECT * FROM Transactions ORDER BY Id DESC").as(transaction *)
   }
 
   def create(productId: Long, userName: String, quantity: Int, amount: BigDecimal, notes: String): Transaction = { 

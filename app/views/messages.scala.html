@@ -1,18 +1,36 @@
-@(messages: List[(java.util.Date, String)])(implicit user: User.User)
+@(announcements: List[Announcement], announcementForm: Form[(String)])(implicit user: User.User)
+
+@import helper._
 
 @main("Blackbook | Welcome") {
+  <link rel="stylesheet" href="@routes.Assets.at("stylesheets/message-table.css")" />
+
+  @if(user.hasPermission(Permission.MakeAnnouncements)) {
+  	<div style="margin-left:20px">
+  	 <h1>Make Announcement</h1>
+	  @form(routes.Announcements.createAnnouncement()) {
+	   	@textarea(announcementForm("message"), args = 'rows -> 10, 'cols -> 90, '_label -> "Announcement", 'class -> "fancy-text-input")
+	   	<input style="margin-top:20px;" class="fancy-button" type="submit" value="Create">
+	  }
+	  </div>
+	  <br />
+	  <br />  
+  }
+  
   <div style="margin-left:20px">
   <h1>Recent Messages</h1>
   </div>
-  <link rel="stylesheet" href="@routes.Assets.at("stylesheets/message-table.css")" />
   <table class="message-table">
     <tr>
       <th>Time</th>
       <th>Message</th>
     </tr>
-    @messages.map { case (d, m) => 
-      <td>@d.toString</td>
-      <td>@m</td>
+    @for(announcement <- announcements){
+      <td>@announcement.createTime</td>
+      <td>@play.api.templates.Html(announcement.message)</td>
+      @if(user.hasPermission(Permission.MakeAnnouncements)) {
+      <td><a id="disable-button-@announcement.id" href="#" class="fancy-button">Dismiss</a></td>
+      }
     }
   </table>
 
