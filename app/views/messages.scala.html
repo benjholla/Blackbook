@@ -18,7 +18,7 @@
   }
   
   <div style="margin-left:20px">
-  <h1>Recent Messages</h1>
+  <h1>Announcements</h1>
   </div>
   <table class="message-table">
     <tr>
@@ -30,6 +30,25 @@
       <td>@play.api.templates.Html(announcement.message)</td>
       @if(user.hasPermission(Permission.MakeAnnouncements)) {
       <td><a id="disable-button-@announcement.id" href="#" class="fancy-button">Dismiss</a></td>
+      <script type="text/javascript">
+		$("#disable-button-@announcement.id").click(function() {
+		   if(confirm('Are you sure you want to dismiss this announcement?  This cannot be undone.')) {
+		 	  jsRoutes.controllers.api.Announcements.disable(@announcement.id).ajax({
+		          dataType: 'json',
+		          contentType:"text/json; charset=utf-8",
+		          success: function(json){
+		         if(json.status == "OK"){
+		           alert("This announcement has been dismissed.");
+		           window.location = "@routes.Announcements.announcements()";
+		          } else {
+		            alert("Error: " + json.status);
+		          }
+		        },
+		        error: function() { alert("Error: Could not dismiss announcement."); }
+		         });
+		   }
+		});
+		</script>
       }
     }
   </table>

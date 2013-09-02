@@ -76,6 +76,7 @@ object Application extends Controller with Secured {
         capi.Users.get,
         capi.Users.update,
         capi.Users.disable,
+        capi.Announcements.disable,
         capi.Transactions.cancel,
         c.Products.viewProduct,
         c.Products.editProduct,

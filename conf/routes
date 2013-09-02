@@ -74,4 +74,5 @@ POST    /api/users/update                     controllers.api.Users.update
 
 GET     /api/products/:id/disable             controllers.api.Products.disable(id: Long)
 GET     /api/users/:name/disable              controllers.api.Users.disable(name: String)
+GET     /api/messages/:id/disable             controllers.api.Announcements.disable(id: Long)
 GET     /api/ledger/:id/cancel                controllers.api.Transactions.cancel(id: Long)
