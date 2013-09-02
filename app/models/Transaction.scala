@@ -70,14 +70,14 @@ object Transaction {
   
   def update(id: Long,  notes: String) {
     DB.withConnection { implicit c =>
-      SQL("UPDATE Products SET Notes={notes} WHERE Id={id}").on(
+      SQL("UPDATE Transactions SET Notes={notes} WHERE Id={id}").on(
         'notes -> notes, 'id -> id).executeUpdate()
     }
   }
   
   def cancel(id: Long) {
     DB.withConnection { implicit c =>
-      SQL("UPDATE Products SET Cancelled='yes' WHERE Id={id}").on(
+      SQL("UPDATE Transactions SET Cancelled='yes' WHERE Id={id}").on(
         'id -> id).executeUpdate()
     }
   }

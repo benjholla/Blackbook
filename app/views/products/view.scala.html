@@ -45,8 +45,7 @@
     } else {
       <h3>No Categories</h3>
     }
-    
-    
+
     <br />
     <h2>Files:</h2>
     @if(product.getFiles().size > 0) {
@@ -68,8 +67,16 @@
     } else {
       <h3>No attachments</h3>
     }
-    
+
+   <br /><hr /><br />
+   
+   <h2>Product Status</h2>
+   @if(product.enabled){
+   <h3>This product is active.</h3>
+   } else {
+   <h3>This product has been discontinued.</h3>
+   }
+   <br />
+   <br />
   </div>
-  <br />
-  <br />
 }

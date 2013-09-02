@@ -20,7 +20,7 @@
   	}
   	
   	<br /><hr /><br />
-  
+    
   	<img class="product-icon" src="@routes.Products.getIcon(product.id)" alt="@product.name Icon" width="180px" height="180px" />
   	<br />
   	<br />
@@ -158,6 +158,35 @@
 	  <input type="file" name="fileUpload">
 	  <input class="fancy-button" type="submit" value="Upload File">
 	}
+
+   <br /><hr /><br />
+   
+   <h2>Product Status</h2>
+   @if(product.enabled){
+   <h3>This product is active.</h3>
+   <input id="disable-button" class="fancy-button" value="Discontinue">
+   <script type="text/javascript">
+   $("#disable-button").click(function() {
+      if(confirm('Are you sure you want to discontinue this product?  This cannot be undone.')) {
+    	  jsRoutes.controllers.api.Products.disable(@product.id).ajax({
+              dataType: 'json',
+              contentType:"text/json; charset=utf-8",
+              success: function(json){
+  	          if(json.status == "OK"){
+  	            alert("This product has been discontinued.");
+  	            window.location = "@routes.Products.viewProduct(product.id)";
+  	          } else {
+  	            alert("Error: " + json.status);
+  	          }
+  	        },
+  	        error: function() { alert("Error: Could not disable product."); }
+            });
+      }
+   });
+   </script>
+   } else {
+   <h3>This product has been discontinued.</h3>
+   }
    <br />
    <br />
   </div>

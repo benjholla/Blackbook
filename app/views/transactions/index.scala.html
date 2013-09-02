@@ -27,7 +27,32 @@
 	      </td>
 	      <td>$@transaction.amount.setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble</td>
 	      <td>@transaction.getCreateTime().toString()</td>
-	      <td>@if(transaction.cancelled){Cancelled}else{<a href="#" style="width:100%;" class="fancy-button">Cancel</a>}</td>
+	      <td>
+	      @if(transaction.cancelled){
+	      Cancelled
+	      } else {
+	      <a id="cancel-button-@transaction.id" href="#" class="fancy-button">Cancel</a>
+	      <script type="text/javascript">
+		   $("#cancel-button-@transaction.id").click(function() {
+		      if(confirm('Are you sure you want to cancel this transaction?  This cannot be undone.')) {
+		    	  jsRoutes.controllers.api.Transactions.cancel(@transaction.id).ajax({
+		              dataType: 'json',
+		              contentType:"text/json; charset=utf-8",
+		              success: function(json){
+		  	          if(json.status == "OK"){
+		  	            alert("This product has been discontinued.");
+		  	            window.location = "@routes.Transactions.transactions()";
+		  	          } else {
+		  	            alert("Error: " + json.status);
+		  	          }
+		  	        },
+		  	        error: function() { alert("Error: Could not cancel transaction."); }
+		            });
+		      }
+		   });
+		   </script>
+	      }
+	      </td>
 	      <td><p style="max-width: 400px;">@transaction.notes</p></td>
 	    </tr>
 		}

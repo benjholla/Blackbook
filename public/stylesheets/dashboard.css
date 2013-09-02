@@ -263,6 +263,7 @@ q:before, q:after {
 {
 	text-align: left;
 	border-collapse: collapse;
+	cursor: default;
 }
 
 .box-table th
@@ -281,6 +282,11 @@ q:before, q:after {
 	border-bottom: 1px solid #fff;
 	color: black;
 	border-top: 1px solid transparent;
+}
+
+.box-table input
+{
+	cursor: pointer;
 }
 
 /* Button Styling */

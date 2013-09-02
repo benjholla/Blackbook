@@ -48,6 +48,11 @@ object Products extends Controller with SecuredApi {
 
     updated.recoverTotal(ValidationError)
   }
+  
+  def disable(id: Long) = SecuredApiCall(Permission.EditProducts){
+    Product.disable(id)
+    Success()
+  }
 
   /** Handle an API request to update a list of products. */
   def updateMany = SecuredApiCall(Permission.EditProducts)(parse.json) 

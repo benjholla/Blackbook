@@ -19,8 +19,12 @@
     </td>
   </tr>
   <tr>
-    <th>Enabled</th>
-    <td>@userToView.enabled</td>
+    <th>Account Status</th>
+    @if(userToView.enabled){
+	<td>This account is active.</td>
+	} else {
+	<td>This account has been disabled.</td>
+	}
   </td>
 </table>
 <br />
@@ -28,4 +32,3 @@
 @if(user.hasPermission(Permission.ViewUsers)) {
 	<a href="@routes.Users.editUser(userToView.name)" class="fancy-button">Edit User</a>
 }
-  

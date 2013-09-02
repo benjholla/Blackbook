@@ -33,7 +33,6 @@ GET     /products/:id/files/:filename         controllers.Products.getFile(id: L
 GET     /products/:id/icon                    controllers.Products.getIcon(id: Long)
 GET     /products/:id/delete/:filename        controllers.Products.deleteFile(id: Long, filename:String)
 POST    /products                             controllers.Products.createProduct
-POST    /products/:id/delete                  controllers.Products.deleteProduct(id:Long)
 POST    /products/:id/update                  controllers.Products.updateProduct(id: Long)
 POST    /products/:id/upload                  controllers.Products.uploadProductFile(id: Long)
 POST    /products/:id/icon                    controllers.Products.uploadProductIcon(id: Long)
@@ -68,8 +67,10 @@ GET     /api/users/:name                      controllers.api.Users.get(name:Str
 POST    /api/products/create                  controllers.api.Products.create
 POST    /api/products/update                  controllers.api.Products.updateMany
 POST    /api/products/:id/update              controllers.api.Products.update(id: Long)
-POST    /api/products/:id/delete              controllers.api.Products.delete(id: Long)
 POST    /api/products/:id/addTags             controllers.api.Products.addTags(id: Long)
 POST    /api/products/:id/removeTags          controllers.api.Products.removeTags(id: Long)
 POST    /api/users/update                     controllers.api.Users.update
 
+GET     /api/products/:id/disable             controllers.api.Products.disable(id: Long)
+GET     /api/users/:name/disable              controllers.api.Users.disable(name: String)
+GET     /api/ledger/:id/cancel                controllers.api.Transactions.cancel(id: Long)

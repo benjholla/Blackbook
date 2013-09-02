@@ -99,6 +99,13 @@ object Product {
       return Product(id, Db.normalizeName(name), description)
     }
   }
+  
+  def disable(id: Long) {
+    DB.withConnection { implicit c =>
+      SQL("UPDATE Products SET Enabled='no' WHERE Id={id}").on(
+        'id -> id).executeUpdate()
+    }
+  }
 
   def delete(id: Long) {
     DB.withConnection { implicit c =>

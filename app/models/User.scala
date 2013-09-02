@@ -127,7 +127,7 @@ object User {
   
   def disable(username:String) = {
     DB.withConnection { implicit c =>
-      SQL("UPDATE Users SET Enabled=no WHERE Name={username}").on(
+      SQL("UPDATE Users SET Enabled='no' WHERE Name={username}").on(
         'username -> username).executeUpdate()
     }
   }

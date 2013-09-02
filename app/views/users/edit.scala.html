@@ -35,6 +35,33 @@
 	   	</div>
    	</div>
    	<input class="fancy-button" type="submit" value="Update">
+   	<br /><br /><hr /><br />
+	<h2>Account Status</h2>
+	@if(userToEdit.enabled){
+	<h3>This account is active.</h3>
+	<input id="disable-button" class="fancy-button" value="Disable">
+	<script type="text/javascript">
+	$("#disable-button").click(function() {
+	   if(confirm('Are you sure you want to disable this account?  This cannot be undone.')) {
+	 	  jsRoutes.controllers.api.Users.disable("@userToEdit.name").ajax({
+	           dataType: 'json',
+	           contentType:"text/json; charset=utf-8",
+	           success: function(json){
+	          if(json.status == "OK"){
+	            alert("This account has been disabled.");
+	            window.location = "@routes.Users.users()";
+	          } else {
+	            alert("Error: " + json.status);
+	          }
+	        },
+	        error: function() { alert("Error: Could not disable account."); }
+	        });
+	   }
+	});
+	</script>
+	} else {
+	<h3>This account has been disabled.</h3>
+	}
   }
   </div>
   

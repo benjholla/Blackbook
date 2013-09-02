@@ -26,4 +26,9 @@ object Users extends Controller with SecuredApi {
       Success()
     }.recoverTotal(ValidationError)
   }
+  
+  def disable(name: String) = SecuredApiCall(Permission.EditUsers){
+    User.disable(name)
+    Success()
+  }
 }
