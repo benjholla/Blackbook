@@ -6,15 +6,15 @@
   <link rel="stylesheet" href="@routes.Assets.at("stylesheets/message-table.css")" />
 
   @if(user.hasPermission(Permission.MakeAnnouncements)) {
-  	<div style="margin-left:20px">
-  	 <h1>Make Announcement</h1>
-	  @form(routes.Announcements.createAnnouncement()) {
-	   	@textarea(announcementForm("message"), args = 'rows -> 10, 'cols -> 90, '_label -> "Announcement", 'class -> "fancy-text-input")
-	   	<input style="margin-top:20px;" class="fancy-button" type="submit" value="Create">
-	  }
-	  </div>
-	  <br />
-	  <br />  
+     <div style="margin-left:20px">
+      <h1>Make Announcement</h1>
+     @form(routes.Announcements.createAnnouncement()) {
+         @textarea(announcementForm("message"), args = 'rows -> 10, 'cols -> 90, '_label -> "Announcement", 'class -> "fancy-text-input")
+         <input style="margin-top:20px;" class="fancy-button" type="submit" value="Create">
+     }
+     </div>
+     <br />
+     <br />  
   }
   
   <div style="margin-left:20px">
@@ -33,24 +33,24 @@
       @if(user.hasPermission(Permission.MakeAnnouncements)) {
       <td><a id="disable-button-@announcement.id" href="#" class="fancy-button">Dismiss</a></td>
       <script type="text/javascript">
-		$("#disable-button-@announcement.id").click(function() {
-		   if(confirm('Are you sure you want to dismiss this announcement?  This cannot be undone.')) {
-		 	  jsRoutes.controllers.api.Announcements.disable(@announcement.id).ajax({
-		          dataType: 'json',
-		          contentType:"text/json; charset=utf-8",
-		          success: function(json){
-		         if(json.status == "OK"){
-		           alert("This announcement has been dismissed.");
-		           window.location = "@routes.Announcements.announcements()";
-		          } else {
-		            alert("Error: " + json.status);
-		          }
-		        },
-		        error: function() { alert("Error: Could not dismiss announcement."); }
-		         });
-		   }
-		});
-		</script>
+      $("#disable-button-@announcement.id").click(function() {
+         if(confirm('Are you sure you want to dismiss this announcement?  This cannot be undone.')) {
+            jsRoutes.controllers.api.Announcements.disable(@announcement.id).ajax({
+                dataType: 'json',
+                contentType:"text/json; charset=utf-8",
+                success: function(json){
+               if(json.status == "OK"){
+                 alert("This announcement has been dismissed.");
+                 window.location = "@routes.Announcements.announcements()";
+                } else {
+                  alert("Error: " + json.status);
+                }
+              },
+              error: function() { alert("Error: Could not dismiss announcement."); }
+               });
+         }
+      });
+      </script>
       }
       </tr>
     }

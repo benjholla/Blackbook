@@ -52,10 +52,10 @@ object Products extends Controller with Secured {
       form => {
         val (name, description) = form
         val product = Product.find(id)
-	    product match { 
-	      case Some(p) => {Product.update(p.id, name, description); Redirect(routes.Products.editProduct(p.id))}
-	      case None => BadRequest(views.html.products.index(Product.all()))
-	    }
+       product match { 
+         case Some(p) => {Product.update(p.id, name, description); Redirect(routes.Products.editProduct(p.id))}
+         case None => BadRequest(views.html.products.index(Product.all()))
+       }
       })
   }
 
@@ -132,30 +132,30 @@ object Products extends Controller with Secured {
   def uploadProductFile(id: Long) = 
     WithPermissions(Perm.ViewProducts)(parse.multipartFormData)
   { implicit request =>
-	  request.body.file("fileUpload").map { fileUpload =>
-	    val filename = fileUpload.filename 
-	    val contentType = fileUpload.contentType
-	    fileUpload.ref.moveTo(getProductFilePath(id,filename), replace=true)
-	    Redirect(routes.Products.editProduct(id))
-	  }.getOrElse {
-	    Redirect(routes.Products.editProduct(id)).flashing("error" -> "Missing file")
-	  }
+     request.body.file("fileUpload").map { fileUpload =>
+       val filename = fileUpload.filename 
+       val contentType = fileUpload.contentType
+       fileUpload.ref.moveTo(getProductFilePath(id,filename), replace=true)
+       Redirect(routes.Products.editProduct(id))
+     }.getOrElse {
+       Redirect(routes.Products.editProduct(id)).flashing("error" -> "Missing file")
+     }
   }
   
   def uploadProductIcon(id: Long) = 
     WithPermissions(Perm.ViewProducts + Perm.EditProducts)(parse.multipartFormData)
   { request => 
-	  request.body.file("iconUpload").map { fileUpload =>
-	    val contentType = fileUpload.contentType
-	    if(contentType.get.toString().startsWith("image/")){
-	      fileUpload.ref.moveTo(getProductIconPath(id), replace=true)
-	      Redirect(routes.Products.editProduct(id))
-	    } else {
-	      getProductIconPath(id).delete();
-	      Redirect(routes.Products.editProduct(id)).flashing("error" -> (contentType.get.toString() + " is not a PNG file"))
-	    }
-	  }.getOrElse {
-	    Redirect(routes.Products.editProduct(id)).flashing("error" -> "Missing file")
-	  }
+     request.body.file("iconUpload").map { fileUpload =>
+       val contentType = fileUpload.contentType
+       if(contentType.get.toString().startsWith("image/")){
+         fileUpload.ref.moveTo(getProductIconPath(id), replace=true)
+         Redirect(routes.Products.editProduct(id))
+       } else {
+         getProductIconPath(id).delete();
+         Redirect(routes.Products.editProduct(id)).flashing("error" -> (contentType.get.toString() + " is not a PNG file"))
+       }
+     }.getOrElse {
+       Redirect(routes.Products.editProduct(id)).flashing("error" -> "Missing file")
+     }
   }
 }

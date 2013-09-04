@@ -13,151 +13,151 @@
   <div id="dashboard-content">
   
     <h2>Name and Description:</h2>
-  	@form(routes.Products.updateProduct(product.id)) {
-    	@inputText(productForm("name"), args = '_label -> "Name", 'class -> "fancy-input") 
-    	@textarea(productForm("description"), args = 'rows -> 10, 'cols -> 90, '_label -> "Description", 'class -> "fancy-text-input")
-    	<input class="fancy-button" type="submit" value="Update">
-  	}
-  	
-  	<br /><hr /><br />
+     @form(routes.Products.updateProduct(product.id)) {
+       @inputText(productForm("name"), args = '_label -> "Name", 'class -> "fancy-input") 
+       @textarea(productForm("description"), args = 'rows -> 10, 'cols -> 90, '_label -> "Description", 'class -> "fancy-text-input")
+       <input class="fancy-button" type="submit" value="Update">
+     }
+     
+     <br /><hr /><br />
     
-  	<img class="product-icon" src="@routes.Products.getIcon(product.id)" alt="@product.name Icon" width="180px" height="180px" />
-  	<br />
-  	<br />
-  	<h2>Icon</h2>
-	@form(action = routes.Products.uploadProductIcon(product.id), 'enctype -> "multipart/form-data") {
-	  <input type="file" name="iconUpload">
-	  <input class="fancy-button" type="submit" value="Upload Icon">
-	}
-  	
-  	<br /><hr /><br />
+     <img class="product-icon" src="@routes.Products.getIcon(product.id)" alt="@product.name Icon" width="180px" height="180px" />
+     <br />
+     <br />
+     <h2>Icon</h2>
+   @form(action = routes.Products.uploadProductIcon(product.id), 'enctype -> "multipart/form-data") {
+     <input type="file" name="iconUpload">
+     <input class="fancy-button" type="submit" value="Upload Icon">
+   }
+     
+     <br /><hr /><br />
 
-  	<h2>Categories:</h2>
-  	@if(Product.getTags(product.id).size > 0) {
-  	<table id="categories-table" class="box-table" summary="Categories">
-	    <tr>
-	    	<th>Category</th>
-	    	<th>Delete</th>
-	    </tr>
-	    @for(tag <- Product.getTags(product.id)) {
-	    <tr>
-	      <td>@tag.name</td>
-	      <td><input id="delete-category-@tag.id-button" class="fancy-button" type="submit" value="Delete"></td>
-	      <input type="hidden" id="delete-category-@tag.id" value="@tag.name" />
-	      <script type="text/javascript">
-	      $('#delete-category-@tag.id-button').click(function() {
-		      jsRoutes.controllers.api.Products.removeTags(@product.id).ajax({
-	            type: 'post',
-	            dataType: 'json',
-	            contentType:"text/json; charset=utf-8",
-	            success: function(json){
-		          if(json.status == "OK"){
-		            availableTags.push("@tag.name");
-		            if($("#categories-table > tbody > tr").length <= 2){
-		              // table will be empty just remove the whole table
-		              $("#categories-table").remove();
-		            } else {
-		              // just remove the single row
-		              $('#delete-category-@tag.id-button').closest('tr').remove();
-		            }
-		          } else {
-		            alert("Error: " + json.status);
-		          }
-		        },
-		        error: function() { alert("Error: Could not add category to product."); },
-	            data: "[\"" + $("#delete-category-@tag.id").val() + "\"]"
-	          });
-	        });
-	      </script>
-	    </tr>
-	    }
-	</table>
-	} else {
-  		<h3>No Categories</h3>
-  	}
-  	
-  	<h3>Add Product to Categories</h3>
-  	<div class="ui-widget">
-	  <label for="categories">Category: </label>
-	  <input id="categories" />
-	  <input id="add-category-button" class="fancy-button" type="submit" value="Add">
-	</div>
-  	<br />
-  	
-  	<script type="text/javascript">
-  	    $('#add-category-button').click(function() {
-  	    
-  	      if($("#categories").val().length == 0){
-  	      	alert("Enter a Category");
-  	      	return;
-  	      }
-  	    
-	      jsRoutes.controllers.api.Products.addTags(@product.id).ajax({
+     <h2>Categories:</h2>
+     @if(Product.getTags(product.id).size > 0) {
+     <table id="categories-table" class="box-table" summary="Categories">
+       <tr>
+          <th>Category</th>
+          <th>Delete</th>
+       </tr>
+       @for(tag <- Product.getTags(product.id)) {
+       <tr>
+         <td>@tag.name</td>
+         <td><input id="delete-category-@tag.id-button" class="fancy-button" type="submit" value="Delete"></td>
+         <input type="hidden" id="delete-category-@tag.id" value="@tag.name" />
+         <script type="text/javascript">
+         $('#delete-category-@tag.id-button').click(function() {
+            jsRoutes.controllers.api.Products.removeTags(@product.id).ajax({
+               type: 'post',
+               dataType: 'json',
+               contentType:"text/json; charset=utf-8",
+               success: function(json){
+                if(json.status == "OK"){
+                  availableTags.push("@tag.name");
+                  if($("#categories-table > tbody > tr").length <= 2){
+                    // table will be empty just remove the whole table
+                    $("#categories-table").remove();
+                  } else {
+                    // just remove the single row
+                    $('#delete-category-@tag.id-button').closest('tr').remove();
+                  }
+                } else {
+                  alert("Error: " + json.status);
+                }
+              },
+              error: function() { alert("Error: Could not add category to product."); },
+               data: "[\"" + $("#delete-category-@tag.id").val() + "\"]"
+             });
+           });
+         </script>
+       </tr>
+       }
+   </table>
+   } else {
+        <h3>No Categories</h3>
+     }
+     
+     <h3>Add Product to Categories</h3>
+     <div class="ui-widget">
+     <label for="categories">Category: </label>
+     <input id="categories" />
+     <input id="add-category-button" class="fancy-button" type="submit" value="Add">
+   </div>
+     <br />
+     
+     <script type="text/javascript">
+         $('#add-category-button').click(function() {
+         
+           if($("#categories").val().length == 0){
+              alert("Enter a Category");
+              return;
+           }
+         
+         jsRoutes.controllers.api.Products.addTags(@product.id).ajax({
             type: 'post',
             dataType: 'json',
             contentType:"text/json; charset=utf-8",
             success: function(json){
-	          if(json.status == "OK"){
-	            location.reload(); // being lazy, instead of using jquery to append the table just reload the page
-	          } else {
-	            alert("Error: " + json.status);
-	          }
-	        },
-	        error: function() { alert("Error: Could not add category to product."); },
+             if(json.status == "OK"){
+               location.reload(); // being lazy, instead of using jquery to append the table just reload the page
+             } else {
+               alert("Error: " + json.status);
+             }
+           },
+           error: function() { alert("Error: Could not add category to product."); },
             data: "[\"" + $("#categories").val() + "\"]"
           });
         });
 
-  		var availableTags = [@play.api.templates.Html({
-					  			var result = ""
-					   	    	for(tag <- Tag.all()) {
-					   		    	var tagAvailable = true
-					   		    	var tags = Product.getTags(product.id)
-					   		    	for(usedTag <- tags){
-					   		    		if(tag.name.equals(usedTag.name)){
-					   		    			tagAvailable = false
-					   		    		}
-					   		    	}
-					   		    	if(tagAvailable) {
-					   		    		result += "\"" + tag.name + "\"" + " "
-					   		    	}
-					   	    	}
-					   	    	result.trim().replace(" ", ",");
-					   	    })];
-   	    $("#categories").autocomplete({
-   	      source: availableTags
-   	    });
-	</script>
-  	
-  	<br /><hr /><br />
-  	
-  	<h2>Files:</h2>
-  	@if(product.getFiles().size > 0) {
-  	<table class="box-table" summary="Product Files">
-	    <tr>
-	    	<th>File</th>
-	    	<th>Delete</th>
-	    </tr>
-	    @for(file <- product.getFiles()) {
-		<tr>
-	      <td>@file.getName()</td>
-	      	<td>
-	      	@form(routes.Products.deleteFile(product.id,file.getName())) {
+        var availableTags = [@play.api.templates.Html({
+                          var result = ""
+                            for(tag <- Tag.all()) {
+                               var tagAvailable = true
+                               var tags = Product.getTags(product.id)
+                               for(usedTag <- tags){
+                                  if(tag.name.equals(usedTag.name)){
+                                     tagAvailable = false
+                                  }
+                               }
+                               if(tagAvailable) {
+                                  result += "\"" + tag.name + "\"" + " "
+                               }
+                            }
+                            result.trim().replace(" ", ",");
+                         })];
+          $("#categories").autocomplete({
+            source: availableTags
+          });
+   </script>
+     
+     <br /><hr /><br />
+     
+     <h2>Files:</h2>
+     @if(product.getFiles().size > 0) {
+     <table class="box-table" summary="Product Files">
+       <tr>
+          <th>File</th>
+          <th>Delete</th>
+       </tr>
+       @for(file <- product.getFiles()) {
+      <tr>
+         <td>@file.getName()</td>
+            <td>
+            @form(routes.Products.deleteFile(product.id,file.getName())) {
               <input class="fancy-button" type="submit" value="Delete">
-          	}
-        	</td>
-	    </tr>
-		}
-	</table>
-  	} else {
-  		<h3>No attachments</h3>
-  	}
-  	
-  	<h3>Upload File</h3>
-	@form(action = routes.Products.uploadProductFile(product.id), 'enctype -> "multipart/form-data") {
-	  <input type="file" name="fileUpload">
-	  <input class="fancy-button" type="submit" value="Upload File">
-	}
+             }
+           </td>
+       </tr>
+      }
+   </table>
+     } else {
+        <h3>No attachments</h3>
+     }
+     
+     <h3>Upload File</h3>
+   @form(action = routes.Products.uploadProductFile(product.id), 'enctype -> "multipart/form-data") {
+     <input type="file" name="fileUpload">
+     <input class="fancy-button" type="submit" value="Upload File">
+   }
 
    <br /><hr /><br />
    
@@ -168,18 +168,18 @@
    <script type="text/javascript">
    $("#disable-button").click(function() {
       if(confirm('Are you sure you want to discontinue this product?  This cannot be undone.')) {
-    	  jsRoutes.controllers.api.Products.disable(@product.id).ajax({
+         jsRoutes.controllers.api.Products.disable(@product.id).ajax({
               dataType: 'json',
               contentType:"text/json; charset=utf-8",
               success: function(json){
-  	          if(json.status == "OK"){
-  	            alert("This product has been discontinued.");
-  	            window.location = "@routes.Products.viewProduct(product.id)";
-  	          } else {
-  	            alert("Error: " + json.status);
-  	          }
-  	        },
-  	        error: function() { alert("Error: Could not disable product."); }
+               if(json.status == "OK"){
+                 alert("This product has been discontinued.");
+                 window.location = "@routes.Products.viewProduct(product.id)";
+               } else {
+                 alert("Error: " + json.status);
+               }
+             },
+             error: function() { alert("Error: Could not disable product."); }
             });
       }
    });

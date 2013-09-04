@@ -46,13 +46,13 @@ object Transaction {
     get[BigDecimal]("Transactions.Amount") ~
     get[String]("Transactions.Notes") ~
     get[Boolean]("Transactions.Cancelled") map { 
-    	case id ~ 
-    	     productId ~ 
-    	     userName ~ 
-    	     quantity ~ 
-    	     amount ~
-    	     notes ~
-    	     cancelled => Transaction(id, productId, userName, quantity, amount, notes, cancelled)
+       case id ~ 
+            productId ~ 
+            userName ~ 
+            quantity ~ 
+            amount ~
+            notes ~
+            cancelled => Transaction(id, productId, userName, quantity, amount, notes, cancelled)
     }
   }
 

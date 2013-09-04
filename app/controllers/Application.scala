@@ -27,11 +27,11 @@ object Application extends Controller with Secured {
   }
   
   def robots() = Action { implicit request =>
-  	Ok(views.txt.decoy.robots())
+     Ok(views.txt.decoy.robots())
   }
   
   def noscript() = Action { implicit request =>
-  	Ok(views.html.noscript())
+     Ok(views.html.noscript())
   }
   
   def error(request: RequestHeader): Result = {
@@ -60,7 +60,7 @@ object Application extends Controller with Secured {
 
   def order = WithPermissions(Permission.ViewProducts)
   { implicit request =>
-	  Ok(views.html.order())
+     Ok(views.html.order())
   }
 
   def javascriptRoutes = WithSomePermissions()

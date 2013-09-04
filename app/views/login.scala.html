@@ -2,11 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
 <head>
-	<title>The Caring Donations Community &rsaquo; Log In</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" media="screen" href="@routes.Assets.at("wordpress/stylesheets/login.css")">
-	<link rel="stylesheet" media="screen" href="@routes.Assets.at("wordpress/stylesheets/colors-fresh.css")">
-	<meta name='robots' content='noindex,nofollow' />
+   <title>The Caring Donations Community &rsaquo; Log In</title>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <link rel="stylesheet" media="screen" href="@routes.Assets.at("wordpress/stylesheets/login.css")">
+   <link rel="stylesheet" media="screen" href="@routes.Assets.at("wordpress/stylesheets/colors-fresh.css")">
+   <meta name='robots' content='noindex,nofollow' />
 </head>
 <body class="login">
 
@@ -15,7 +15,7 @@
 
 @loginForm.errors.map { error =>
   <p id="login_error">
-  	<strong>Error: </strong> @error.message
+     <strong>Error: </strong> @error.message
   </p>
 }
 
@@ -29,9 +29,9 @@
       <label>Password<br />
       <input type="password" name="password" id="password" class="input" value="@loginForm("password").value" size="20" tabindex="20" />
     </p>
-	<p class="submit">
-		<input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="Log In" tabindex="100" />
-	</p>
+   <p class="submit">
+      <input type="submit" name="wp-submit" id="wp-submit" class="button-primary" value="Log In" tabindex="100" />
+   </p>
 }
 
 <p id="backtoblog"><a href="/" title="Login Required">← The Caring Donations Community</a></p>

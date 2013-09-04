@@ -13,99 +13,99 @@
   <div id="dashboard-content">
   <h1>User: @userToEdit.name</h1>
   @form(routes.Users.updateUser(userToEdit.name)) {
-   	@inputText(userForm("email"), args = '_label -> "Email", 'class -> "fancy-input") 
-   	@inputText(userForm("password"), args = '_label -> "Password", 'class -> "fancy-input") 
-   	<input type="hidden" id="permissions" name="permissions" value="@Permission.setToLong(userToEdit.getPermissions())">
-   	<div>
-	   	<div style="float:left;">
-		   	<label for="role">Role</label><br />
-		   	<input id="none-radio" type="radio" name="role" value="None" checked="checked">None<br>
-		   	<input id="client-radio" type="radio" name="role" value="Client">Client<br>
-		   	<input id="sales-radio" type="radio" name="role" value="Sales">Sales<br>
-		   	<input id="accounting-radio" type="radio" name="role" value="Accounting">Accounting<br>
-		   	<input id="admin-radio" type="radio" name="role" value="Administrator">Administrator<br>
-		   	<input id="custom-radio" type="radio" name="role" value="Custom">Custom<br>
-		   	<br />
-	   	</div>
-	   	<div style="float:right;">
-		   	@Permission.values.map { perm =>
-		      <input type="checkbox" name="permission-types" id="@perm.toString()" value="@perm.toString()" disabled="disabled">@perm.toString<br />
-		    }
-		   	<br />
-	   	</div>
-   	</div>
-   	<input class="fancy-button" type="submit" value="Update">
-   	<br /><br /><hr /><br />
-	<h2>Account Status</h2>
-	@if(userToEdit.enabled){
-	<h3>This account is active.</h3>
-	<input id="disable-button" class="fancy-button" value="Disable">
-	<script type="text/javascript">
-	$("#disable-button").click(function() {
-	   if(confirm('Are you sure you want to disable this account?  This cannot be undone.')) {
-	 	  jsRoutes.controllers.api.Users.disable("@userToEdit.name").ajax({
-	           dataType: 'json',
-	           contentType:"text/json; charset=utf-8",
-	           success: function(json){
-	          if(json.status == "OK"){
-	            alert("This account has been disabled.");
-	            window.location = "@routes.Users.users()";
-	          } else {
-	            alert("Error: " + json.status);
-	          }
-	        },
-	        error: function() { alert("Error: Could not disable account."); }
-	        });
-	   }
-	});
-	</script>
-	} else {
-	<h3>This account has been disabled.</h3>
-	}
+      @inputText(userForm("email"), args = '_label -> "Email", 'class -> "fancy-input") 
+      @inputText(userForm("password"), args = '_label -> "Password", 'class -> "fancy-input") 
+      <input type="hidden" id="permissions" name="permissions" value="@Permission.setToLong(userToEdit.getPermissions())">
+      <div>
+         <div style="float:left;">
+            <label for="role">Role</label><br />
+            <input id="none-radio" type="radio" name="role" value="None" checked="checked">None<br>
+            <input id="client-radio" type="radio" name="role" value="Client">Client<br>
+            <input id="sales-radio" type="radio" name="role" value="Sales">Sales<br>
+            <input id="accounting-radio" type="radio" name="role" value="Accounting">Accounting<br>
+            <input id="admin-radio" type="radio" name="role" value="Administrator">Administrator<br>
+            <input id="custom-radio" type="radio" name="role" value="Custom">Custom<br>
+            <br />
+         </div>
+         <div style="float:right;">
+            @Permission.values.map { perm =>
+            <input type="checkbox" name="permission-types" id="@perm.toString()" value="@perm.toString()" disabled="disabled">@perm.toString<br />
+          }
+            <br />
+         </div>
+      </div>
+      <input class="fancy-button" type="submit" value="Update">
+      <br /><br /><hr /><br />
+   <h2>Account Status</h2>
+   @if(userToEdit.enabled){
+   <h3>This account is active.</h3>
+   <input id="disable-button" class="fancy-button" value="Disable">
+   <script type="text/javascript">
+   $("#disable-button").click(function() {
+      if(confirm('Are you sure you want to disable this account?  This cannot be undone.')) {
+         jsRoutes.controllers.api.Users.disable("@userToEdit.name").ajax({
+              dataType: 'json',
+              contentType:"text/json; charset=utf-8",
+              success: function(json){
+             if(json.status == "OK"){
+               alert("This account has been disabled.");
+               window.location = "@routes.Users.users()";
+             } else {
+               alert("Error: " + json.status);
+             }
+           },
+           error: function() { alert("Error: Could not disable account."); }
+           });
+      }
+   });
+   </script>
+   } else {
+   <h3>This account has been disabled.</h3>
+   }
   }
   </div>
   
   <script type="text/javascript">
-	// create a set of handy permission mappings
-	var permsValueToNameMap = {};
-	@Permission.values.map { perm =>
-		permsValueToNameMap["@Permission.setToLong(perm)"] = "@perm.toString()";
-	}
-	
-	var permsNameToValueMap = {};
-	@Permission.values.map { perm =>
-		permsNameToValueMap["@perm.toString()"] = "@Permission.setToLong(perm)";
-	}
-	
-	// helper function to set the individual role permissions values
-	function setPermissions(value) {
-	    // clear all perms
-		@Permission.values.map { perm =>
-			$("#@perm.toString()").prop('checked', false);
-		}
-		// set the selected perms
-	    var numPerms = @Permission.values.size;
-	    var permsValue = 0;
-	    for (var i = 0; (i < numPerms || i < 32); i++) {
-	    	var permValue = value & (1 << i);
-	        var perm = permsValueToNameMap[permValue];
-	        if (perm != undefined) {
-	            $("#" + perm).prop('checked', true);
-	            permsValue += permValue;
-	        }
-	    }
-	    $("#permissions").val("" + permsValue);
-	}
-	
-	// helper function to enable/disable the permission checkboxes
-	function setCheckboxesEnabled(enabled) {
-	    @Permission.values.map { perm =>
-			$("#@perm.toString()").prop('disabled', !enabled);
-		}
-	}
-	
-	// helper function for updating individual permissions when the role radio selector is updated
-	function radioValueChanged() {
+   // create a set of handy permission mappings
+   var permsValueToNameMap = {};
+   @Permission.values.map { perm =>
+      permsValueToNameMap["@Permission.setToLong(perm)"] = "@perm.toString()";
+   }
+   
+   var permsNameToValueMap = {};
+   @Permission.values.map { perm =>
+      permsNameToValueMap["@perm.toString()"] = "@Permission.setToLong(perm)";
+   }
+   
+   // helper function to set the individual role permissions values
+   function setPermissions(value) {
+       // clear all perms
+      @Permission.values.map { perm =>
+         $("#@perm.toString()").prop('checked', false);
+      }
+      // set the selected perms
+       var numPerms = @Permission.values.size;
+       var permsValue = 0;
+       for (var i = 0; (i < numPerms || i < 32); i++) {
+          var permValue = value & (1 << i);
+           var perm = permsValueToNameMap[permValue];
+           if (perm != undefined) {
+               $("#" + perm).prop('checked', true);
+               permsValue += permValue;
+           }
+       }
+       $("#permissions").val("" + permsValue);
+   }
+   
+   // helper function to enable/disable the permission checkboxes
+   function setCheckboxesEnabled(enabled) {
+       @Permission.values.map { perm =>
+         $("#@perm.toString()").prop('disabled', !enabled);
+      }
+   }
+   
+   // helper function for updating individual permissions when the role radio selector is updated
+   function radioValueChanged() {
         var radioValue = $(this).val();
         if (radioValue == "None") {
             setCheckboxesEnabled(false);
@@ -129,61 +129,61 @@
     }
     
     // helper function for updating the hidden field when a permission checkbox is changed
-	function checkboxValueChanged() {
+   function checkboxValueChanged() {
         var checkboxValue = $(this).val();
         var permValue = permsNameToValueMap[checkboxValue];
         if(permValue != undefined){
-        	if($(this).is(":checked")){
-        		$("#permissions").val("" + (parseInt($("#permissions").val()) + parseInt(permValue)));
-        	} else {
-        		$("#permissions").val("" + (parseInt($("#permissions").val()) - parseInt(permValue)));
-        	}
+           if($(this).is(":checked")){
+              $("#permissions").val("" + (parseInt($("#permissions").val()) + parseInt(permValue)));
+           } else {
+              $("#permissions").val("" + (parseInt($("#permissions").val()) - parseInt(permValue)));
+           }
         }
     }
-	
-	// setup role radio and permission checkbox listeners
-	$(document).ready(function () {
-		
-		// sets the default value according to the current permission level
-		function setDefaultPermissions(value) {
-		    if(value == 0){
-		    	$("#none-radio").prop('checked',true);
-		    } else if(value == @Permission.setToLong(Roles.Client)){
-		    	$("#client-radio").prop('checked',true);
-		    } else if(value == @Permission.setToLong(Roles.Sales)){
-		    	$("#sales-radio").prop('checked',true);
-		    } else if(value == @Permission.setToLong(Roles.Accounting)){
-		    	$("#accounting-radio").prop('checked',true);
-		    } else if(value == @Permission.setToLong(Roles.Admin)){
-		    	$("#admin-radio").prop('checked',true);
-		    } else {
-		    	$("#custom-radio").prop('checked',true);
-		    }
-		
-		    // clear all perms
-			@Permission.values.map { perm =>
-				$("#@perm.toString()").prop('checked', false);
-			}
-			// set the selected perms
-		    var numPerms = @Permission.values.size;
-		    var permsValue = 0;
-		    for (var i = 0; (i < numPerms || i < 32); i++) {
-		    	var permValue = value & (1 << i);
-		        var perm = permsValueToNameMap[permValue];
-		        if (perm != undefined) {
-		            $("#" + perm).prop('checked', true);
-		            permsValue += permValue;
-		        }
-		    }
-		    $("#permissions").val("" + permsValue);
-		}
-		
-		setDefaultPermissions(@Permission.setToLong(userToEdit.getPermissions()));
-		
+   
+   // setup role radio and permission checkbox listeners
+   $(document).ready(function () {
+      
+      // sets the default value according to the current permission level
+      function setDefaultPermissions(value) {
+          if(value == 0){
+             $("#none-radio").prop('checked',true);
+          } else if(value == @Permission.setToLong(Roles.Client)){
+             $("#client-radio").prop('checked',true);
+          } else if(value == @Permission.setToLong(Roles.Sales)){
+             $("#sales-radio").prop('checked',true);
+          } else if(value == @Permission.setToLong(Roles.Accounting)){
+             $("#accounting-radio").prop('checked',true);
+          } else if(value == @Permission.setToLong(Roles.Admin)){
+             $("#admin-radio").prop('checked',true);
+          } else {
+             $("#custom-radio").prop('checked',true);
+          }
+      
+          // clear all perms
+         @Permission.values.map { perm =>
+            $("#@perm.toString()").prop('checked', false);
+         }
+         // set the selected perms
+          var numPerms = @Permission.values.size;
+          var permsValue = 0;
+          for (var i = 0; (i < numPerms || i < 32); i++) {
+             var permValue = value & (1 << i);
+              var perm = permsValueToNameMap[permValue];
+              if (perm != undefined) {
+                  $("#" + perm).prop('checked', true);
+                  permsValue += permValue;
+              }
+          }
+          $("#permissions").val("" + permsValue);
+      }
+      
+      setDefaultPermissions(@Permission.setToLong(userToEdit.getPermissions()));
+      
         $("input[name='role']").change(radioValueChanged);
         $("input[name='permission-types']").change(checkboxValueChanged);
     });
-	</script>
+   </script>
 }
 
 

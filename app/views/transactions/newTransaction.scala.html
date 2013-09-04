@@ -17,74 +17,74 @@
       <dd class="info">Required</dd>
   </dl>
   @form(routes.Transactions.createTransaction) {
-   	<input type="hidden" id="product-id" name="productId" value="" class="fancy-input">
-   	@inputText(transactionForm("userName"), args = '_label -> "Client Username", 'class -> "fancy-input", 'id -> "username")
-   	@inputText(transactionForm("quantity"), args = '_label -> "Quantity", 'class -> "fancy-input")
-   	@inputText(transactionForm("amount"), args = '_label -> "Amount", 'class -> "fancy-input")
-   	@textarea(transactionForm("notes"), args = 'rows -> 5, 'cols -> 50, '_label -> "Notes", 'class -> "fancy-text-input")
-   	<input class="fancy-button" type="submit" value="Create">
+      <input type="hidden" id="product-id" name="productId" value="" class="fancy-input">
+      @inputText(transactionForm("userName"), args = '_label -> "Client Username", 'class -> "fancy-input", 'id -> "username")
+      @inputText(transactionForm("quantity"), args = '_label -> "Quantity", 'class -> "fancy-input")
+      @inputText(transactionForm("amount"), args = '_label -> "Amount", 'class -> "fancy-input")
+      @textarea(transactionForm("notes"), args = 'rows -> 5, 'cols -> 50, '_label -> "Notes", 'class -> "fancy-text-input")
+      <input class="fancy-button" type="submit" value="Create">
   }
   </div>
   
   <script type="text/javascript">
   
-  	var validProductIds = [@play.api.templates.Html({
-					  			var validIdResult = ""
-					   	    	for(product <- Product.all()) {
-					   		    	validIdResult += "\"" + product.id  + "\"" + " "
-					   	    	}
-					   	    	validIdResult.trim().replace(" ", ",");
-					   	    })];
-					   	    
-	  // helper function to check if the array contains a given element
-	  function contains(item, arr) {
-	      for (var i = 0; i < arr.length; i++) {
-	          if (arr[i] === item) {
-	              return true;
-	          }
-	      }
-	      return false;
-	  }
+     var validProductIds = [@play.api.templates.Html({
+                          var validIdResult = ""
+                            for(product <- Product.all()) {
+                               validIdResult += "\"" + product.id  + "\"" + " "
+                            }
+                            validIdResult.trim().replace(" ", ",");
+                         })];
+                         
+     // helper function to check if the array contains a given element
+     function contains(item, arr) {
+         for (var i = 0; i < arr.length; i++) {
+             if (arr[i] === item) {
+                 return true;
+             }
+         }
+         return false;
+     }
   
     // make sure we have a proper product id before sumitting
     $("form").submit(function() {
-   		var index = productNameToId[$("#product-name").val()];
-	    if(index != undefined){
-	    	$("#product-id").val(index);
-	    	return true; // we have a valid product id, perform submission
-	    } else {
-	    	alert("Please select a valid product.");
-	    	return false; // cancel the submit
-	    }
-	});
+         var index = productNameToId[$("#product-name").val()];
+       if(index != undefined){
+          $("#product-id").val(index);
+          return true; // we have a valid product id, perform submission
+       } else {
+          alert("Please select a valid product.");
+          return false; // cancel the submit
+       }
+   });
   
     var productNameToId = {};
     @for(product <- Product.all()) {
-		productNameToId["@product.name"] = "@product.id";
-	}
+      productNameToId["@product.name"] = "@product.id";
+   }
   
     var products = [@play.api.templates.Html({
-	var productsResult = ""
-	   	for(product <- Product.all()) {
-	    	productsResult += "\"" + product.name + "\"" + " "
-	   	}
-	   	productsResult.trim().replace(" ", ",");
-	   })];
-	   
-	$("#product-name").autocomplete({
-		source: products
-	});
-	
-	var users = [@play.api.templates.Html({
-	var usersResult = ""
-	   	for(user <- User.all()) {
-	    	usersResult += "\"" + user.name + "\"" + " "
-	   	}
-	   	usersResult.trim().replace(" ", ",");
-	   })];
-	   
-	$("#username").autocomplete({
-	source: users
-	});
+   var productsResult = ""
+         for(product <- Product.all()) {
+          productsResult += "\"" + product.name + "\"" + " "
+         }
+         productsResult.trim().replace(" ", ",");
+      })];
+      
+   $("#product-name").autocomplete({
+      source: products
+   });
+   
+   var users = [@play.api.templates.Html({
+   var usersResult = ""
+         for(user <- User.all()) {
+          usersResult += "\"" + user.name + "\"" + " "
+         }
+         usersResult.trim().replace(" ", ",");
+      })];
+      
+   $("#username").autocomplete({
+   source: users
+   });
   </script>
 }

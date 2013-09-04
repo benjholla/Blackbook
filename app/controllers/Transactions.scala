@@ -19,8 +19,8 @@ object Transactions extends Controller with Secured {
     tuple("productId" -> number,
           "userName" -> nonEmptyText,
           "quantity" -> number,
-    	  "amount" -> Forms.bigDecimal,
-    	  "notes" -> nonEmptyText
+         "amount" -> Forms.bigDecimal,
+         "notes" -> nonEmptyText
          )
   )
   

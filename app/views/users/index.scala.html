@@ -57,11 +57,11 @@
     }
 
     $(document).ready(function() {
-  		refreshUsers();
-	});
+        refreshUsers();
+   });
   </script>
   <div id="sidebar">
-  	<h2>Actions</h2>
+     <h2>Actions</h2>
     @if(user.hasPermission(Permission.ViewUsers)) {
     <a href="@routes.Users.newUser()" style="width:100%;" class="fancy-button">New User</a>
     }

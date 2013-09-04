@@ -12,9 +12,9 @@ table.message-table tr {
 }
 
 table.message-table td {
-	padding:5px;
-	border-top: 1px solid gray;
+   padding:5px;
+   border-top: 1px solid gray;
 }
 table.message-table th { 
-	
+   
 }

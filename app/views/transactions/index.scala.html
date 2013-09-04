@@ -8,55 +8,55 @@
     <a href="@routes.Transactions.newTransaction()" style="width:100%;" class="fancy-button">Add Transaction</a>
   </div>
   <div id="dashboard-content">
-	  <table class="box-table" summary="Transactions">
-	    <tr>
-	    	<th>Transaction</th>
-	    	<th>Client</th>
-	    	<th>Purchase</th>
-	    	<th>Amount</th>
-	    	<th>Purchased</th>
-	    	<th>Cancelled</th>
-	    	<th>Notes</th>
-	    </tr>
-	    @for(transaction <- transactions) {
-		<tr>
-	      <td>@transaction.id</td>
-	      <td>@transaction.userName</td>
-	      <td>@Product.find(transaction.productId).get.name
-	          @if(transaction.quantity > 1){&nbsp;(x @transaction.quantity)}
-	      </td>
-	      <td>$@transaction.amount.setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble</td>
-	      <td>@transaction.getCreateTime().toString()</td>
-	      <td>
-	      @if(transaction.cancelled){
-	      Cancelled
-	      } else {
-	      <a id="cancel-button-@transaction.id" href="#" class="fancy-button">Cancel</a>
-	      <script type="text/javascript">
-		   $("#cancel-button-@transaction.id").click(function() {
-		      if(confirm('Are you sure you want to cancel this transaction?  This cannot be undone.')) {
-		    	  jsRoutes.controllers.api.Transactions.cancel(@transaction.id).ajax({
-		              dataType: 'json',
-		              contentType:"text/json; charset=utf-8",
-		              success: function(json){
-		  	          if(json.status == "OK"){
-		  	            alert("This transaction has been cancelled.");
-		  	            window.location = "@routes.Transactions.transactions()";
-		  	          } else {
-		  	            alert("Error: " + json.status);
-		  	          }
-		  	        },
-		  	        error: function() { alert("Error: Could not cancel transaction."); }
-		            });
-		      }
-		   });
-		   </script>
-	      }
-	      </td>
-	      <td><p style="max-width: 400px;">@transaction.notes</p></td>
-	    </tr>
-		}
-	</table>
+     <table class="box-table" summary="Transactions">
+       <tr>
+          <th>Transaction</th>
+          <th>Client</th>
+          <th>Purchase</th>
+          <th>Amount</th>
+          <th>Purchased</th>
+          <th>Cancelled</th>
+          <th>Notes</th>
+       </tr>
+       @for(transaction <- transactions) {
+      <tr>
+         <td>@transaction.id</td>
+         <td>@transaction.userName</td>
+         <td>@Product.find(transaction.productId).get.name
+             @if(transaction.quantity > 1){&nbsp;(x @transaction.quantity)}
+         </td>
+         <td>$@transaction.amount.setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble</td>
+         <td>@transaction.getCreateTime().toString()</td>
+         <td>
+         @if(transaction.cancelled){
+         Cancelled
+         } else {
+         <a id="cancel-button-@transaction.id" href="#" class="fancy-button">Cancel</a>
+         <script type="text/javascript">
+         $("#cancel-button-@transaction.id").click(function() {
+            if(confirm('Are you sure you want to cancel this transaction?  This cannot be undone.')) {
+               jsRoutes.controllers.api.Transactions.cancel(@transaction.id).ajax({
+                    dataType: 'json',
+                    contentType:"text/json; charset=utf-8",
+                    success: function(json){
+                     if(json.status == "OK"){
+                       alert("This transaction has been cancelled.");
+                       window.location = "@routes.Transactions.transactions()";
+                     } else {
+                       alert("Error: " + json.status);
+                     }
+                   },
+                   error: function() { alert("Error: Could not cancel transaction."); }
+                  });
+            }
+         });
+         </script>
+         }
+         </td>
+         <td><p style="max-width: 400px;">@transaction.notes</p></td>
+       </tr>
+      }
+   </table>
   </div>
   <br />
   <br />
