@@ -39,7 +39,7 @@
     @if(Product.getTags(product.id).size > 0) {
       <p style="font-size: 120%;">
       @Product.getTags(product.id).map { tag =>
-        @tag.name 
+       [ @tag.name ]  
       }
       </p>
     } else {

@@ -118,6 +118,8 @@ a:active {
 	border-radius: 10px;
 }
 
+#product-description a:hover {color: black;}  /* mouse over link */
+
 /* Page Header */
 #header {
   position: absolute; 
