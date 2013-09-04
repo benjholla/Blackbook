@@ -29,6 +29,10 @@ GET     /assets/*file                         controllers.Assets.at(path="/publi
 GET     /messages                             controllers.Announcements.announcements
 POST    /messages                             controllers.Announcements.createAnnouncement
 
+# Error investigation
+GET     /debug                                controllers.Application.debug
+POST    /debug                                controllers.Application.debugWithParams()
+
 # Products Routes
 GET     /products                             controllers.Products.products
 GET     /products/new                         controllers.Products.newProduct

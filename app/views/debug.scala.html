@@ -1,0 +1,22 @@
+@(result: String, debugForm: Form[(String)])(implicit user: User.User)
+
+@import helper._
+
+@main("Blackbook | Debug") {
+
+<div style="margin-left:20px">
+  @if(user.hasPermission(Permission.EditUsers) && user.hasPermission(Permission.EditProducts)) {
+  <h1>Debug Console</h1>
+ 	<textarea rows="20" cols="100" disabled="disabled">@play.api.templates.Html(result)</textarea>
+	<br />
+  @form(routes.Application.debugWithParams()) {
+  	 Console: <input style="width:300px;" type="text" id="params" name="params"> <input type="submit" value="Execute">
+  }
+  
+  
+  } else {
+  <h1>Sorry you need moderator permissions to reach this page.</h1>
+  }
+</div>
+}
+
