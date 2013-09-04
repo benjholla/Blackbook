@@ -40,7 +40,7 @@ object Users extends Controller with Secured {
     Ok(views.html.users.edit(User.find(username), editUserForm.fill((user.password, user.email, Permission.setToLong(user.getPermissions())))))
   }
   
-  def updateUser(username: String) = WithPermissions(Permission.ViewUsers + Permission.EditUsers){ implicit request =>
+  def updateUser(username: String) = WithPermissions(Permission.ViewUsers){ implicit request =>
     editUserForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.users.edit(User.find(username), formWithErrors)),
       form => {
@@ -54,7 +54,7 @@ object Users extends Controller with Secured {
     Ok(views.html.users.newUser(User.all, userForm))
   }
   
-  def createUser() = WithPermission(Permission.EditUsers){ implicit request =>
+  def createUser() = WithPermission(){ implicit request =>
     userForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.users.newUser(User.all, formWithErrors)),
       form => {

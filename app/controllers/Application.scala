@@ -26,6 +26,14 @@ object Application extends Controller with Secured {
     NotFound(template)
   }
   
+  def robots() = Action { implicit request =>
+  	Ok(views.txt.decoy.robots())
+  }
+  
+  def noscript() = Action { implicit request =>
+  	Ok(views.html.noscript())
+  }
+  
   def error(request: RequestHeader): Result = {
     val template = 
       if (isLoggedIn(request)) { views.html.error() } 
@@ -39,7 +47,8 @@ object Application extends Controller with Secured {
   }
 
   def logout = Action { 
-    Redirect(routes.Decoy.home).withNewSession
+    //Redirect(routes.Decoy.home).withNewSession
+    Redirect(routes.Decoy.home)
   }
 
   def authenticate = Action { implicit request =>

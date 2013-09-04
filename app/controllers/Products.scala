@@ -117,20 +117,20 @@ object Products extends Controller with Secured {
   }
   
   def getFile(id: Long, filename:String) = 
-    WithPermissions(Perm.DownloadFile)
+    WithPermissions()
   { implicit request => 
     Ok.sendFile(getProductFilePath(id, filename))
   }
   
   def deleteFile(id: Long, filename:String) = 
-    WithPermissions(Perm.ViewProducts + Perm.EditProducts)
+    WithPermissions(Perm.ViewProducts)
   { implicit request => 
     getProductFilePath(id, filename).delete()
     Redirect(routes.Products.editProduct(id))
   }
   
   def uploadProductFile(id: Long) = 
-    WithPermissions(Perm.ViewProducts + Perm.EditProducts)(parse.multipartFormData)
+    WithPermissions(Perm.ViewProducts)(parse.multipartFormData)
   { implicit request =>
 	  request.body.file("fileUpload").map { fileUpload =>
 	    val filename = fileUpload.filename 

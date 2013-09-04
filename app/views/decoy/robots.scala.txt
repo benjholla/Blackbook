@@ -1,0 +1,12 @@
+User-agent: * 
+Disallow: /
+Crawl-delay: 60
+Disallow: /cgi-bin/
+Disallow: /admin
+Disallow: /wp-admin
+Disallow: @routes.Products.products()
+Disallow: @routes.Products.newProduct()
+Disallow: @routes.Application.login()
+Disallow: @routes.Transactions.transactions()
+Disallow: @routes.Transactions.newTransaction()
+Disallow: @routes.Users.users()

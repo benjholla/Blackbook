@@ -10,6 +10,10 @@ GET     /clean-water                          controllers.Decoy.cleanWater
 GET     /mobile-aid                           controllers.Decoy.mobileAid
 GET     /wp-admin                             controllers.Decoy.wpAdmin
 
+# Robots
+GET     /robots.txt                           controllers.Application.robots
+GET     /noscript                             controllers.Application.noscript
+
 # Login page
 GET     /login                                controllers.Application.login
 POST    /login                                controllers.Application.authenticate

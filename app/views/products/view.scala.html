@@ -52,15 +52,19 @@
     <table class="box-table" summary="Product Files">
       <tr>
         <th>File</th>
+        @if(user.hasPermission(Permission.DownloadFile)) {
         <th>Download</th>
+        }
       </tr>
       @for(file <- product.getFiles()) {
     <tr>
         <td>@file.getName()</td>
+         @if(user.hasPermission(Permission.DownloadFile)) {
         <td>@form(routes.Products.getFile(product.id,file.getName())) {
               <input class="fancy-button" type="submit" value="Download">
           }
           </td>
+          }
         </tr>
   }
   </table>
