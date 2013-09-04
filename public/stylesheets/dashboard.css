@@ -112,7 +112,7 @@ a:active {
 	color:black;
 	padding: 20px;
 	background-color: #cfcfcf;
-	width: 100%;
+	max-width: 95%;
 	border: 2px solid black;
 	box-shadow: 0 0 10px #858585;
 	border-radius: 10px;

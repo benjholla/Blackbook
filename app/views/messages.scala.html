@@ -24,8 +24,10 @@
     <tr>
       <th>Time</th>
       <th>Message</th>
+      <th></th>
     </tr>
     @for(announcement <- announcements){
+      <tr>
       <td>@announcement.createTime</td>
       <td>@play.api.templates.Html(announcement.message)</td>
       @if(user.hasPermission(Permission.MakeAnnouncements)) {
@@ -50,6 +52,7 @@
 		});
 		</script>
       }
+      </tr>
     }
   </table>
 
