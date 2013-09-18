@@ -90,7 +90,7 @@ object User {
         val query = SQL("""
           UPDATE Users SET LastLogin = now() 
           WHERE Name = {name}
-          AND Password = {password}
+          AND HashedPassword = crypt({password}, HashedPassword)
         """).on('name -> username, 'password -> password)
         
         // users can authenticate via database lookup or via browser session
@@ -102,7 +102,7 @@ object User {
   // Parses a DB user from a SQL result set.
   val dbUser = {
     get[String]("Users.Name") ~
-    get[String]("Users.Password") ~
+    get[String]("Users.HashedPassword") ~
     get[String]("Users.Email") ~
     get[Long]("Users.Permissions") ~
     get[Boolean]("Users.Enabled") map (flatten) map ((DbUser.apply _).tupled)
@@ -115,14 +115,14 @@ object User {
 
   def create(username:String, password:String, email:String, permissions:Long) = {
     DB.withConnection { implicit c =>
-      SQL("INSERT INTO Users(Name,Password,Email,Permissions) VALUES ({name},{password},{email},{permissions})").on(
+      SQL("INSERT INTO Users(Name,HashedPassword,Email,Permissions) VALUES ({name},crypt({password},gen_salt('md5')),{email},{permissions})").on(
         'name -> Db.normalizeName(username), 'password -> password, 'email -> email, 'permissions -> permissions).executeUpdate()
     }
   }
   
   def update(username:String, password:String, email:String, permissions:Long) = {
     DB.withConnection { implicit c =>
-      SQL("UPDATE Users SET Password={password}, Email={email}, Permissions={permissions} WHERE Name={username}").on(
+      SQL("UPDATE Users SET HashedPassword=crypt({password},gen_salt('md5')), Email={email}, Permissions={permissions} WHERE Name={username}").on(
         'username -> username, 'password -> password, 'email -> email, 'permissions -> permissions).executeUpdate()
     }
   }
